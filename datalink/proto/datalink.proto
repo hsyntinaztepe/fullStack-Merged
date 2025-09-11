@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package datalink;
+
+// Data Link Message - tek bir mesaj için
+message DataLinkMessage {
+  string id = 1;
+  string from = 2;
+  string to = 3;
+  string text = 4;
+}
+
+// Request mesajı - istemci tarafından gönderilir
+message DataLinkRequest {
+  // Şu anda boş ama gelecekte filtre parametreleri eklenebilir
+  string filter = 1;
+}
+
+// Response mesajı - server tarafından döndürülür
+message DataLinkResponse {
+  repeated DataLinkMessage messages = 1;
+  int32 total_count = 2;
+}
+
+// Data Link Service tanımı
+service DataLinkService {
+  // Data Link mesajlarını getir
+  rpc GetDataLinkMessages(DataLinkRequest) returns (DataLinkResponse);
+}

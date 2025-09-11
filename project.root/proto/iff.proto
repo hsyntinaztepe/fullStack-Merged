@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package iff;
+
+// Tek bir IFF verisi
+message IFFData {
+  string status = 1;    // Dost / Düşman / Belirsiz vb.
+  double lat = 2;       // Enlem
+  double lon = 3;       // Boylam
+  string callsign = 4;  // Sadece dost ise gerçek kimlik, aksi halde "UNKNOWN"
+}
+
+// İstemciden gelen istek
+message IFFRequest {
+  // Opsiyonel: Belirli koordinatlara yakın hedefleri filtrelemek için
+  double lat = 1;        // Merkez enlem
+  double lon = 2;        // Merkez boylam
+  double radius_km = 3;  // Yarıçap (km)
+}
+
+// Sunucudan gelen yanıt (streaming için tekli veri)
+message IFFStreamResponse {
+  IFFData data = 1;
+}
+
+// IFF Servisi
+service IFFService {
+  // Sürekli IFF verisi akışı
+  rpc StreamIFFData(IFFRequest) returns (stream IFFStreamResponse);
+}

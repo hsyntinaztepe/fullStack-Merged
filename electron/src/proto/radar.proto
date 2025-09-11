@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package radar;
+
+// Radar Target - tek bir radar hedefi için
+message RadarTarget {
+  string id = 1;
+  int32 x_coordinate = 2;
+  int32 y_coordinate = 3;
+  int32 velocity = 4;
+  string location = 5;
+}
+
+// Request mesajı - istemci tarafından gönderilir
+message RadarRequest {
+  // Filtre parametreleri eklenebilir
+  string filter = 1;
+  int32 min_velocity = 2;
+  int32 max_velocity = 3;
+}
+
+// Response mesajı - server tarafından döndürülür
+message RadarResponse {
+  repeated RadarTarget targets = 1;
+  int32 total_count = 2;
+  string coverage_area = 3; // Türkiye haritası için
+}
+
+// Streaming için boş request (isteğe bağlı filtreler eklenebilir)
+message StreamRequest {
+  string filter = 1;
+  int32 refresh_interval_ms = 2; // milisaniye cinsinden refresh süresi
+}
+
+// Radar Service tanımı
+service RadarService {
+  // Radar hedeflerini getir (unary)
+  rpc GetRadarTargets(RadarRequest) returns (RadarResponse);
+  
+  // Radar hedeflerini stream olarak al (server streaming)
+  rpc StreamRadarTargets(StreamRequest) returns (stream RadarTarget);
+}

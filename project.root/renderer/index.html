@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Electron + OpenLayers + GeoJSON</title>
+    <link rel="stylesheet" href="./assets/css/ol.css" />
+  </head>
+  <body>
+    <!-- Harita -->
+    <div id="map"></div>
+    
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <button data-tool="None">Seçim Yok</button>
+      <button data-tool="Point">Nokta</button>
+      <button data-tool="LineString">Çizgi</button>
+      <button data-tool="Polygon">Poligon</button>
+      <button id="modify">Düzenle</button>
+      <button id="translate">Taşı</button>
+      <button id="clear">Temizle</button>
+      <button id="load">Yükle</button>
+      <button id="save">Kaydet</button>
+      <button id="fit">Fit to Data</button>
+    </div>
+    
+    <!-- Katman değiştirme -->
+    <div class="layer-controls">
+      <button onclick="changeLayer('osm')">Harita</button>
+      <button onclick="changeLayer('satellite')">Uydu</button>
+      <button onclick="changeLayer('hybrid')">Hibrit</button>
+      <button onclick="changeLayer('terrain')">Arazi</button>
+    </div>
+    
+    <!-- Durum -->
+    <div class="status" id="status">Hazır</div>
+    
+    <!-- Popup -->
+    <div id="popup" class="ol-popup radar-popup">
+      <button id="popup-closer" class="ol-popup-closer" type="button">×</button>
+      <div id="popup-content" class="ol-popup-content"></div>
+    </div>
+
+    <!-- JS -->
+    <script type="module" src="index.js"></script>
+  </body>
+</html>

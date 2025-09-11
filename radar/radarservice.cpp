@@ -1,0 +1,271 @@
+// radarservice.cpp
+#include "radarservice.h"
+
+#include <grpcpp/grpcpp.h>
+#include "radar.grpc.pb.h"
+
+#include <string>
+#include <vector>
+#include <iostream>
+#include <thread>
+#include <chrono>
+#include <cstdint>
+#include <unordered_map>
+#include <unordered_set>
+#include <mutex>
+#include <cstdlib>
+#include <ctime>
+
+// MongoDB C++ Driver
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
+
+// Programda 1 kez instance
+static mongocxx::instance s_mongo_instance{};
+
+// RNG seed
+static bool __seeded = ([](){
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    return true;
+})();
+
+// ---------------------- RadarServiceImpl ----------------------
+
+RadarServiceImpl::RadarServiceImpl(std::string mongo_uri,
+                                   std::string db_name,
+                                   std::string coll_name)
+    : mongo_uri_(std::move(mongo_uri)),
+      db_name_(std::move(db_name)),
+      coll_name_(std::move(coll_name)) {}
+
+static inline std::string get_string_utf8(const bsoncxx::document::view& v, const char* key, const std::string& def = {}) {
+    auto elem = v[key];
+    if (!elem) return def;
+    if (elem.type() == bsoncxx::type::k_string) {
+        auto sv = elem.get_string().value;
+        return std::string(sv.data(), sv.size());
+    }
+    return def;
+}
+
+static inline bool get_double_safe(const bsoncxx::document::view& v, const char* key, double& out) {
+    auto elem = v[key];
+    if (!elem) return false;
+    switch (elem.type()) {
+        case bsoncxx::type::k_double: out = elem.get_double().value; return true;
+        case bsoncxx::type::k_int32:  out = static_cast<double>(elem.get_int32().value); return true;
+        case bsoncxx::type::k_int64:  out = static_cast<double>(elem.get_int64().value); return true;
+        default: return false;
+    }
+}
+
+static inline int32_t get_int32_safe(const bsoncxx::document::view& v, const char* key, int32_t def = 0) {
+    auto elem = v[key];
+    if (!elem) return def;
+    switch (elem.type()) {
+        case bsoncxx::type::k_int32:  return elem.get_int32().value;
+        case bsoncxx::type::k_int64:  return static_cast<int32_t>(elem.get_int64().value);
+        case bsoncxx::type::k_double: return static_cast<int32_t>(elem.get_double().value);
+        default: return def;
+    }
+}
+
+static inline std::string get_oid_string(const bsoncxx::document::view& v) {
+    auto elem = v["_id"];
+    if (!elem) return {};
+    if (elem.type() == bsoncxx::type::k_oid) {
+        return elem.get_oid().value.to_string(); // çoğu sürümde to_string mevcut
+    }
+    // Bazı durumlarda _id string olabilir
+    if (elem.type() == bsoncxx::type::k_string) {
+        auto sv = elem.get_string().value;
+        return std::string(sv.data(), sv.size());
+    }
+    return {};
+}
+
+// Türkiye bbox doğrulaması (lat/lon)
+static inline bool is_in_tr_bbox(double lat, double lon) {
+    return (lat >= 36.0 && lat <= 42.0 && lon >= 26.0 && lon <= 45.0);
+}
+
+// Basit drift için rastgele ±1 yön
+static inline int sign_rand() { return (std::rand() % 2) ? 1 : -1; }
+
+// Her 5 sn'de bir yeniden yükle
+bool RadarServiceImpl::checkAndReloadData() {
+    std::time_t now = std::time(nullptr);
+    if (now - last_reload_check_ < 5)
+        return false;
+    last_reload_check_ = now;
+
+    loadRadarData();
+    return true;
+}
+
+// Mongo'dan yükle (lat/lon/velocity/baroAltitude/geoAltitude)
+void RadarServiceImpl::loadRadarData() {
+    mongocxx::client conn{mongocxx::uri{mongo_uri_}};
+    auto db   = conn[db_name_];
+    auto coll = db[coll_name_];
+
+    std::unordered_map<std::string, MovingTarget> parsed; // key: _id string
+    std::unordered_set<std::string> seen_ids;
+
+    try {
+        auto cursor = coll.find({});
+        for (auto&& doc : cursor) {
+            try {
+                std::string key = get_oid_string(doc);
+                if (key.empty()) continue;
+
+                double lat = 0.0, lon = 0.0;
+                if (!get_double_safe(doc, "lat", lat)) continue;
+                if (!get_double_safe(doc, "lon", lon)) continue;
+
+                int32_t velocity      = get_int32_safe(doc, "velocity", 0);
+                int32_t baroAltitude  = get_int32_safe(doc, "baroAltitude", 0);
+                int32_t geoAltitude   = get_int32_safe(doc, "geoAltitude", 0);
+
+                if (!is_in_tr_bbox(lat, lon)) continue;
+
+                MovingTarget mt;
+                mt.id = key;
+                mt.lat = lat;
+                mt.lon = lon;
+                mt.velocity = velocity;
+                mt.baro_altitude = baroAltitude;
+                mt.geo_altitude  = geoAltitude;
+
+                // İlk girişte küçük rastgele drift yönü ata
+                auto it = targets_.find(key);
+                if (it == targets_.end()) {
+                    mt.dlat = 1e-4 * sign_rand();  // ~11m civarı
+                    mt.dlon = 1e-4 * sign_rand();  // ~9m enlem/uzunluk farkına göre değişir
+                } else {
+                    // var olan yönleri koru
+                    mt.dlat = it->second.dlat;
+                    mt.dlon = it->second.dlon;
+                    mt.move_accumulator = it->second.move_accumulator;
+                }
+
+                parsed.emplace(key, std::move(mt));
+                seen_ids.insert(key);
+            } catch (const std::exception& e) {
+                std::cerr << "Mongo parse hata: " << e.what() << std::endl;
+            }
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "MongoDB bağlantı/sorgu hatası: " << e.what() << std::endl;
+        return;
+    }
+
+    // Global targets_ güncelle
+    {
+        std::lock_guard<std::mutex> lock(targets_mutex_);
+
+        // Ekle/Güncelle
+        for (auto& kv : parsed) {
+            const std::string& id = kv.first;
+            auto it = targets_.find(id);
+            if (it != targets_.end()) {
+                it->second.velocity       = kv.second.velocity;
+                it->second.baro_altitude  = kv.second.baro_altitude;
+                it->second.geo_altitude   = kv.second.geo_altitude;
+                // İstersen pozisyonu da DB’den resetleyebilirsin:
+                // it->second.lat = kv.second.lat;
+                // it->second.lon = kv.second.lon;
+            } else {
+                targets_.emplace(id, std::move(kv.second));
+                std::cout << "Target eklendi: " << id << std::endl;
+            }
+        }
+
+        // Sil
+        for (auto it = targets_.begin(); it != targets_.end();) {
+            if (seen_ids.find(it->first) == seen_ids.end()) {
+                std::cout << "Target silindi: " << it->first << std::endl;
+                it = targets_.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        std::cout << "Reloaded from MongoDB. Active targets: " << targets_.size() << std::endl;
+    }
+}
+
+void RadarServiceImpl::smartLoadRadarData() {
+    loadRadarData();
+}
+
+// ---------------------- gRPC Akış ----------------------
+grpc::Status RadarServiceImpl::StreamRadarTargets(
+    grpc::ServerContext *context,
+    const radar::StreamRequest *request,
+    grpc::ServerWriter<radar::RadarTarget> *writer)
+{
+    int interval_ms = request->refresh_interval_ms() > 0 ? request->refresh_interval_ms() : 1000;
+
+    while (!context->IsCancelled()) {
+        sendRadarFile(writer, request);
+        if (context->IsCancelled())
+            break;
+        std::this_thread::sleep_for(std::chrono::milliseconds(interval_ms));
+    }
+    return grpc::Status::OK;
+}
+
+void RadarServiceImpl::sendRadarFile(
+    grpc::ServerWriter<radar::RadarTarget> *writer,
+    const radar::StreamRequest *request)
+{
+    if (targets_.empty() || checkAndReloadData()) {
+        if (targets_.empty())
+            loadRadarData();
+    }
+
+    const int interval_ms = request->refresh_interval_ms() > 0 ? request->refresh_interval_ms() : 1000;
+    const double delta_s = interval_ms / 1000.0;
+
+    std::lock_guard<std::mutex> lock(targets_mutex_);
+
+    for (auto &kv : targets_) {
+        MovingTarget &t = kv.second;
+
+        // Basit drift (kapamak istersen bu bloğu yoruma al)
+        // velocity birimi “keyfi” olduğundan drift’i küçük tutuyoruz
+        if (t.velocity > 0) {
+            t.move_accumulator += (t.velocity / 100.0) * delta_s; // ölçek faktörü
+            while (t.move_accumulator >= 1.0) {
+                t.lat += t.dlat;
+                t.lon += t.dlon;
+
+                // Türkiye bbox dışına çıkınca yönü ters çevir
+                if (!is_in_tr_bbox(t.lat, t.lon)) {
+                    t.dlat = -t.dlat;
+                    t.dlon = -t.dlon;
+                    // geri bir adım
+                    t.lat += t.dlat;
+                    t.lon += t.dlon;
+                }
+                t.move_accumulator -= 1.0;
+            }
+        }
+
+        radar::RadarTarget out;
+        out.set_lat(t.lat);
+        out.set_lon(t.lon);
+        out.set_velocity(t.velocity);
+        out.set_baro_altitude(t.baro_altitude);
+        out.set_geo_altitude(t.geo_altitude);
+
+        if (!writer->Write(out)) {
+            std::cerr << "Writer kapandı, client ayrıldı." << std::endl;
+            break;
+        }
+    }
+}
