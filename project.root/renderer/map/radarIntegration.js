@@ -7,26 +7,37 @@ import { setStatus } from '../ui/status.js';
 // Her target için ayrı timer tut
 let targetTimers = new Map();
 
-// Lat/lon toleranslı eşleşme (km cinsinden)
-function findIFFMatchByLocation(radarLat, radarLon, iffTargets, toleranceKm = 5) {
+// Yakınlık tabanlı lock tablosu
+// { lat, lon, status, callsign }
+const lockTable = [];
+
+// Mesafe hesaplama (km)
+function distanceKm(lat1, lon1, lat2, lon2) {
   const toRad = deg => deg * Math.PI / 180;
-  const R = 6371; // Dünya yarıçapı km
-  return iffTargets.find(iff => {
-    const dLat = toRad(iff.lat - radarLat);
-    const dLon = toRad(iff.lon - radarLon);
-    const a = Math.sin(dLat/2)**2 +
-              Math.cos(toRad(radarLat)) * Math.cos(toRad(iff.lat)) *
-              Math.sin(dLon/2)**2;
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-    const distance = R * c;
-    return distance <= toleranceKm;
-  });
+  const R = 6371;
+  const dLat = toRad(lat2 - lat1);
+  const dLon = toRad(lon2 - lon1);
+  const a = Math.sin(dLat / 2) ** 2 +
+            Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+            Math.sin(dLon / 2) ** 2;
+  return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+}
+
+// Lock tablosunda yakın kayıt bul
+function findLockByProximity(lat, lon, toleranceKm = 3) {
+  return lockTable.find(entry => distanceKm(lat, lon, entry.lat, entry.lon) <= toleranceKm);
+}
+
+// Yeni lock ekle
+function addLock(lat, lon, status, callsign) {
+  lockTable.push({ lat, lon, status, callsign });
 }
 
 export function startRadarStream(iffTargets) {
-  // Eski timer'ları temizle
+  // Önceki verileri temizle
   targetTimers.forEach(timer => clearTimeout(timer));
   targetTimers.clear();
+  lockTable.length = 0;
 
   window.radar.startStream();
 
@@ -34,61 +45,76 @@ export function startRadarStream(iffTargets) {
     const lat = parseFloat(t.lat ?? t.y_coordinate);
     const lon = parseFloat(t.lon ?? t.x_coordinate);
 
+    // Önce lock tablosunda yakın kayıt var mı bak
+    let lock = findLockByProximity(lat, lon);
 
+    if (!lock) {
+      // Yoksa IFF eşleşmesi dene (sadece ilk kez)
+      let matched = null;
+      if (Array.isArray(iffTargets)) {
+        matched = iffTargets.find(iff => distanceKm(lat, lon, iff.lat, iff.lon) <= 5);
+      }
+      const status = (matched?.status ?? 'UNKNOWN').toString();
+      const callsign = (matched?.callsign ?? 'UNKNOWN').toString();
 
-    // IFF eşleşmesini lat/lon ile bul
-    const iffMatch = Array.isArray(iffTargets)
-      ? findIFFMatchByLocation(lat, lon, iffTargets, 5) // 5 km tolerans
-      : null;
+      // Yeni lock kaydı ekle
+      addLock(lat, lon, status, callsign);
+      lock = { lat, lon, status, callsign };
+    } else {
+      // Lock bulundu → sadece lock konumunu güncelle (takip için)
+      lock.lat = lat;
+      lock.lon = lon;
+    }
 
-    // Radar + IFF verisini birleştir
+    const radarId = `${Math.round(lat * 1e5)}_${Math.round(lon * 1e5)}`;
+
     const merged = {
-      radarId: t.id,
+      radarId,
       lat,
       lon,
-      velocity: t.velocity,
-      baroAlt: t.baroAlt,
-      geoAlt: t.geoAlt,
-      status: iffMatch?.status || 'UNKNOWN',
-      callsign: iffMatch?.callsign || 'UNKNOWN'
+      velocity: t.velocity ?? null,
+      baroAlt: t.baroAlt ?? t.baro_altitude ?? null,
+      geoAlt: t.geoAlt ?? t.geo_altitude ?? null,
+      status: lock.status,
+      callsign: lock.callsign
     };
 
-    // ------------------ ID ile feature update ------------------
-    let feature = radarSource.getFeatureById(merged.radarId);
+    // Feature oluştur / güncelle
+    let feature = radarSource.getFeatureById(radarId);
     if (!feature) {
-      // Yeni hedef
       feature = new Feature({
         geometry: new Point(fromLonLat([lon, lat])),
         ...merged
       });
-      feature.setId(merged.radarId);
+      feature.setId(radarId);
       radarSource.addFeature(feature);
-      console.log(`Yeni target eklendi: ${merged.radarId}`, merged);
+      console.log(`Yeni target eklendi: ${radarId}`, merged);
     } else {
-      // Var olan hedefi update et
       feature.getGeometry().setCoordinates(fromLonLat([lon, lat]));
       Object.keys(merged).forEach(key => {
         if (key !== 'geometry') feature.set(key, merged[key]);
       });
     }
-    // ------------------------------------------------------------
 
-    setStatus(`Hedef güncellendi: ${merged.radarId} (${merged.velocity ?? '-'} km/h)`);
+    setStatus(`Hedef güncellendi: ${radarId} (${merged.velocity ?? '-'} km/h)`);
 
-    // Timer resetle → 2 saniye boyunca veri gelmezse silinsin
-    if (targetTimers.has(merged.radarId)) {
-      clearTimeout(targetTimers.get(merged.radarId));
+    // Timer resetle → 2 saniye veri gelmezse sil
+    if (targetTimers.has(radarId)) {
+      clearTimeout(targetTimers.get(radarId));
     }
     const timer = setTimeout(() => {
-      let f = radarSource.getFeatureById(merged.radarId);
+      const f = radarSource.getFeatureById(radarId);
       if (f) {
         radarSource.removeFeature(f);
-        console.log(`Target kaldırıldı (timeout): ${merged.radarId}`);
-        setStatus(`Target kaldırıldı: ${merged.radarId}`);
+        console.log(`Target kaldırıldı (timeout): ${radarId}`);
+        setStatus(`Target kaldırıldı: ${radarId}`);
       }
-      targetTimers.delete(merged.radarId);
+      targetTimers.delete(radarId);
+      // Lock kaydını da temizle
+      const idx = lockTable.findIndex(entry => entry.status === lock.status && entry.callsign === lock.callsign);
+      if (idx !== -1) lockTable.splice(idx, 1);
     }, 2000);
-    targetTimers.set(merged.radarId, timer);
+    targetTimers.set(radarId, timer);
   });
 
   window.radar.onStreamEnd(() => {
@@ -106,11 +132,13 @@ function cleanupAllTargets() {
   radarSource.clear();
   targetTimers.forEach(timer => clearTimeout(timer));
   targetTimers.clear();
+  lockTable.length = 0;
 }
 
 export async function loadRadarTargets() {
   radarSource.clear();
   targetTimers.forEach(timer => clearTimeout(timer));
   targetTimers.clear();
+  lockTable.length = 0;
   setStatus('Radar verisi stream ile yüklenecek');
 }

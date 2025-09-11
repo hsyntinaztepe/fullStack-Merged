@@ -1,4 +1,3 @@
-// styles.js
 import Style from 'ol/style/Style.js';
 import Stroke from 'ol/style/Stroke.js';
 import Fill from 'ol/style/Fill.js';
@@ -56,4 +55,3 @@ export function radarStyle(feature) {
     })
   });
 }
-
