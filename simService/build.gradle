@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group = 'com.aewc'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    mongoVersion = '4.11.1'
+}
+
+dependencies {
+    implementation "org.mongodb:mongodb-driver-sync:${mongoVersion}"
+    testImplementation 'junit:junit:4.13.2'
+}
+
+application {
+    mainClass = 'com.aewc.sim.MainLauncher'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}

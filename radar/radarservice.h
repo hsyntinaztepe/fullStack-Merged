@@ -19,7 +19,7 @@ class RadarServiceImpl final : public radar::RadarService::Service
 {
 public:
     explicit RadarServiceImpl(std::string mongo_uri = "mongodb://localhost:27017",
-                              std::string db_name   = "microservices",
+                              std::string db_name   = "aewc",
                               std::string coll_name = "radar");
 
     grpc::Status StreamRadarTargets(

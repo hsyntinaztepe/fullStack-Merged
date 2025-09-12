@@ -42,7 +42,7 @@ void RunServer()
 {
     const std::string server_address = "0.0.0.0:50051";
     const std::string mongo_uri      = "mongodb://localhost:27017";
-    const std::string db_name        = "microservices";
+    const std::string db_name        = "aewc";
     const std::string coll_name      = "iff";
 
     // Mongo bağlantısını test et

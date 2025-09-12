@@ -8,7 +8,7 @@ int main() {
     // Sunucu ve Mongo ayarları (gerekirse değiştir)
     const std::string server_address = "0.0.0.0:50053";
     const std::string mongo_uri      = "mongodb://localhost:27017";
-    const std::string db_name        = "microservices";
+    const std::string db_name        = "aewc";
     const std::string coll_name      = "radar";
 
     try {
