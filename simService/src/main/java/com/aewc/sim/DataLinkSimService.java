@@ -10,7 +10,7 @@ import java.util.concurrent.*;
 public class DataLinkSimService implements Runnable {
 
     private static final int TRACK_COUNT = 30;
-    private static final long PERIOD_MS = 500L;
+    private static final long PERIOD_MS = 30_000L;
     private final List<TrackState> tracks = new ArrayList<>();
     private final Random rand = new Random();
     private final MongoCollection<Document> collection;

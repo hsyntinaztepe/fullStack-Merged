@@ -2,7 +2,7 @@ package com.aewc.sim;
 
 public class MainLauncher {
     public static void main(String[] args) {
-        AircraftGenerator.generateAircrafts(5);
+        AircraftGenerator.generateAircrafts(30);
         // Lancer Radar
         new Thread(new RadarSimService()).start();
 

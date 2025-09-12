@@ -1,9 +1,13 @@
 package com.aewc.sim;
 
 import com.mongodb.client.*;
+
+import java.util.concurrent.TimeUnit;
+
 import org.bson.Document;
 
 public class RadarSimService implements Runnable {
+    private static final long PERIOD_MS = TimeUnit.SECONDS.toMillis(30);
     @Override
     public void run() {
         try (MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017")) {
@@ -15,11 +19,11 @@ public class RadarSimService implements Runnable {
                     Document doc = new Document("lat", ac.lat)
                             .append("lon", ac.lon)
                             .append("velocity", ac.velocity)
-                            .append("baroaltitude", ac.baroaltitude)
-                            .append("geoaltitude", ac.geoaltitude);
+                            .append("baroAltitude", ac.baroaltitude)
+                            .append("geoAltitude", ac.geoaltitude);
                     radarCol.insertOne(doc);
                 }
-                Thread.sleep(2000);
+                Thread.sleep(PERIOD_MS);
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
