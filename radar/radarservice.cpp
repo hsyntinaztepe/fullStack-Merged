@@ -121,7 +121,6 @@ void RadarServiceImpl::loadRadarData() {
 
     try {
         mongocxx::options::find find_opts;
-        // _id alanına göre artan sırada getir
         find_opts.sort(bsoncxx::builder::basic::make_document(
             bsoncxx::builder::basic::kvp("_id", 1)
         ));
@@ -143,7 +142,7 @@ void RadarServiceImpl::loadRadarData() {
                 if (!is_in_tr_bbox(lat, lon)) continue;
 
                 MovingTarget mt;
-                mt.id = key; // Mongo _id string
+                mt.id = key;
                 mt.lat = lat;
                 mt.lon = lon;
                 mt.velocity = velocity;
@@ -152,8 +151,10 @@ void RadarServiceImpl::loadRadarData() {
 
                 auto it = targets_.find(key);
                 if (it == targets_.end()) {
-                    mt.dlat = 1e-4 * sign_rand();
-                    mt.dlon = 1e-4 * sign_rand();
+                    // Hıza bağlı başlangıç drift miktarı
+                    double deg_per_sec = (mt.velocity / 100.0) * 0.001; 
+                    mt.dlat = deg_per_sec * sign_rand();
+                    mt.dlon = deg_per_sec * sign_rand();
                 } else {
                     mt.dlat = it->second.dlat;
                     mt.dlon = it->second.dlon;
@@ -218,9 +219,10 @@ grpc::Status RadarServiceImpl::StreamRadarTargets(
 }
 
 void RadarServiceImpl::sendRadarFile(
-    grpc::ServerWriter<radar::RadarTarget> *writer,
-    const radar::StreamRequest *request)
+    grpc::ServerWriter<radar::RadarTarget>* writer,
+    const radar::StreamRequest* request)
 {
+    // Veri yoksa (ilk açılış) veya periyodik reload zamanı gelmişse Mongo'dan yükle
     if (targets_.empty() || checkAndReloadData()) {
         if (targets_.empty())
             loadRadarData();
@@ -231,59 +233,65 @@ void RadarServiceImpl::sendRadarFile(
         : 1000;
     const double delta_s = interval_ms / 1000.0;
 
-    // 1) Hedefleri güncelle (drift simülasyonu)
+    // 1) Hedefleri hızla orantılı ve gözle fark edilir şekilde hareket ettir
     {
         std::lock_guard<std::mutex> lock(targets_mutex_);
-        for (auto &kv : targets_) {
-            MovingTarget &t = kv.second;
+        for (auto& kv : targets_) {
+            MovingTarget& t = kv.second;
 
+            // Hız m/s kabul; katsayıları haritada görünürlük için ayarladık
             if (t.velocity > 0) {
-                t.move_accumulator += (t.velocity / 100.0) * delta_s;
-                while (t.move_accumulator >= 1.0) {
-                    t.lat += t.dlat;
-                    t.lon += t.dlon;
+                // Temel hareket ölçeği: hız × zaman × görünürlük katsayısı
+                // Bu katsayıları (k_lat, k_lon) artırırsan hareket daha belirgin olur.
+                const double k_lat = 0.00002; // derece/s için ölçek (enlem)
+                const double k_lon = 0.00002; // derece/s için ölçek (boylam)
 
-                    if (!is_in_tr_bbox(t.lat, t.lon)) {
-                        t.dlat = -t.dlat;
-                        t.dlon = -t.dlon;
-                        t.lat += t.dlat;
-                        t.lon += t.dlon;
-                    }
-                    t.move_accumulator -= 1.0;
+                double step_lat = (t.velocity * delta_s) * k_lat * (t.dlat >= 0 ? 1.0 : -1.0);
+                double step_lon = (t.velocity * delta_s) * k_lon * (t.dlon >= 0 ? 1.0 : -1.0);
+
+                t.lat += step_lat;
+                t.lon += step_lon;
+
+                // TR bbox dışına taşarsa yönü çevir ve bir adım geri al
+                if (!is_in_tr_bbox(t.lat, t.lon)) {
+                    t.dlat = -t.dlat;
+                    t.dlon = -t.dlon;
+                    t.lat -= step_lat;
+                    t.lon -= step_lon;
                 }
             }
         }
     }
 
-    // 2) Snapshot al (_id sırası korunuyor)
+    // 2) Snapshot al (kilit dışı)
     std::vector<MovingTarget> snapshot;
     {
         std::lock_guard<std::mutex> lock(targets_mutex_);
         snapshot.reserve(targets_.size());
-        for (auto &kv : targets_) {
+        for (auto& kv : targets_) {
             snapshot.push_back(kv.second);
         }
     }
 
-    // 3) ID ataması (_id sırası sabit olduğu için ID sabit kalır)
+    // 3) Stabil ID üret ve gönder
     std::ostringstream oss;
     int rank = 0;
 
-    for (const MovingTarget &t : snapshot) {
+    for (const MovingTarget& t : snapshot) {
         ++rank;
         oss.str(std::string());
         oss.clear();
         oss << "ID" << std::setw(3) << std::setfill('0') << rank;
 
         radar::RadarTarget out;
-        out.set_id(oss.str()); // Frontend/IFF ile eşleşecek ID
+        out.set_id(oss.str());
         out.set_lat(t.lat);
         out.set_lon(t.lon);
         out.set_velocity(t.velocity);
         out.set_baro_altitude(t.baro_altitude);
         out.set_geo_altitude(t.geo_altitude);
 
-        // Debug log
+        // İstediğin log satırı (WRITE öncesi)
         std::cout << "[SEND] ID: " << out.id()
                   << " | Lat: " << out.lat()
                   << " | Lon: " << out.lon()

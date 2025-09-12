@@ -36,8 +36,8 @@ export function radarStyle(feature) {
   const callsign = (feature.get('callsign') ?? 'UNKNOWN').toString();
 
   let color = '#000000ff'; // default siyah
-  if (status === 'DOST') color = '#00ff00ff';
-  else if (status === 'DUSMAN') color = '#ff0000ff';
+  if (status === 'FRIEND') color = '#00ff00ff';
+  else if (status === 'FOE') color = '#ff0000ff';
   else if (status === 'UNKNOWN') color = '#9B9B9BFF';
 
   return new Style({

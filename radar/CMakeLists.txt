@@ -139,3 +139,4 @@ endif()
 install(TARGETS radar
     RUNTIME DESTINATION bin
 )
+
