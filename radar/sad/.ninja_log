@@ -1,0 +1,8 @@
+# ninja log v7
+99	2027	7793775633942187	CMakeFiles/radar.dir/generated/radar.pb.cc.obj	3e2964a5a1842150
+7	4311	7793775633029265	CMakeFiles/radar.dir/main.cpp.obj	9c6078de433341b3
+65	5790	7793775633604500	CMakeFiles/radar.dir/radarservice.cpp.obj	2f558a523ef69960
+135	6042	7793775634294071	CMakeFiles/radar.dir/generated/radar.grpc.pb.cc.obj	9d1b9faecd84273c
+6043	8240	7793775693383482	radar.exe	9718465385fa35da
+18	4687	7793800083196045	CMakeFiles/radar.dir/radarservice.cpp.obj	2f558a523ef69960
+4688	6716	7793800129885241	radar.exe	9718465385fa35da

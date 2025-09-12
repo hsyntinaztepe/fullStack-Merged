@@ -40,10 +40,14 @@ private:
         int32_t baro_altitude = 0;
         int32_t geo_altitude  = 0;
 
-        // Drift simülasyonu
+        // Drift / hareket simülasyonu
         double dlat = 0.0;
         double dlon = 0.0;
         double move_accumulator = 0.0;
+
+        // Yeni eklenen alanlar
+        double heading_deg = 0.0; // 0..360 derece yön
+        bool is_fighter = false;  // UNKNOWN hedefin savaş uçağı olup olmadığı
     };
 
     void sendRadarFile(grpc::ServerWriter<radar::RadarTarget>* writer,
