@@ -1,4 +1,3 @@
-// radarservice.cpp
 #include "radarservice.h"
 
 #include <grpcpp/grpcpp.h>
@@ -15,15 +14,21 @@
 #include <mutex>
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
+#include <iomanip>
+#include <algorithm>
 
 // MongoDB C++ Driver
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
+#include <mongocxx/options/find.hpp>
 
-// Programda 1 kez instance
+// Programda 1 kez instance (global)
 static mongocxx::instance s_mongo_instance{};
 
 // RNG seed
@@ -32,16 +37,9 @@ static bool __seeded = ([](){
     return true;
 })();
 
-// ---------------------- RadarServiceImpl ----------------------
+// ---------------------- Yardımcı fonksiyonlar ----------------------
 
-RadarServiceImpl::RadarServiceImpl(std::string mongo_uri,
-                                   std::string db_name,
-                                   std::string coll_name)
-    : mongo_uri_(std::move(mongo_uri)),
-      db_name_(std::move(db_name)),
-      coll_name_(std::move(coll_name)) {}
-
-static inline std::string get_string_utf8(const bsoncxx::document::view& v, const char* key, const std::string& def = {}) {
+std::string RadarServiceImpl::get_string_utf8(const bsoncxx::document::view& v, const char* key, const std::string& def) {
     auto elem = v[key];
     if (!elem) return def;
     if (elem.type() == bsoncxx::type::k_string) {
@@ -51,7 +49,7 @@ static inline std::string get_string_utf8(const bsoncxx::document::view& v, cons
     return def;
 }
 
-static inline bool get_double_safe(const bsoncxx::document::view& v, const char* key, double& out) {
+bool RadarServiceImpl::get_double_safe(const bsoncxx::document::view& v, const char* key, double& out) {
     auto elem = v[key];
     if (!elem) return false;
     switch (elem.type()) {
@@ -62,7 +60,7 @@ static inline bool get_double_safe(const bsoncxx::document::view& v, const char*
     }
 }
 
-static inline int32_t get_int32_safe(const bsoncxx::document::view& v, const char* key, int32_t def = 0) {
+int32_t RadarServiceImpl::get_int32_safe(const bsoncxx::document::view& v, const char* key, int32_t def) {
     auto elem = v[key];
     if (!elem) return def;
     switch (elem.type()) {
@@ -73,13 +71,12 @@ static inline int32_t get_int32_safe(const bsoncxx::document::view& v, const cha
     }
 }
 
-static inline std::string get_oid_string(const bsoncxx::document::view& v) {
+std::string RadarServiceImpl::get_oid_string(const bsoncxx::document::view& v) {
     auto elem = v["_id"];
     if (!elem) return {};
     if (elem.type() == bsoncxx::type::k_oid) {
-        return elem.get_oid().value.to_string(); // çoğu sürümde to_string mevcut
+        return elem.get_oid().value.to_string();
     }
-    // Bazı durumlarda _id string olabilir
     if (elem.type() == bsoncxx::type::k_string) {
         auto sv = elem.get_string().value;
         return std::string(sv.data(), sv.size());
@@ -88,14 +85,22 @@ static inline std::string get_oid_string(const bsoncxx::document::view& v) {
 }
 
 // Türkiye bbox doğrulaması (lat/lon)
-static inline bool is_in_tr_bbox(double lat, double lon) {
+bool RadarServiceImpl::is_in_tr_bbox(double lat, double lon) {
     return (lat >= 36.0 && lat <= 42.0 && lon >= 26.0 && lon <= 45.0);
 }
 
 // Basit drift için rastgele ±1 yön
-static inline int sign_rand() { return (std::rand() % 2) ? 1 : -1; }
+int RadarServiceImpl::sign_rand() { return (std::rand() % 2) ? 1 : -1; }
 
-// Her 5 sn'de bir yeniden yükle
+// ---------------------- Implementasyon ----------------------
+
+RadarServiceImpl::RadarServiceImpl(std::string mongo_uri,
+                                   std::string db_name,
+                                   std::string coll_name)
+    : mongo_uri_(std::move(mongo_uri)),
+      db_name_(std::move(db_name)),
+      coll_name_(std::move(coll_name)) {}
+
 bool RadarServiceImpl::checkAndReloadData() {
     std::time_t now = std::time(nullptr);
     if (now - last_reload_check_ < 5)
@@ -106,17 +111,22 @@ bool RadarServiceImpl::checkAndReloadData() {
     return true;
 }
 
-// Mongo'dan yükle (lat/lon/velocity/baroAltitude/geoAltitude)
 void RadarServiceImpl::loadRadarData() {
     mongocxx::client conn{mongocxx::uri{mongo_uri_}};
     auto db   = conn[db_name_];
     auto coll = db[coll_name_];
 
-    std::unordered_map<std::string, MovingTarget> parsed; // key: _id string
+    std::unordered_map<std::string, MovingTarget> parsed;
     std::unordered_set<std::string> seen_ids;
 
     try {
-        auto cursor = coll.find({});
+        mongocxx::options::find find_opts;
+        // _id alanına göre artan sırada getir
+        find_opts.sort(bsoncxx::builder::basic::make_document(
+            bsoncxx::builder::basic::kvp("_id", 1)
+        ));
+
+        auto cursor = coll.find({}, find_opts);
         for (auto&& doc : cursor) {
             try {
                 std::string key = get_oid_string(doc);
@@ -133,20 +143,18 @@ void RadarServiceImpl::loadRadarData() {
                 if (!is_in_tr_bbox(lat, lon)) continue;
 
                 MovingTarget mt;
-                mt.id = key;
+                mt.id = key; // Mongo _id string
                 mt.lat = lat;
                 mt.lon = lon;
                 mt.velocity = velocity;
                 mt.baro_altitude = baroAltitude;
                 mt.geo_altitude  = geoAltitude;
 
-                // İlk girişte küçük rastgele drift yönü ata
                 auto it = targets_.find(key);
                 if (it == targets_.end()) {
-                    mt.dlat = 1e-4 * sign_rand();  // ~11m civarı
-                    mt.dlon = 1e-4 * sign_rand();  // ~9m enlem/uzunluk farkına göre değişir
+                    mt.dlat = 1e-4 * sign_rand();
+                    mt.dlon = 1e-4 * sign_rand();
                 } else {
-                    // var olan yönleri koru
                     mt.dlat = it->second.dlat;
                     mt.dlon = it->second.dlon;
                     mt.move_accumulator = it->second.move_accumulator;
@@ -163,11 +171,8 @@ void RadarServiceImpl::loadRadarData() {
         return;
     }
 
-    // Global targets_ güncelle
     {
         std::lock_guard<std::mutex> lock(targets_mutex_);
-
-        // Ekle/Güncelle
         for (auto& kv : parsed) {
             const std::string& id = kv.first;
             auto it = targets_.find(id);
@@ -175,16 +180,11 @@ void RadarServiceImpl::loadRadarData() {
                 it->second.velocity       = kv.second.velocity;
                 it->second.baro_altitude  = kv.second.baro_altitude;
                 it->second.geo_altitude   = kv.second.geo_altitude;
-                // İstersen pozisyonu da DB’den resetleyebilirsin:
-                // it->second.lat = kv.second.lat;
-                // it->second.lon = kv.second.lon;
             } else {
                 targets_.emplace(id, std::move(kv.second));
                 std::cout << "Target eklendi: " << id << std::endl;
             }
         }
-
-        // Sil
         for (auto it = targets_.begin(); it != targets_.end();) {
             if (seen_ids.find(it->first) == seen_ids.end()) {
                 std::cout << "Target silindi: " << it->first << std::endl;
@@ -193,7 +193,6 @@ void RadarServiceImpl::loadRadarData() {
                 ++it;
             }
         }
-
         std::cout << "Reloaded from MongoDB. Active targets: " << targets_.size() << std::endl;
     }
 }
@@ -202,7 +201,6 @@ void RadarServiceImpl::smartLoadRadarData() {
     loadRadarData();
 }
 
-// ---------------------- gRPC Akış ----------------------
 grpc::Status RadarServiceImpl::StreamRadarTargets(
     grpc::ServerContext *context,
     const radar::StreamRequest *request,
@@ -228,40 +226,71 @@ void RadarServiceImpl::sendRadarFile(
             loadRadarData();
     }
 
-    const int interval_ms = request->refresh_interval_ms() > 0 ? request->refresh_interval_ms() : 1000;
+    const int interval_ms = request->refresh_interval_ms() > 0
+        ? request->refresh_interval_ms()
+        : 1000;
     const double delta_s = interval_ms / 1000.0;
 
-    std::lock_guard<std::mutex> lock(targets_mutex_);
+    // 1) Hedefleri güncelle (drift simülasyonu)
+    {
+        std::lock_guard<std::mutex> lock(targets_mutex_);
+        for (auto &kv : targets_) {
+            MovingTarget &t = kv.second;
 
-    for (auto &kv : targets_) {
-        MovingTarget &t = kv.second;
-
-        // Basit drift (kapamak istersen bu bloğu yoruma al)
-        // velocity birimi “keyfi” olduğundan drift’i küçük tutuyoruz
-        if (t.velocity > 0) {
-            t.move_accumulator += (t.velocity / 100.0) * delta_s; // ölçek faktörü
-            while (t.move_accumulator >= 1.0) {
-                t.lat += t.dlat;
-                t.lon += t.dlon;
-
-                // Türkiye bbox dışına çıkınca yönü ters çevir
-                if (!is_in_tr_bbox(t.lat, t.lon)) {
-                    t.dlat = -t.dlat;
-                    t.dlon = -t.dlon;
-                    // geri bir adım
+            if (t.velocity > 0) {
+                t.move_accumulator += (t.velocity / 100.0) * delta_s;
+                while (t.move_accumulator >= 1.0) {
                     t.lat += t.dlat;
                     t.lon += t.dlon;
+
+                    if (!is_in_tr_bbox(t.lat, t.lon)) {
+                        t.dlat = -t.dlat;
+                        t.dlon = -t.dlon;
+                        t.lat += t.dlat;
+                        t.lon += t.dlon;
+                    }
+                    t.move_accumulator -= 1.0;
                 }
-                t.move_accumulator -= 1.0;
             }
         }
+    }
+
+    // 2) Snapshot al (_id sırası korunuyor)
+    std::vector<MovingTarget> snapshot;
+    {
+        std::lock_guard<std::mutex> lock(targets_mutex_);
+        snapshot.reserve(targets_.size());
+        for (auto &kv : targets_) {
+            snapshot.push_back(kv.second);
+        }
+    }
+
+    // 3) ID ataması (_id sırası sabit olduğu için ID sabit kalır)
+    std::ostringstream oss;
+    int rank = 0;
+
+    for (const MovingTarget &t : snapshot) {
+        ++rank;
+        oss.str(std::string());
+        oss.clear();
+        oss << "ID" << std::setw(3) << std::setfill('0') << rank;
 
         radar::RadarTarget out;
+        out.set_id(oss.str()); // Frontend/IFF ile eşleşecek ID
         out.set_lat(t.lat);
         out.set_lon(t.lon);
         out.set_velocity(t.velocity);
         out.set_baro_altitude(t.baro_altitude);
         out.set_geo_altitude(t.geo_altitude);
+
+        // Debug log
+        std::cout << "[SEND] ID: " << out.id()
+                  << " | Lat: " << out.lat()
+                  << " | Lon: " << out.lon()
+                  << " | Vel: " << out.velocity()
+                  << " | BaroAlt: " << out.baro_altitude()
+                  << " | GeoAlt: " << out.geo_altitude()
+                  << std::endl;
 
         if (!writer->Write(out)) {
             std::cerr << "Writer kapandı, client ayrıldı." << std::endl;

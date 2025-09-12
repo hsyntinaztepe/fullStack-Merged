@@ -1,5 +1,3 @@
-// index.js
-
 // Harita ve kaynaklar
 import './map/initMap.js';
 
@@ -55,21 +53,26 @@ await loadExampleGeoJson();
 await loadRadarTargets();
 
 // === IFF snapshot + Radar stream eşleşme mantığı ===
-let iffTargets = [];
+const iffTargets = new Map();
 
-// Yeni proto'ya uygun IFF stream başlatma
-// Filtre istemezsen lat/lon/radius_km = 0 gönder
+// ID normalize fonksiyonu
+const cleanId = (id) => (id || '').trim().toUpperCase();
+
+// IFF stream başlat (filtre istemezsen lat/lon/radius_km = 0 gönder)
 window.iff.startStream({
   lat: 0,
   lon: 0,
   radius_km: 0
 });
 
-// IFF verisi geldikçe topla
+// IFF verisi geldikçe kaydet
 window.iff.onStreamData((data) => {
   if (!data) return;
+  const id = cleanId(data.id);
   console.log('[IFF STREAM]', data);
-  iffTargets.push({
+
+  iffTargets.set(id, {
+    id,
     status: data.status,
     lat: data.lat,
     lon: data.lon,
@@ -87,12 +90,19 @@ let radarRendererListenerAttached = false;
 window.iff.onStreamEnd(() => {
   console.log('[IFF STREAM] End of stream, starting radar stream...');
 
-  // Renderer konsoluna radar verisini de bas
   if (!radarRendererListenerAttached) {
     radarRendererListenerAttached = true;
 
     window.radar.onStreamData((t) => {
+      const id = cleanId(t.id);
       console.log('[RADAR STREAM - Renderer]', t);
+
+      const iffMatch = iffTargets.get(id);
+      if (iffMatch) {
+        console.log('[MATCH FOUND]', { radar: t, iff: iffMatch });
+      } else {
+        console.log('[NO MATCH]', id);
+      }
     });
 
     window.radar.onStreamError?.((err) => {

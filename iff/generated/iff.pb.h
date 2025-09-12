@@ -185,6 +185,7 @@ class IFFData final :
   enum : int {
     kStatusFieldNumber = 1,
     kCallsignFieldNumber = 4,
+    kIdFieldNumber = 5,
     kLatFieldNumber = 2,
     kLonFieldNumber = 3,
   };
@@ -216,6 +217,20 @@ class IFFData final :
   std::string* _internal_mutable_callsign();
   public:
 
+  // string id = 5;
+  void clear_id();
+  const std::string& id() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_id(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_id();
+  PROTOBUF_NODISCARD std::string* release_id();
+  void set_allocated_id(std::string* id);
+  private:
+  const std::string& _internal_id() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_id(const std::string& value);
+  std::string* _internal_mutable_id();
+  public:
+
   // double lat = 2;
   void clear_lat();
   double lat() const;
@@ -243,6 +258,7 @@ class IFFData final :
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr status_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr callsign_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr id_;
   double lat_;
   double lon_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
@@ -714,6 +730,56 @@ inline void IFFData::set_allocated_callsign(std::string* callsign) {
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
   // @@protoc_insertion_point(field_set_allocated:iff.IFFData.callsign)
+}
+
+// string id = 5;
+inline void IFFData::clear_id() {
+  id_.ClearToEmpty();
+}
+inline const std::string& IFFData::id() const {
+  // @@protoc_insertion_point(field_get:iff.IFFData.id)
+  return _internal_id();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void IFFData::set_id(ArgT0&& arg0, ArgT... args) {
+ 
+ id_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:iff.IFFData.id)
+}
+inline std::string* IFFData::mutable_id() {
+  std::string* _s = _internal_mutable_id();
+  // @@protoc_insertion_point(field_mutable:iff.IFFData.id)
+  return _s;
+}
+inline const std::string& IFFData::_internal_id() const {
+  return id_.Get();
+}
+inline void IFFData::_internal_set_id(const std::string& value) {
+  
+  id_.Set(value, GetArenaForAllocation());
+}
+inline std::string* IFFData::_internal_mutable_id() {
+  
+  return id_.Mutable(GetArenaForAllocation());
+}
+inline std::string* IFFData::release_id() {
+  // @@protoc_insertion_point(field_release:iff.IFFData.id)
+  return id_.Release();
+}
+inline void IFFData::set_allocated_id(std::string* id) {
+  if (id != nullptr) {
+    
+  } else {
+    
+  }
+  id_.SetAllocated(id, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (id_.IsDefault()) {
+    id_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:iff.IFFData.id)
 }
 
 // -------------------------------------------------------------------

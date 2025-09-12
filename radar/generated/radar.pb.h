@@ -60,193 +60,6 @@ namespace radar {
 
 // ===================================================================
 
-class RadarTarget final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:radar.RadarTarget) */ {
- public:
-  inline RadarTarget() : RadarTarget(nullptr) {}
-  ~RadarTarget() override;
-  explicit PROTOBUF_CONSTEXPR RadarTarget(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  RadarTarget(const RadarTarget& from);
-  RadarTarget(RadarTarget&& from) noexcept
-    : RadarTarget() {
-    *this = ::std::move(from);
-  }
-
-  inline RadarTarget& operator=(const RadarTarget& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline RadarTarget& operator=(RadarTarget&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetOwningArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const RadarTarget& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const RadarTarget* internal_default_instance() {
-    return reinterpret_cast<const RadarTarget*>(
-               &_RadarTarget_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    0;
-
-  friend void swap(RadarTarget& a, RadarTarget& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(RadarTarget* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetOwningArena() != nullptr &&
-        GetOwningArena() == other->GetOwningArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetOwningArena() == other->GetOwningArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(RadarTarget* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  RadarTarget* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<RadarTarget>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const RadarTarget& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const RadarTarget& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  uint8_t* _InternalSerialize(
-      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(RadarTarget* other);
-
-  private:
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "radar.RadarTarget";
-  }
-  protected:
-  explicit RadarTarget(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kLatFieldNumber = 1,
-    kLonFieldNumber = 2,
-    kVelocityFieldNumber = 3,
-    kBaroAltitudeFieldNumber = 4,
-    kGeoAltitudeFieldNumber = 5,
-  };
-  // double lat = 1;
-  void clear_lat();
-  double lat() const;
-  void set_lat(double value);
-  private:
-  double _internal_lat() const;
-  void _internal_set_lat(double value);
-  public:
-
-  // double lon = 2;
-  void clear_lon();
-  double lon() const;
-  void set_lon(double value);
-  private:
-  double _internal_lon() const;
-  void _internal_set_lon(double value);
-  public:
-
-  // int32 velocity = 3;
-  void clear_velocity();
-  int32_t velocity() const;
-  void set_velocity(int32_t value);
-  private:
-  int32_t _internal_velocity() const;
-  void _internal_set_velocity(int32_t value);
-  public:
-
-  // int32 baro_altitude = 4;
-  void clear_baro_altitude();
-  int32_t baro_altitude() const;
-  void set_baro_altitude(int32_t value);
-  private:
-  int32_t _internal_baro_altitude() const;
-  void _internal_set_baro_altitude(int32_t value);
-  public:
-
-  // int32 geo_altitude = 5;
-  void clear_geo_altitude();
-  int32_t geo_altitude() const;
-  void set_geo_altitude(int32_t value);
-  private:
-  int32_t _internal_geo_altitude() const;
-  void _internal_set_geo_altitude(int32_t value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:radar.RadarTarget)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  double lat_;
-  double lon_;
-  int32_t velocity_;
-  int32_t baro_altitude_;
-  int32_t geo_altitude_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_radar_2eproto;
-};
-// -------------------------------------------------------------------
-
 class StreamRequest final :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:radar.StreamRequest) */ {
  public:
@@ -295,7 +108,7 @@ class StreamRequest final :
                &_StreamRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    0;
 
   friend void swap(StreamRequest& a, StreamRequest& b) {
     a.Swap(&b);
@@ -366,8 +179,23 @@ class StreamRequest final :
   // accessors -------------------------------------------------------
 
   enum : int {
+    kFilterFieldNumber = 2,
     kRefreshIntervalMsFieldNumber = 1,
   };
+  // string filter = 2;
+  void clear_filter();
+  const std::string& filter() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_filter(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_filter();
+  PROTOBUF_NODISCARD std::string* release_filter();
+  void set_allocated_filter(std::string* filter);
+  private:
+  const std::string& _internal_filter() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_filter(const std::string& value);
+  std::string* _internal_mutable_filter();
+  public:
+
   // int32 refresh_interval_ms = 1;
   void clear_refresh_interval_ms();
   int32_t refresh_interval_ms() const;
@@ -384,7 +212,211 @@ class StreamRequest final :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr filter_;
   int32_t refresh_interval_ms_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_radar_2eproto;
+};
+// -------------------------------------------------------------------
+
+class RadarTarget final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:radar.RadarTarget) */ {
+ public:
+  inline RadarTarget() : RadarTarget(nullptr) {}
+  ~RadarTarget() override;
+  explicit PROTOBUF_CONSTEXPR RadarTarget(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  RadarTarget(const RadarTarget& from);
+  RadarTarget(RadarTarget&& from) noexcept
+    : RadarTarget() {
+    *this = ::std::move(from);
+  }
+
+  inline RadarTarget& operator=(const RadarTarget& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline RadarTarget& operator=(RadarTarget&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const RadarTarget& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const RadarTarget* internal_default_instance() {
+    return reinterpret_cast<const RadarTarget*>(
+               &_RadarTarget_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(RadarTarget& a, RadarTarget& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(RadarTarget* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(RadarTarget* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  RadarTarget* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<RadarTarget>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
+  void CopyFrom(const RadarTarget& from);
+  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
+  void MergeFrom(const RadarTarget& from);
+  private:
+  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
+  public:
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  uint8_t* _InternalSerialize(
+      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(RadarTarget* other);
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "radar.RadarTarget";
+  }
+  protected:
+  explicit RadarTarget(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kIdFieldNumber = 6,
+    kLatFieldNumber = 1,
+    kLonFieldNumber = 2,
+    kVelocityFieldNumber = 3,
+    kBaroAltitudeFieldNumber = 4,
+    kGeoAltitudeFieldNumber = 5,
+  };
+  // string id = 6;
+  void clear_id();
+  const std::string& id() const;
+  template <typename ArgT0 = const std::string&, typename... ArgT>
+  void set_id(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_id();
+  PROTOBUF_NODISCARD std::string* release_id();
+  void set_allocated_id(std::string* id);
+  private:
+  const std::string& _internal_id() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_id(const std::string& value);
+  std::string* _internal_mutable_id();
+  public:
+
+  // double lat = 1;
+  void clear_lat();
+  double lat() const;
+  void set_lat(double value);
+  private:
+  double _internal_lat() const;
+  void _internal_set_lat(double value);
+  public:
+
+  // double lon = 2;
+  void clear_lon();
+  double lon() const;
+  void set_lon(double value);
+  private:
+  double _internal_lon() const;
+  void _internal_set_lon(double value);
+  public:
+
+  // int32 velocity = 3;
+  void clear_velocity();
+  int32_t velocity() const;
+  void set_velocity(int32_t value);
+  private:
+  int32_t _internal_velocity() const;
+  void _internal_set_velocity(int32_t value);
+  public:
+
+  // int32 baro_altitude = 4;
+  void clear_baro_altitude();
+  int32_t baro_altitude() const;
+  void set_baro_altitude(int32_t value);
+  private:
+  int32_t _internal_baro_altitude() const;
+  void _internal_set_baro_altitude(int32_t value);
+  public:
+
+  // int32 geo_altitude = 5;
+  void clear_geo_altitude();
+  int32_t geo_altitude() const;
+  void set_geo_altitude(int32_t value);
+  private:
+  int32_t _internal_geo_altitude() const;
+  void _internal_set_geo_altitude(int32_t value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:radar.RadarTarget)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr id_;
+  double lat_;
+  double lon_;
+  int32_t velocity_;
+  int32_t baro_altitude_;
+  int32_t geo_altitude_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_radar_2eproto;
 };
@@ -397,7 +429,131 @@ class StreamRequest final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// StreamRequest
+
+// int32 refresh_interval_ms = 1;
+inline void StreamRequest::clear_refresh_interval_ms() {
+  refresh_interval_ms_ = 0;
+}
+inline int32_t StreamRequest::_internal_refresh_interval_ms() const {
+  return refresh_interval_ms_;
+}
+inline int32_t StreamRequest::refresh_interval_ms() const {
+  // @@protoc_insertion_point(field_get:radar.StreamRequest.refresh_interval_ms)
+  return _internal_refresh_interval_ms();
+}
+inline void StreamRequest::_internal_set_refresh_interval_ms(int32_t value) {
+  
+  refresh_interval_ms_ = value;
+}
+inline void StreamRequest::set_refresh_interval_ms(int32_t value) {
+  _internal_set_refresh_interval_ms(value);
+  // @@protoc_insertion_point(field_set:radar.StreamRequest.refresh_interval_ms)
+}
+
+// string filter = 2;
+inline void StreamRequest::clear_filter() {
+  filter_.ClearToEmpty();
+}
+inline const std::string& StreamRequest::filter() const {
+  // @@protoc_insertion_point(field_get:radar.StreamRequest.filter)
+  return _internal_filter();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void StreamRequest::set_filter(ArgT0&& arg0, ArgT... args) {
+ 
+ filter_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:radar.StreamRequest.filter)
+}
+inline std::string* StreamRequest::mutable_filter() {
+  std::string* _s = _internal_mutable_filter();
+  // @@protoc_insertion_point(field_mutable:radar.StreamRequest.filter)
+  return _s;
+}
+inline const std::string& StreamRequest::_internal_filter() const {
+  return filter_.Get();
+}
+inline void StreamRequest::_internal_set_filter(const std::string& value) {
+  
+  filter_.Set(value, GetArenaForAllocation());
+}
+inline std::string* StreamRequest::_internal_mutable_filter() {
+  
+  return filter_.Mutable(GetArenaForAllocation());
+}
+inline std::string* StreamRequest::release_filter() {
+  // @@protoc_insertion_point(field_release:radar.StreamRequest.filter)
+  return filter_.Release();
+}
+inline void StreamRequest::set_allocated_filter(std::string* filter) {
+  if (filter != nullptr) {
+    
+  } else {
+    
+  }
+  filter_.SetAllocated(filter, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (filter_.IsDefault()) {
+    filter_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:radar.StreamRequest.filter)
+}
+
+// -------------------------------------------------------------------
+
 // RadarTarget
+
+// string id = 6;
+inline void RadarTarget::clear_id() {
+  id_.ClearToEmpty();
+}
+inline const std::string& RadarTarget::id() const {
+  // @@protoc_insertion_point(field_get:radar.RadarTarget.id)
+  return _internal_id();
+}
+template <typename ArgT0, typename... ArgT>
+inline PROTOBUF_ALWAYS_INLINE
+void RadarTarget::set_id(ArgT0&& arg0, ArgT... args) {
+ 
+ id_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:radar.RadarTarget.id)
+}
+inline std::string* RadarTarget::mutable_id() {
+  std::string* _s = _internal_mutable_id();
+  // @@protoc_insertion_point(field_mutable:radar.RadarTarget.id)
+  return _s;
+}
+inline const std::string& RadarTarget::_internal_id() const {
+  return id_.Get();
+}
+inline void RadarTarget::_internal_set_id(const std::string& value) {
+  
+  id_.Set(value, GetArenaForAllocation());
+}
+inline std::string* RadarTarget::_internal_mutable_id() {
+  
+  return id_.Mutable(GetArenaForAllocation());
+}
+inline std::string* RadarTarget::release_id() {
+  // @@protoc_insertion_point(field_release:radar.RadarTarget.id)
+  return id_.Release();
+}
+inline void RadarTarget::set_allocated_id(std::string* id) {
+  if (id != nullptr) {
+    
+  } else {
+    
+  }
+  id_.SetAllocated(id, GetArenaForAllocation());
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (id_.IsDefault()) {
+    id_.Set("", GetArenaForAllocation());
+  }
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  // @@protoc_insertion_point(field_set_allocated:radar.RadarTarget.id)
+}
 
 // double lat = 1;
 inline void RadarTarget::clear_lat() {
@@ -497,30 +653,6 @@ inline void RadarTarget::_internal_set_geo_altitude(int32_t value) {
 inline void RadarTarget::set_geo_altitude(int32_t value) {
   _internal_set_geo_altitude(value);
   // @@protoc_insertion_point(field_set:radar.RadarTarget.geo_altitude)
-}
-
-// -------------------------------------------------------------------
-
-// StreamRequest
-
-// int32 refresh_interval_ms = 1;
-inline void StreamRequest::clear_refresh_interval_ms() {
-  refresh_interval_ms_ = 0;
-}
-inline int32_t StreamRequest::_internal_refresh_interval_ms() const {
-  return refresh_interval_ms_;
-}
-inline int32_t StreamRequest::refresh_interval_ms() const {
-  // @@protoc_insertion_point(field_get:radar.StreamRequest.refresh_interval_ms)
-  return _internal_refresh_interval_ms();
-}
-inline void StreamRequest::_internal_set_refresh_interval_ms(int32_t value) {
-  
-  refresh_interval_ms_ = value;
-}
-inline void StreamRequest::set_refresh_interval_ms(int32_t value) {
-  _internal_set_refresh_interval_ms(value);
-  // @@protoc_insertion_point(field_set:radar.StreamRequest.refresh_interval_ms)
 }
 
 #ifdef __GNUC__

@@ -4,11 +4,13 @@ package iff;
 
 // Tek bir IFF verisi
 message IFFData {
-  string status = 1;    // Dost / Düşman / Belirsiz vb.
-  double lat = 2;       // Enlem
-  double lon = 3;       // Boylam
-  string callsign = 4;  // Sadece dost ise gerçek kimlik, aksi halde "UNKNOWN"
+    string status = 1;
+    double lat = 2;
+    double lon = 3;
+    string callsign = 4;
+    string id = 5; // yeni eklenen alan
 }
+
 
 // İstemciden gelen istek
 message IFFRequest {

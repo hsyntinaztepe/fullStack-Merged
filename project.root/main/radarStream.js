@@ -19,13 +19,15 @@ ipcMain.on('radar:startStream', (event, args) => {
 
   call.on('data', (target) => {
     // === Konsola basma eklendi ===
-    console.log(
-      `[STREAM] lat=${target.lat?.toFixed?.(5) ?? target.lat}, ` +
-      `lon=${target.lon?.toFixed?.(5) ?? target.lon}, ` +
-      `velocity=${target.velocity}, ` +
-      `baroAlt=${target.baro_altitude}, ` +
-      `geoAlt=${target.geo_altitude}`
-    );
+  console.log(
+    `[STREAM] id=${target.id}, ` +
+    `lat=${target.lat?.toFixed?.(5) ?? target.lat}, ` +
+    `lon=${target.lon?.toFixed?.(5) ?? target.lon}, ` +
+    `velocity=${target.velocity}, ` +
+    `baroAlt=${target.baro_altitude}, ` +
+    `geoAlt=${target.geo_altitude}`
+  );
+
     // =============================
 
     event.sender.send('radar:streamData', target);

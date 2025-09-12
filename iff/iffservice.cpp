@@ -8,10 +8,10 @@
 #include <thread>
 #include <chrono>
 #include <cstdint>
-#include <unordered_map>
-#include <mutex>
-#include <cstdlib>
-#include <ctime>
+#include <vector>
+#include <algorithm>
+#include <sstream>
+#include <iomanip>
 
 // MongoDB C++ Driver
 #include <bsoncxx/json.hpp>
@@ -23,7 +23,7 @@
 // Programda 1 kez instance
 static mongocxx::instance s_mongo_instance{};
 
-// Constructor tanımı
+// Constructor
 IFFServiceImpl::IFFServiceImpl(std::string mongo_uri,
                                std::string db_name,
                                std::string coll_name)
@@ -33,8 +33,11 @@ IFFServiceImpl::IFFServiceImpl(std::string mongo_uri,
 {
 }
 
-// Güvenli string çıkarıcı
-static inline std::string get_string_utf8(const bsoncxx::document::view& v, const char* key, const std::string& def = {}) {
+// -------- Yardımcı fonksiyonlar (header'da static üye olarak bildirildi) --------
+
+std::string IFFServiceImpl::get_string_utf8(const bsoncxx::document::view& v,
+                                            const char* key,
+                                            const std::string& def) {
     auto elem = v[key];
     if (!elem) return def;
     if (elem.type() == bsoncxx::type::k_string) {
@@ -44,8 +47,9 @@ static inline std::string get_string_utf8(const bsoncxx::document::view& v, cons
     return def;
 }
 
-// Güvenli double çıkarıcı
-static inline bool get_double_safe(const bsoncxx::document::view& v, const char* key, double& out) {
+bool IFFServiceImpl::get_double_safe(const bsoncxx::document::view& v,
+                                     const char* key,
+                                     double& out) {
     auto elem = v[key];
     if (!elem) return false;
     switch (elem.type()) {
@@ -56,10 +60,11 @@ static inline bool get_double_safe(const bsoncxx::document::view& v, const char*
     }
 }
 
-// Türkiye bbox doğrulaması (lat/lon)
-static inline bool is_in_tr_bbox(double lat, double lon) {
+bool IFFServiceImpl::is_in_tr_bbox(double lat, double lon) {
     return (lat >= 36.0 && lat <= 42.0 && lon >= 26.0 && lon <= 45.0);
 }
+
+// -------- Ana streaming metodu --------
 
 grpc::Status IFFServiceImpl::StreamIFFData(
     grpc::ServerContext* context,
@@ -71,8 +76,16 @@ grpc::Status IFFServiceImpl::StreamIFFData(
         auto db   = conn[db_name_];
         auto coll = db[coll_name_];
 
-        auto cursor = coll.find({});
+        struct IFFRecord {
+            std::string callsign;
+            std::string status;
+            double lat;
+            double lon;
+        };
 
+        std::vector<IFFRecord> records;
+
+        auto cursor = coll.find({});
         for (auto&& doc : cursor) {
             std::string callsign = get_string_utf8(doc, "callsign", "UNKNOWN");
             std::string status   = get_string_utf8(doc, "status", "UNKNOWN");
@@ -81,34 +94,56 @@ grpc::Status IFFServiceImpl::StreamIFFData(
             if (!get_double_safe(doc, "lat", lat)) continue;
             if (!get_double_safe(doc, "lon", lon)) continue;
 
-            // Türkiye sınırları dışında ise atla
             if (!is_in_tr_bbox(lat, lon)) continue;
+
+            records.push_back({callsign, status, lat, lon});
+        }
+
+        // Lat → Lon → Callsign sırasına göre sırala
+        std::sort(records.begin(), records.end(),
+            [](const IFFRecord& a, const IFFRecord& b) {
+                if (a.lat != b.lat) return a.lat < b.lat;
+                if (a.lon != b.lon) return a.lon < b.lon;
+                return a.callsign < b.callsign;
+            });
+
+        // ID üret ve gönder
+        std::ostringstream oss;
+        int rank = 0;
+
+        for (const auto& rec : records) {
+            ++rank;
+            oss.str(std::string());
+            oss.clear();
+            oss << "ID" << std::setw(3) << std::setfill('0') << rank;
 
             iff::IFFStreamResponse resp;
             iff::IFFData* data = resp.mutable_data();
-            data->set_status(status);
-            data->set_lat(lat);
-            data->set_lon(lon);
-            data->set_callsign(callsign);
+            data->set_id(oss.str()); // proto'da string id = 5; olmalı
+            data->set_status(rec.status);
+            data->set_lat(rec.lat);
+            data->set_lon(rec.lon);
+            data->set_callsign(rec.callsign);
 
             // Konsola log
-            std::cout << "[IFF] callsign=" << callsign
-                      << " status=" << status
-                      << " lat=" << lat
-                      << " lon=" << lon << std::endl;
+            std::cout << "[IFF] ID: " << data->id()
+                      << " | Callsign: " << data->callsign()
+                      << " | Status: " << data->status()
+                      << " | Lat: " << data->lat()
+                      << " | Lon: " << data->lon()
+                      << std::endl;
 
             if (!writer->Write(resp)) {
                 std::cerr << "[IFF] Client disconnected." << std::endl;
                 break;
             }
 
-            // İstersen küçük bir gecikme ekleyebilirsin
-            std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
             if (context->IsCancelled()) {
                 std::cout << "[IFF] Stream cancelled by client." << std::endl;
                 break;
             }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
         }
 
     } catch (const std::exception& e) {

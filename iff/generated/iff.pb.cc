@@ -25,6 +25,7 @@ PROTOBUF_CONSTEXPR IFFData::IFFData(
     ::_pbi::ConstantInitialized)
   : status_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
   , callsign_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , id_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
   , lat_(0)
   , lon_(0){}
 struct IFFDataDefaultTypeInternal {
@@ -78,6 +79,7 @@ const uint32_t TableStruct_iff_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(prot
   PROTOBUF_FIELD_OFFSET(::iff::IFFData, lat_),
   PROTOBUF_FIELD_OFFSET(::iff::IFFData, lon_),
   PROTOBUF_FIELD_OFFSET(::iff::IFFData, callsign_),
+  PROTOBUF_FIELD_OFFSET(::iff::IFFData, id_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::iff::IFFRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -97,8 +99,8 @@ const uint32_t TableStruct_iff_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(prot
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::iff::IFFData)},
-  { 10, -1, -1, sizeof(::iff::IFFRequest)},
-  { 19, -1, -1, sizeof(::iff::IFFStreamResponse)},
+  { 11, -1, -1, sizeof(::iff::IFFRequest)},
+  { 20, -1, -1, sizeof(::iff::IFFStreamResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
@@ -108,17 +110,18 @@ static const ::_pb::Message* const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_iff_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\tiff.proto\022\003iff\"E\n\007IFFData\022\016\n\006status\030\001 "
+  "\n\tiff.proto\022\003iff\"Q\n\007IFFData\022\016\n\006status\030\001 "
   "\001(\t\022\013\n\003lat\030\002 \001(\001\022\013\n\003lon\030\003 \001(\001\022\020\n\010callsig"
-  "n\030\004 \001(\t\"9\n\nIFFRequest\022\013\n\003lat\030\001 \001(\001\022\013\n\003lo"
-  "n\030\002 \001(\001\022\021\n\tradius_km\030\003 \001(\001\"/\n\021IFFStreamR"
-  "esponse\022\032\n\004data\030\001 \001(\0132\014.iff.IFFData2H\n\nI"
-  "FFService\022:\n\rStreamIFFData\022\017.iff.IFFRequ"
-  "est\032\026.iff.IFFStreamResponse0\001b\006proto3"
+  "n\030\004 \001(\t\022\n\n\002id\030\005 \001(\t\"9\n\nIFFRequest\022\013\n\003lat"
+  "\030\001 \001(\001\022\013\n\003lon\030\002 \001(\001\022\021\n\tradius_km\030\003 \001(\001\"/"
+  "\n\021IFFStreamResponse\022\032\n\004data\030\001 \001(\0132\014.iff."
+  "IFFData2H\n\nIFFService\022:\n\rStreamIFFData\022\017"
+  ".iff.IFFRequest\032\026.iff.IFFStreamResponse0"
+  "\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_iff_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_iff_2eproto = {
-    false, false, 277, descriptor_table_protodef_iff_2eproto,
+    false, false, 289, descriptor_table_protodef_iff_2eproto,
     "iff.proto",
     &descriptor_table_iff_2eproto_once, nullptr, 0, 3,
     schemas, file_default_instances, TableStruct_iff_2eproto::offsets,
@@ -164,6 +167,14 @@ IFFData::IFFData(const IFFData& from)
     callsign_.Set(from._internal_callsign(), 
       GetArenaForAllocation());
   }
+  id_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    id_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_id().empty()) {
+    id_.Set(from._internal_id(), 
+      GetArenaForAllocation());
+  }
   ::memcpy(&lat_, &from.lat_,
     static_cast<size_t>(reinterpret_cast<char*>(&lon_) -
     reinterpret_cast<char*>(&lat_)) + sizeof(lon_));
@@ -178,6 +189,10 @@ status_.InitDefault();
 callsign_.InitDefault();
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
   callsign_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+id_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  id_.Set("", GetArenaForAllocation());
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&lat_) - reinterpret_cast<char*>(this)),
@@ -198,6 +213,7 @@ inline void IFFData::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   status_.Destroy();
   callsign_.Destroy();
+  id_.Destroy();
 }
 
 void IFFData::SetCachedSize(int size) const {
@@ -212,6 +228,7 @@ void IFFData::Clear() {
 
   status_.ClearToEmpty();
   callsign_.ClearToEmpty();
+  id_.ClearToEmpty();
   ::memset(&lat_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&lon_) -
       reinterpret_cast<char*>(&lat_)) + sizeof(lon_));
@@ -257,6 +274,16 @@ const char* IFFData::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) 
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
           CHK_(::_pbi::VerifyUTF8(str, "iff.IFFData.callsign"));
+        } else
+          goto handle_unusual;
+        continue;
+      // string id = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 42)) {
+          auto str = _internal_mutable_id();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "iff.IFFData.id"));
         } else
           goto handle_unusual;
         continue;
@@ -329,6 +356,16 @@ uint8_t* IFFData::_InternalSerialize(
         4, this->_internal_callsign(), target);
   }
 
+  // string id = 5;
+  if (!this->_internal_id().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_id().data(), static_cast<int>(this->_internal_id().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "iff.IFFData.id");
+    target = stream->WriteStringMaybeAliased(
+        5, this->_internal_id(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -357,6 +394,13 @@ size_t IFFData::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_callsign());
+  }
+
+  // string id = 5;
+  if (!this->_internal_id().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_id());
   }
 
   // double lat = 2;
@@ -405,6 +449,9 @@ void IFFData::MergeFrom(const IFFData& from) {
   if (!from._internal_callsign().empty()) {
     _internal_set_callsign(from._internal_callsign());
   }
+  if (!from._internal_id().empty()) {
+    _internal_set_id(from._internal_id());
+  }
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_lat = from._internal_lat();
   uint64_t raw_lat;
@@ -445,6 +492,10 @@ void IFFData::InternalSwap(IFFData* other) {
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
       &callsign_, lhs_arena,
       &other->callsign_, rhs_arena
+  );
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &id_, lhs_arena,
+      &other->id_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(IFFData, lon_)

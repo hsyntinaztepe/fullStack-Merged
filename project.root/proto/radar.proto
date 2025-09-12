@@ -1,9 +1,17 @@
+// radar.proto
 syntax = "proto3";
 
 package radar;
 
-// MongoDB dokümanına birebir uyumlu radar hedefi
+message StreamRequest {
+  int32 refresh_interval_ms = 1;
+  string filter = 2; // varsa
+}
+
 message RadarTarget {
+  // YENİ ALAN
+  string id = 6;
+
   double lat = 1;
   double lon = 2;
   int32 velocity = 3;
@@ -11,12 +19,6 @@ message RadarTarget {
   int32 geo_altitude = 5;
 }
 
-// Streaming isteği (sadece refresh süresi)
-message StreamRequest {
-  int32 refresh_interval_ms = 1;
-}
-
-// Radar servisi — sadece streaming
 service RadarService {
-  rpc StreamRadarTargets(StreamRequest) returns (stream RadarTarget);
+  rpc StreamRadarTargets (StreamRequest) returns (stream RadarTarget);
 }

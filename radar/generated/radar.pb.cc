@@ -21,9 +21,23 @@ namespace _pb = ::PROTOBUF_NAMESPACE_ID;
 namespace _pbi = _pb::internal;
 
 namespace radar {
+PROTOBUF_CONSTEXPR StreamRequest::StreamRequest(
+    ::_pbi::ConstantInitialized)
+  : filter_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , refresh_interval_ms_(0){}
+struct StreamRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR StreamRequestDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~StreamRequestDefaultTypeInternal() {}
+  union {
+    StreamRequest _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StreamRequestDefaultTypeInternal _StreamRequest_default_instance_;
 PROTOBUF_CONSTEXPR RadarTarget::RadarTarget(
     ::_pbi::ConstantInitialized)
-  : lat_(0)
+  : id_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , lat_(0)
   , lon_(0)
   , velocity_(0)
   , baro_altitude_(0)
@@ -37,18 +51,6 @@ struct RadarTargetDefaultTypeInternal {
   };
 };
 PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 RadarTargetDefaultTypeInternal _RadarTarget_default_instance_;
-PROTOBUF_CONSTEXPR StreamRequest::StreamRequest(
-    ::_pbi::ConstantInitialized)
-  : refresh_interval_ms_(0){}
-struct StreamRequestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR StreamRequestDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
-  ~StreamRequestDefaultTypeInternal() {}
-  union {
-    StreamRequest _instance;
-  };
-};
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StreamRequestDefaultTypeInternal _StreamRequest_default_instance_;
 }  // namespace radar
 static ::_pb::Metadata file_level_metadata_radar_2eproto[2];
 static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_radar_2eproto = nullptr;
@@ -56,46 +58,49 @@ static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors
 
 const uint32_t TableStruct_radar_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, lat_),
-  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, lon_),
-  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, velocity_),
-  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, baro_altitude_),
-  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, geo_altitude_),
-  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::radar::StreamRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
   PROTOBUF_FIELD_OFFSET(::radar::StreamRequest, refresh_interval_ms_),
+  PROTOBUF_FIELD_OFFSET(::radar::StreamRequest, filter_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  ~0u,  // no _inlined_string_donated_
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, id_),
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, lat_),
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, lon_),
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, velocity_),
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, baro_altitude_),
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, geo_altitude_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::radar::RadarTarget)},
-  { 11, -1, -1, sizeof(::radar::StreamRequest)},
+  { 0, -1, -1, sizeof(::radar::StreamRequest)},
+  { 8, -1, -1, sizeof(::radar::RadarTarget)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::radar::_RadarTarget_default_instance_._instance,
   &::radar::_StreamRequest_default_instance_._instance,
+  &::radar::_RadarTarget_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_radar_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\013radar.proto\022\005radar\"f\n\013RadarTarget\022\013\n\003l"
-  "at\030\001 \001(\001\022\013\n\003lon\030\002 \001(\001\022\020\n\010velocity\030\003 \001(\005\022"
-  "\025\n\rbaro_altitude\030\004 \001(\005\022\024\n\014geo_altitude\030\005"
-  " \001(\005\",\n\rStreamRequest\022\033\n\023refresh_interva"
-  "l_ms\030\001 \001(\0052P\n\014RadarService\022@\n\022StreamRada"
-  "rTargets\022\024.radar.StreamRequest\032\022.radar.R"
-  "adarTarget0\001b\006proto3"
+  "\n\013radar.proto\022\005radar\"<\n\rStreamRequest\022\033\n"
+  "\023refresh_interval_ms\030\001 \001(\005\022\016\n\006filter\030\002 \001"
+  "(\t\"r\n\013RadarTarget\022\n\n\002id\030\006 \001(\t\022\013\n\003lat\030\001 \001"
+  "(\001\022\013\n\003lon\030\002 \001(\001\022\020\n\010velocity\030\003 \001(\005\022\025\n\rbar"
+  "o_altitude\030\004 \001(\005\022\024\n\014geo_altitude\030\005 \001(\0052P"
+  "\n\014RadarService\022@\n\022StreamRadarTargets\022\024.r"
+  "adar.StreamRequest\032\022.radar.RadarTarget0\001"
+  "b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_radar_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_radar_2eproto = {
-    false, false, 260, descriptor_table_protodef_radar_2eproto,
+    false, false, 288, descriptor_table_protodef_radar_2eproto,
     "radar.proto",
     &descriptor_table_radar_2eproto_once, nullptr, 0, 2,
     schemas, file_default_instances, TableStruct_radar_2eproto::offsets,
@@ -112,6 +117,227 @@ namespace radar {
 
 // ===================================================================
 
+class StreamRequest::_Internal {
+ public:
+};
+
+StreamRequest::StreamRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
+  SharedCtor();
+  // @@protoc_insertion_point(arena_constructor:radar.StreamRequest)
+}
+StreamRequest::StreamRequest(const StreamRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  filter_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    filter_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_filter().empty()) {
+    filter_.Set(from._internal_filter(), 
+      GetArenaForAllocation());
+  }
+  refresh_interval_ms_ = from.refresh_interval_ms_;
+  // @@protoc_insertion_point(copy_constructor:radar.StreamRequest)
+}
+
+inline void StreamRequest::SharedCtor() {
+filter_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  filter_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+refresh_interval_ms_ = 0;
+}
+
+StreamRequest::~StreamRequest() {
+  // @@protoc_insertion_point(destructor:radar.StreamRequest)
+  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
+  (void)arena;
+    return;
+  }
+  SharedDtor();
+}
+
+inline void StreamRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  filter_.Destroy();
+}
+
+void StreamRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+
+void StreamRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:radar.StreamRequest)
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  filter_.ClearToEmpty();
+  refresh_interval_ms_ = 0;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* StreamRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    uint32_t tag;
+    ptr = ::_pbi::ReadTag(ptr, &tag);
+    switch (tag >> 3) {
+      // int32 refresh_interval_ms = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
+          refresh_interval_ms_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string filter = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
+          auto str = _internal_mutable_filter();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "radar.StreamRequest.filter"));
+        } else
+          goto handle_unusual;
+        continue;
+      default:
+        goto handle_unusual;
+    }  // switch
+  handle_unusual:
+    if ((tag == 0) || ((tag & 7) == 4)) {
+      CHK_(ptr);
+      ctx->SetLastTag(tag);
+      goto message_done;
+    }
+    ptr = UnknownFieldParse(
+        tag,
+        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+        ptr, ctx);
+    CHK_(ptr != nullptr);
+  }  // while
+message_done:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto message_done;
+#undef CHK_
+}
+
+uint8_t* StreamRequest::_InternalSerialize(
+    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:radar.StreamRequest)
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int32 refresh_interval_ms = 1;
+  if (this->_internal_refresh_interval_ms() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_refresh_interval_ms(), target);
+  }
+
+  // string filter = 2;
+  if (!this->_internal_filter().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_filter().data(), static_cast<int>(this->_internal_filter().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "radar.StreamRequest.filter");
+    target = stream->WriteStringMaybeAliased(
+        2, this->_internal_filter(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:radar.StreamRequest)
+  return target;
+}
+
+size_t StreamRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:radar.StreamRequest)
+  size_t total_size = 0;
+
+  uint32_t cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // string filter = 2;
+  if (!this->_internal_filter().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_filter());
+  }
+
+  // int32 refresh_interval_ms = 1;
+  if (this->_internal_refresh_interval_ms() != 0) {
+    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_refresh_interval_ms());
+  }
+
+  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
+}
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData StreamRequest::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
+    StreamRequest::MergeImpl
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StreamRequest::GetClassData() const { return &_class_data_; }
+
+void StreamRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+  static_cast<StreamRequest *>(to)->MergeFrom(
+      static_cast<const StreamRequest &>(from));
+}
+
+
+void StreamRequest::MergeFrom(const StreamRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:radar.StreamRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  uint32_t cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!from._internal_filter().empty()) {
+    _internal_set_filter(from._internal_filter());
+  }
+  if (from._internal_refresh_interval_ms() != 0) {
+    _internal_set_refresh_interval_ms(from._internal_refresh_interval_ms());
+  }
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+}
+
+void StreamRequest::CopyFrom(const StreamRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:radar.StreamRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool StreamRequest::IsInitialized() const {
+  return true;
+}
+
+void StreamRequest::InternalSwap(StreamRequest* other) {
+  using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
+  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &filter_, lhs_arena,
+      &other->filter_, rhs_arena
+  );
+  swap(refresh_interval_ms_, other->refresh_interval_ms_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata StreamRequest::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_radar_2eproto_getter, &descriptor_table_radar_2eproto_once,
+      file_level_metadata_radar_2eproto[0]);
+}
+
+// ===================================================================
+
 class RadarTarget::_Internal {
  public:
 };
@@ -125,6 +351,14 @@ RadarTarget::RadarTarget(::PROTOBUF_NAMESPACE_ID::Arena* arena,
 RadarTarget::RadarTarget(const RadarTarget& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  id_.InitDefault();
+  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+    id_.Set("", GetArenaForAllocation());
+  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  if (!from._internal_id().empty()) {
+    id_.Set(from._internal_id(), 
+      GetArenaForAllocation());
+  }
   ::memcpy(&lat_, &from.lat_,
     static_cast<size_t>(reinterpret_cast<char*>(&geo_altitude_) -
     reinterpret_cast<char*>(&lat_)) + sizeof(geo_altitude_));
@@ -132,6 +366,10 @@ RadarTarget::RadarTarget(const RadarTarget& from)
 }
 
 inline void RadarTarget::SharedCtor() {
+id_.InitDefault();
+#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
+  id_.Set("", GetArenaForAllocation());
+#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&lat_) - reinterpret_cast<char*>(this)),
     0, static_cast<size_t>(reinterpret_cast<char*>(&geo_altitude_) -
@@ -149,6 +387,7 @@ RadarTarget::~RadarTarget() {
 
 inline void RadarTarget::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  id_.Destroy();
 }
 
 void RadarTarget::SetCachedSize(int size) const {
@@ -161,6 +400,7 @@ void RadarTarget::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
+  id_.ClearToEmpty();
   ::memset(&lat_, 0, static_cast<size_t>(
       reinterpret_cast<char*>(&geo_altitude_) -
       reinterpret_cast<char*>(&lat_)) + sizeof(geo_altitude_));
@@ -210,6 +450,16 @@ const char* RadarTarget::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
           geo_altitude_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
+        } else
+          goto handle_unusual;
+        continue;
+      // string id = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
+          auto str = _internal_mutable_id();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "radar.RadarTarget.id"));
         } else
           goto handle_unusual;
         continue;
@@ -280,6 +530,16 @@ uint8_t* RadarTarget::_InternalSerialize(
     target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_geo_altitude(), target);
   }
 
+  // string id = 6;
+  if (!this->_internal_id().empty()) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_id().data(), static_cast<int>(this->_internal_id().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "radar.RadarTarget.id");
+    target = stream->WriteStringMaybeAliased(
+        6, this->_internal_id(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -295,6 +555,13 @@ size_t RadarTarget::ByteSizeLong() const {
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
+
+  // string id = 6;
+  if (!this->_internal_id().empty()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_id());
+  }
 
   // double lat = 1;
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
@@ -351,6 +618,9 @@ void RadarTarget::MergeFrom(const RadarTarget& from) {
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
+  if (!from._internal_id().empty()) {
+    _internal_set_id(from._internal_id());
+  }
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_lat = from._internal_lat();
   uint64_t raw_lat;
@@ -390,7 +660,13 @@ bool RadarTarget::IsInitialized() const {
 
 void RadarTarget::InternalSwap(RadarTarget* other) {
   using std::swap;
+  auto* lhs_arena = GetArenaForAllocation();
+  auto* rhs_arena = other->GetArenaForAllocation();
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
+      &id_, lhs_arena,
+      &other->id_, rhs_arena
+  );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
       PROTOBUF_FIELD_OFFSET(RadarTarget, geo_altitude_)
       + sizeof(RadarTarget::geo_altitude_)
@@ -402,190 +678,19 @@ void RadarTarget::InternalSwap(RadarTarget* other) {
 ::PROTOBUF_NAMESPACE_ID::Metadata RadarTarget::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_radar_2eproto_getter, &descriptor_table_radar_2eproto_once,
-      file_level_metadata_radar_2eproto[0]);
-}
-
-// ===================================================================
-
-class StreamRequest::_Internal {
- public:
-};
-
-StreamRequest::StreamRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
-  // @@protoc_insertion_point(arena_constructor:radar.StreamRequest)
-}
-StreamRequest::StreamRequest(const StreamRequest& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  refresh_interval_ms_ = from.refresh_interval_ms_;
-  // @@protoc_insertion_point(copy_constructor:radar.StreamRequest)
-}
-
-inline void StreamRequest::SharedCtor() {
-refresh_interval_ms_ = 0;
-}
-
-StreamRequest::~StreamRequest() {
-  // @@protoc_insertion_point(destructor:radar.StreamRequest)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
-  SharedDtor();
-}
-
-inline void StreamRequest::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-}
-
-void StreamRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-
-void StreamRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:radar.StreamRequest)
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  refresh_interval_ms_ = 0;
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* StreamRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // int32 refresh_interval_ms = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          refresh_interval_ms_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
-}
-
-uint8_t* StreamRequest::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:radar.StreamRequest)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // int32 refresh_interval_ms = 1;
-  if (this->_internal_refresh_interval_ms() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(1, this->_internal_refresh_interval_ms(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:radar.StreamRequest)
-  return target;
-}
-
-size_t StreamRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:radar.StreamRequest)
-  size_t total_size = 0;
-
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // int32 refresh_interval_ms = 1;
-  if (this->_internal_refresh_interval_ms() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_refresh_interval_ms());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
-}
-
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData StreamRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    StreamRequest::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*StreamRequest::GetClassData() const { return &_class_data_; }
-
-void StreamRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<StreamRequest *>(to)->MergeFrom(
-      static_cast<const StreamRequest &>(from));
-}
-
-
-void StreamRequest::MergeFrom(const StreamRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:radar.StreamRequest)
-  GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (from._internal_refresh_interval_ms() != 0) {
-    _internal_set_refresh_interval_ms(from._internal_refresh_interval_ms());
-  }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void StreamRequest::CopyFrom(const StreamRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:radar.StreamRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool StreamRequest::IsInitialized() const {
-  return true;
-}
-
-void StreamRequest::InternalSwap(StreamRequest* other) {
-  using std::swap;
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(refresh_interval_ms_, other->refresh_interval_ms_);
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata StreamRequest::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_radar_2eproto_getter, &descriptor_table_radar_2eproto_once,
       file_level_metadata_radar_2eproto[1]);
 }
 
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace radar
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::radar::RadarTarget*
-Arena::CreateMaybeMessage< ::radar::RadarTarget >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::radar::RadarTarget >(arena);
-}
 template<> PROTOBUF_NOINLINE ::radar::StreamRequest*
 Arena::CreateMaybeMessage< ::radar::StreamRequest >(Arena* arena) {
   return Arena::CreateMessageInternal< ::radar::StreamRequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::radar::RadarTarget*
+Arena::CreateMaybeMessage< ::radar::RadarTarget >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::radar::RadarTarget >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

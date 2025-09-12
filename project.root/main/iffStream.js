@@ -26,11 +26,13 @@ ipcMain.on('iff:startStream', (event, args) => {
   call.on('data', (resp) => {
     // Konsola bas (gelen tüm alanlar)
     console.log('[IFF STREAM]', {
+      id: resp.data?.id,
       status: resp.data?.status,
       lat: resp.data?.lat,
       lon: resp.data?.lon,
       callsign: resp.data?.callsign
     });
+
 
     // Renderer'a gönder
     event.sender.send('iff:streamData', resp.data);
