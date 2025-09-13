@@ -19,6 +19,7 @@
 #include <grpcpp/server_context.h>
 #include <grpcpp/impl/service_type.h>
 #include <grpcpp/support/sync_stream.h>
+#include <grpcpp/ports_def.inc>
 namespace radar {
 
 static const char* RadarService_method_names[] = {
@@ -76,4 +77,5 @@ RadarService::Service::~Service() {
 
 
 }  // namespace radar
+#include <grpcpp/ports_undef.inc>
 

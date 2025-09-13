@@ -1,150 +1,122 @@
 cmake_minimum_required(VERSION 3.16)
-project(IFFService LANGUAGES CXX)
+project(IffService LANGUAGES CXX)
 
-# =========================
-# Genel C++ ayarları
-# =========================
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# =========================
-# Derleyiciye özel ayarlar
-# =========================
+# MinGW için statik linkleme ayarları
 if(MINGW)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -pipe")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
-elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 endif()
 
-# =========================
-# gRPC / Protobuf / Abseil yolları
-# =========================
-set(CMAKE_PREFIX_PATH
-    "C:/users/stj.htinaztepe/desktop/installpc_protobuf3203"  # Protobuf 3.20.3
-    "C:/users/stj.htinaztepe/desktop/installpc"               # gRPC + Abseil
+# -----------------------------
+# gRPC / Protobuf ayarları
+# -----------------------------
+set(CMAKE_PREFIX_PATH "C:/Users/tinaz/Desktop/grpc/install")
+set(gRPC_DIR "C:/Users/tinaz/Desktop/grpc/install/lib/cmake/grpc")
+set(Protobuf_DIR "C:/Users/tinaz/Desktop/grpc/install/lib/cmake/protobuf")
+
+find_package(Protobuf REQUIRED PATHS "C:/Users/tinaz/Desktop/grpc/install" NO_DEFAULT_PATH)
+find_package(gRPC CONFIG REQUIRED PATHS "C:/Users/tinaz/Desktop/grpc/install" NO_DEFAULT_PATH)
+
+set(PROTOC_EXECUTABLE "C:/Users/tinaz/Desktop/grpc/install/bin/protoc.exe")
+set(GRPC_CPP_PLUGIN_EXECUTABLE "C:/Users/tinaz/Desktop/grpc/install/bin/grpc_cpp_plugin.exe")
+
+set(PROTO_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/proto")
+set(PROTO_FILES "${PROTO_SRC_DIR}/iff.proto")
+set(GENERATED_DIR "${CMAKE_CURRENT_SOURCE_DIR}/generated")
+
+add_custom_command(
+    OUTPUT "${GENERATED_DIR}/iff.pb.cc" "${GENERATED_DIR}/iff.pb.h"
+           "${GENERATED_DIR}/iff.grpc.pb.cc" "${GENERATED_DIR}/iff.grpc.pb.h"
+    COMMAND ${PROTOC_EXECUTABLE}
+        -I ${PROTO_SRC_DIR}
+        --cpp_out=${GENERATED_DIR}
+        --grpc_out=${GENERATED_DIR}
+        --plugin=protoc-gen-grpc=${GRPC_CPP_PLUGIN_EXECUTABLE}
+        ${PROTO_FILES}
+    DEPENDS ${PROTO_FILES}
+    COMMENT "Running protoc on ${PROTO_FILES}"
+    VERBATIM
 )
 
-set(Protobuf_PROTOC_EXECUTABLE
-    "C:/users/stj.htinaztepe/desktop/installpc_protobuf3203/bin/protoc.exe"
+set(GENERATED_SRCS
+    ${GENERATED_DIR}/iff.pb.cc
+    ${GENERATED_DIR}/iff.grpc.pb.cc
+)
+set(GENERATED_HDRS
+    ${GENERATED_DIR}/iff.pb.h
+    ${GENERATED_DIR}/iff.grpc.pb.h
 )
 
-find_package(Protobuf REQUIRED)
-find_package(gRPC CONFIG REQUIRED)
-find_package(absl CONFIG REQUIRED)
+# -----------------------------
+# MongoDB C++ driver ayarları
+# -----------------------------
+add_definitions(-DMONGOCXX_STATIC -DBSONCXX_STATIC -DMONGOC_STATIC -DBSON_STATIC)
 
-# =========================
-# MongoDB C++ ve C Driver yolları
-# =========================
-set(MONGO_CXX_INCLUDE_DIR "C:/msys64/home/stj.htinaztepe/mongo-cxx-install/include")
-set(MONGO_C_INCLUDE_DIR   "C:/msys64/home/stj.htinaztepe/mongo-c-driver-install/include")
-set(MONGO_CXX_LIB_DIR     "C:/msys64/home/stj.htinaztepe/mongo-cxx-install/lib")
-set(MONGO_C_LIB_DIR       "C:/msys64/home/stj.htinaztepe/mongo-c-driver-install/lib")
+set(MONGO_CXX_INSTALL_DIR "C:/msys64/home/tinaz/mongo-cxx-install")
+set(MONGO_CXX_INCLUDE_DIR "${MONGO_CXX_INSTALL_DIR}/include")
+set(MONGO_CXX_LIB_DIR     "${MONGO_CXX_INSTALL_DIR}/lib")
 
-# =========================
-# Kaynak dosyalar
-# =========================
-set(SRC_FILES
+# Eğer mongo-c-driver ayrı kuruluysa buradan ekle
+set(MONGO_C_DRIVER_INCLUDE_DIR "${MONGO_CXX_INSTALL_DIR}/include/mongoc-2.0")
+set(BSON_C_DRIVER_INCLUDE_DIR  "${MONGO_CXX_INSTALL_DIR}/include/bson-2.0")
+    
+link_directories(
+    ${MONGO_CXX_LIB_DIR}
+    C:/msys64/home/tinaz/mongo-c-driver-install/lib
+    C:/msys64/home/tinaz/mongo-cxx-install/lib
+)
+
+
+# -----------------------------
+# Executable
+# -----------------------------
+add_executable(iff
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/iffservice.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/generated/iff.pb.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/generated/iff.grpc.pb.cc
+    ${GENERATED_SRCS}
+    ${GENERATED_HDRS}
 )
 
-add_executable(iff_server ${SRC_FILES})
-
-# =========================
 # Include dizinleri
-# =========================
-target_include_directories(iff_server PRIVATE
+target_include_directories(iff PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/proto
-    ${CMAKE_CURRENT_SOURCE_DIR}/generated
-    ${Protobuf_INCLUDE_DIRS}
-
-    ${MONGO_CXX_INCLUDE_DIR}
-    ${MONGO_CXX_INCLUDE_DIR}/mongocxx/v1
-    ${MONGO_CXX_INCLUDE_DIR}/mongocxx/v_noabi
-    ${MONGO_CXX_INCLUDE_DIR}/bsoncxx/v1
-    ${MONGO_CXX_INCLUDE_DIR}/bsoncxx/v_noabi
-
-    ${MONGO_C_INCLUDE_DIR}/mongoc-2.2.0
-    ${MONGO_C_INCLUDE_DIR}/bson-2.2.0
+    ${PROTO_SRC_DIR}
+    ${GENERATED_DIR}
+    C:/msys64/home/tinaz/mongo-cxx-install/include
+    C:/msys64/home/tinaz/mongo-cxx-install/include/bsoncxx/v_noabi
+    C:/msys64/home/tinaz/mongo-cxx-install/include/mongocxx/v_noabi
 )
 
-# =========================
-# Linkleme
-# =========================
-target_link_directories(iff_server PRIVATE
-    ${MONGO_CXX_LIB_DIR}
-    ${MONGO_C_LIB_DIR}
-)
 
-target_compile_definitions(iff_server PRIVATE
-    MONGOCXX_STATIC
-    BSONCXX_STATIC
-    MONGOC_STATIC
-    BSON_STATIC
-)
-
-target_link_libraries(iff_server PRIVATE
+# Link kütüphaneleri
+target_link_libraries(iff PRIVATE
     gRPC::grpc++
-    gRPC::grpc++_reflection
     protobuf::libprotobuf
-    absl::strings
-    absl::base
-
     mongocxx-static
     bsoncxx-static
     mongoc2
     bson2
     zstd
     z
+    ws2_32
+    secur32
+    crypt32
+    bcrypt
+    ncrypt
+    dnsapi
+    advapi32
+    kernel32
+    user32
 )
 
+
+# MinGW ek kütüphaneler
 if(MINGW)
-    target_link_libraries(iff_server PRIVATE
-        ws2_32
-        secur32
-        crypt32
-        bcrypt
-        ncrypt
-        dnsapi
-        advapi32
-        kernel32
-        user32
+    target_link_libraries(iff PRIVATE
+        wsock32
+        winmm
     )
 endif()
-
-# =========================
-# Ninja optimizasyonları
-# =========================
-if(CMAKE_GENERATOR STREQUAL "Ninja")
-    set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Verbose output" FORCE)
-    include(ProcessorCount)
-    ProcessorCount(N)
-    if(NOT N EQUAL 0)
-        set(CMAKE_BUILD_PARALLEL_LEVEL ${N})
-    endif()
-endif()
-
-# =========================
-# Build tipine göre ayarlar
-# =========================
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(iff_server PRIVATE DEBUG=1)
-    if(MINGW)
-        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
-    endif()
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    if(MINGW)
-        set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3 -DNDEBUG")
-    endif()
-endif()
-
-# =========================
-# Install
-# =========================
-install(TARGETS iff_server
-    RUNTIME DESTINATION bin
-)

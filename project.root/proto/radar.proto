@@ -9,16 +9,15 @@ message StreamRequest {
 }
 
 message RadarTarget {
-  // YENİ ALAN
-  string id = 6;
-
-  double lat = 1;
-  double lon = 2;
-  int32 velocity = 3;
-  int32 baro_altitude = 4;
-  int32 geo_altitude = 5;
+  string id = 1;
+  double lat = 2;
+  double lon = 3;
+  int32 velocity = 4;
+  int32 baro_altitude = 5;
+  int32 geo_altitude = 6;
+  double heading = 7;   // yeni
+  bool is_fighter = 8;  // yeni
 }
-
 service RadarService {
   rpc StreamRadarTargets (StreamRequest) returns (stream RadarTarget);
 }
