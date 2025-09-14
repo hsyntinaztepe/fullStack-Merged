@@ -59,6 +59,7 @@ contextBridge.exposeInMainWorld('electronDebug', {
   error: (...args) => console.error('[Renderer]', ...args)
 });
 
+// Log yazma API
 contextBridge.exposeInMainWorld('electron', {
   logWrite: (line) => {
     if (typeof line === 'string' && line.trim()) {
@@ -67,4 +68,16 @@ contextBridge.exposeInMainWorld('electron', {
       console.warn('[Preload] Geçersiz log verisi gönderilmeye çalışıldı:', line);
     }
   }
+});
+
+/* -----------------------------
+   Python Tahmin API Köprüsü
+----------------------------- */
+contextBridge.exposeInMainWorld('api', {
+  /**
+   * Canlı veriyi Python model API'sine gönderip tahmin sonucu döndürür
+   * @param {Object} data - Tek satır canlı veri
+   * @returns {Promise<{prediction:number, probability:number}>}
+   */
+  predict: (data) => ipcRenderer.invoke('predict', data)
 });

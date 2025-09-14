@@ -24,6 +24,7 @@
   "dependencies": {
     "@grpc/grpc-js": "^1.13.4",
     "@grpc/proto-loader": "^0.8.0",
+    "axios": "^1.12.1",
     "ol": "^10.6.1"
   }
 }

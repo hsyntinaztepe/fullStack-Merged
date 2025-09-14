@@ -1,4 +1,3 @@
-// radarStream.js
 import Feature from 'ol/Feature.js';
 import Point from 'ol/geom/Point.js';
 import { fromLonLat } from 'ol/proj.js';
@@ -7,18 +6,14 @@ import { setStatus } from '../ui/status.js';
 
 // Preload'ta expose edilen API
 const { logWrite } = window.electron || {};
+const { predict } = window.api || {}; // Python API tahmin fonksiyonu
 
-// Her hedef için ayrı timer tut
 let targetTimers = new Map();
+let suspiciousTargets = []; // probability > 0 olan hedefler
 
-// ID normalize fonksiyonu
 const cleanId = (id) => (id || '').trim().toUpperCase();
 
-/**
- * XML log kaydı üretip main process’e gönder
- */
 function logMergedCSV(merged) {
-  // CSV başlığı: radar_id,iff_id,callsign,status,lat,lon,velocity,baroAlt,geoAlt
   const csvLine = [
     merged.radarId,
     merged.id,
@@ -30,7 +25,7 @@ function logMergedCSV(merged) {
     merged.baroAlt,
     merged.geoAlt,
     merged.heading
-  ].join(','); // Virgül ile birleştir
+  ].join(',');
 
   console.log('[MERGED JSON]', merged);
   console.log('[MERGED CSV]', csvLine);
@@ -42,10 +37,6 @@ function logMergedCSV(merged) {
   }
 }
 
-
-/**
- * Radar stream’i başlatır ve IFF ile merge eder
- */
 export function startRadarStream(iffTargetsMap) {
   if (!(iffTargetsMap instanceof Map)) {
     console.error('startRadarStream: iffTargetsMap bir Map değil!', iffTargetsMap);
@@ -55,7 +46,7 @@ export function startRadarStream(iffTargetsMap) {
   cleanupAllTargets();
   window.radar.startStream();
 
-  window.radar.onStreamData((t) => {
+  window.radar.onStreamData(async (t) => {
     const lat = parseFloat(t.lat ?? t.y_coordinate);
     const lon = parseFloat(t.lon ?? t.x_coordinate);
 
@@ -86,6 +77,52 @@ export function startRadarStream(iffTargetsMap) {
 
     logMergedCSV(merged);
 
+    // --- Python API'ye tahmin isteği ---
+    if (typeof predict === 'function') {
+      try {
+        const liveData = {
+          id1: merged.radarId,
+          id2: merged.id,
+          callsign: merged.callsign,
+          friend_foe: merged.status,
+          lat: merged.lat,
+          lon: merged.lon,
+          speed: merged.velocity,
+          baroAltitude: merged.baroAlt,
+          geoAltitude: merged.geoAlt,
+          heading: parseFloat(merged.heading)
+        };
+
+        const result = await predict(liveData);
+        console.log(`[Tahmin] ${merged.radarId}:`, result);
+
+        merged.suspicious = result.prediction;
+        merged.suspiciousProbability = result.probability;
+
+        // Probability > 0 ise listeye ekle/güncelle
+        if (result.probability > 0) {
+          const idx = suspiciousTargets.findIndex(t => t.radarId === merged.radarId);
+          if (idx >= 0) {
+            suspiciousTargets[idx] = merged;
+          } else {
+            suspiciousTargets.push(merged);
+          }
+        } else {
+          // 0 ise listeden çıkar
+          suspiciousTargets = suspiciousTargets.filter(t => t.radarId !== merged.radarId);
+        }
+
+        // Listeyi UI'a gönder
+        window.dispatchEvent(new CustomEvent('suspicious:update', { detail: suspiciousTargets }));
+
+      } catch (err) {
+        console.error('[RadarStream] Tahmin API hatası:', err);
+      }
+    } else {
+      console.warn('[RadarStream] predict fonksiyonu preload üzerinden tanımlı değil.');
+    }
+
+    // --- Harita güncelleme ---
     let feature = radarSource.getFeatureById(radarId);
     if (!feature) {
       feature = new Feature({
@@ -115,6 +152,9 @@ export function startRadarStream(iffTargetsMap) {
         setStatus(`Target kaldırıldı: ${radarId}`);
       }
       targetTimers.delete(radarId);
+      // Listeden de çıkar
+      suspiciousTargets = suspiciousTargets.filter(t => t.radarId !== radarId);
+      window.dispatchEvent(new CustomEvent('suspicious:update', { detail: suspiciousTargets }));
     }, 2000);
     targetTimers.set(radarId, timer);
   });
@@ -130,18 +170,14 @@ export function startRadarStream(iffTargetsMap) {
   });
 }
 
-/**
- * Tüm hedefleri temizle
- */
 function cleanupAllTargets() {
   radarSource.clear();
   targetTimers.forEach((timer) => clearTimeout(timer));
   targetTimers.clear();
+  suspiciousTargets = [];
+  window.dispatchEvent(new CustomEvent('suspicious:update', { detail: suspiciousTargets }));
 }
 
-/**
- * İlk yükleme
- */
 export async function loadRadarTargets() {
   cleanupAllTargets();
   setStatus('Radar verisi stream ile yüklenecek');
