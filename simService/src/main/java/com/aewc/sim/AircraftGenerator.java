@@ -13,14 +13,12 @@ public class AircraftGenerator {
     public static void generateAircrafts(int count) {
         for (int i = 0; i < count; i++) {
 
-            String affiliation = random.nextBoolean() ? "FRIEND" : "FOE";
+            String affiliation = random.nextBoolean() ? "FRIEND" : "UNKNOWN";
             String callsign;
 
-            if ("FOE".equals(affiliation)) {
-                // FOE ise callsign sabit "FOE"
+            if ("UNKNOWN".equals(affiliation)) {
                 callsign = "UNKNOWN";
             } else {
-                // FRIEND ise rastgele 2 harf + 2 rakam
                 char letter1 = (char) ('A' + random.nextInt(26));
                 char letter2 = (char) ('A' + random.nextInt(26));
                 int number = random.nextInt(100);

@@ -41,7 +41,9 @@ PROTOBUF_CONSTEXPR RadarTarget::RadarTarget(
   , lon_(0)
   , velocity_(0)
   , baro_altitude_(0)
-  , geo_altitude_(0){}
+  , heading_(0)
+  , geo_altitude_(0)
+  , is_fighter_(false){}
 struct RadarTargetDefaultTypeInternal {
   PROTOBUF_CONSTEXPR RadarTargetDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
@@ -77,6 +79,8 @@ const uint32_t TableStruct_radar_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(pr
   PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, velocity_),
   PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, baro_altitude_),
   PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, geo_altitude_),
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, heading_),
+  PROTOBUF_FIELD_OFFSET(::radar::RadarTarget, is_fighter_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, -1, sizeof(::radar::StreamRequest)},
@@ -91,16 +95,17 @@ static const ::_pb::Message* const file_default_instances[] = {
 const char descriptor_table_protodef_radar_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\013radar.proto\022\005radar\"<\n\rStreamRequest\022\033\n"
   "\023refresh_interval_ms\030\001 \001(\005\022\016\n\006filter\030\002 \001"
-  "(\t\"r\n\013RadarTarget\022\n\n\002id\030\006 \001(\t\022\013\n\003lat\030\001 \001"
-  "(\001\022\013\n\003lon\030\002 \001(\001\022\020\n\010velocity\030\003 \001(\005\022\025\n\rbar"
-  "o_altitude\030\004 \001(\005\022\024\n\014geo_altitude\030\005 \001(\0052P"
-  "\n\014RadarService\022@\n\022StreamRadarTargets\022\024.r"
-  "adar.StreamRequest\032\022.radar.RadarTarget0\001"
-  "b\006proto3"
+  "(\t\"\227\001\n\013RadarTarget\022\n\n\002id\030\001 \001(\t\022\013\n\003lat\030\002 "
+  "\001(\001\022\013\n\003lon\030\003 \001(\001\022\020\n\010velocity\030\004 \001(\005\022\025\n\rba"
+  "ro_altitude\030\005 \001(\005\022\024\n\014geo_altitude\030\006 \001(\005\022"
+  "\017\n\007heading\030\007 \001(\001\022\022\n\nis_fighter\030\010 \001(\0102P\n\014"
+  "RadarService\022@\n\022StreamRadarTargets\022\024.rad"
+  "ar.StreamRequest\032\022.radar.RadarTarget0\001b\006"
+  "proto3"
   ;
 static ::_pbi::once_flag descriptor_table_radar_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_radar_2eproto = {
-    false, false, 288, descriptor_table_protodef_radar_2eproto,
+    false, false, 326, descriptor_table_protodef_radar_2eproto,
     "radar.proto",
     &descriptor_table_radar_2eproto_once, nullptr, 0, 2,
     schemas, file_default_instances, TableStruct_radar_2eproto::offsets,
@@ -360,8 +365,8 @@ RadarTarget::RadarTarget(const RadarTarget& from)
       GetArenaForAllocation());
   }
   ::memcpy(&lat_, &from.lat_,
-    static_cast<size_t>(reinterpret_cast<char*>(&geo_altitude_) -
-    reinterpret_cast<char*>(&lat_)) + sizeof(geo_altitude_));
+    static_cast<size_t>(reinterpret_cast<char*>(&is_fighter_) -
+    reinterpret_cast<char*>(&lat_)) + sizeof(is_fighter_));
   // @@protoc_insertion_point(copy_constructor:radar.RadarTarget)
 }
 
@@ -372,8 +377,8 @@ id_.InitDefault();
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
 ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
     reinterpret_cast<char*>(&lat_) - reinterpret_cast<char*>(this)),
-    0, static_cast<size_t>(reinterpret_cast<char*>(&geo_altitude_) -
-    reinterpret_cast<char*>(&lat_)) + sizeof(geo_altitude_));
+    0, static_cast<size_t>(reinterpret_cast<char*>(&is_fighter_) -
+    reinterpret_cast<char*>(&lat_)) + sizeof(is_fighter_));
 }
 
 RadarTarget::~RadarTarget() {
@@ -402,8 +407,8 @@ void RadarTarget::Clear() {
 
   id_.ClearToEmpty();
   ::memset(&lat_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&geo_altitude_) -
-      reinterpret_cast<char*>(&lat_)) + sizeof(geo_altitude_));
+      reinterpret_cast<char*>(&is_fighter_) -
+      reinterpret_cast<char*>(&lat_)) + sizeof(is_fighter_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -413,53 +418,69 @@ const char* RadarTarget::_InternalParse(const char* ptr, ::_pbi::ParseContext* c
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // double lat = 1;
+      // string id = 1;
       case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 9)) {
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
+          auto str = _internal_mutable_id();
+          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(ptr);
+          CHK_(::_pbi::VerifyUTF8(str, "radar.RadarTarget.id"));
+        } else
+          goto handle_unusual;
+        continue;
+      // double lat = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
           lat_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
           goto handle_unusual;
         continue;
-      // double lon = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 17)) {
+      // double lon = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 25)) {
           lon_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else
           goto handle_unusual;
         continue;
-      // int32 velocity = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
+      // int32 velocity = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
           velocity_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // int32 baro_altitude = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 32)) {
+      // int32 baro_altitude = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
           baro_altitude_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // int32 geo_altitude = 5;
-      case 5:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 40)) {
+      // int32 geo_altitude = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 48)) {
           geo_altitude_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
         continue;
-      // string id = 6;
-      case 6:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 50)) {
-          auto str = _internal_mutable_id();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
+      // double heading = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 57)) {
+          heading_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // bool is_fighter = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 64)) {
+          is_fighter_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "radar.RadarTarget.id"));
         } else
           goto handle_unusual;
         continue;
@@ -492,52 +513,68 @@ uint8_t* RadarTarget::_InternalSerialize(
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // double lat = 1;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_lat = this->_internal_lat();
-  uint64_t raw_lat;
-  memcpy(&raw_lat, &tmp_lat, sizeof(tmp_lat));
-  if (raw_lat != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteDoubleToArray(1, this->_internal_lat(), target);
-  }
-
-  // double lon = 2;
-  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
-  double tmp_lon = this->_internal_lon();
-  uint64_t raw_lon;
-  memcpy(&raw_lon, &tmp_lon, sizeof(tmp_lon));
-  if (raw_lon != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_lon(), target);
-  }
-
-  // int32 velocity = 3;
-  if (this->_internal_velocity() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(3, this->_internal_velocity(), target);
-  }
-
-  // int32 baro_altitude = 4;
-  if (this->_internal_baro_altitude() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(4, this->_internal_baro_altitude(), target);
-  }
-
-  // int32 geo_altitude = 5;
-  if (this->_internal_geo_altitude() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_geo_altitude(), target);
-  }
-
-  // string id = 6;
+  // string id = 1;
   if (!this->_internal_id().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_id().data(), static_cast<int>(this->_internal_id().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
       "radar.RadarTarget.id");
     target = stream->WriteStringMaybeAliased(
-        6, this->_internal_id(), target);
+        1, this->_internal_id(), target);
+  }
+
+  // double lat = 2;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lat = this->_internal_lat();
+  uint64_t raw_lat;
+  memcpy(&raw_lat, &tmp_lat, sizeof(tmp_lat));
+  if (raw_lat != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(2, this->_internal_lat(), target);
+  }
+
+  // double lon = 3;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lon = this->_internal_lon();
+  uint64_t raw_lon;
+  memcpy(&raw_lon, &tmp_lon, sizeof(tmp_lon));
+  if (raw_lon != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(3, this->_internal_lon(), target);
+  }
+
+  // int32 velocity = 4;
+  if (this->_internal_velocity() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(4, this->_internal_velocity(), target);
+  }
+
+  // int32 baro_altitude = 5;
+  if (this->_internal_baro_altitude() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(5, this->_internal_baro_altitude(), target);
+  }
+
+  // int32 geo_altitude = 6;
+  if (this->_internal_geo_altitude() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteInt32ToArray(6, this->_internal_geo_altitude(), target);
+  }
+
+  // double heading = 7;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_heading = this->_internal_heading();
+  uint64_t raw_heading;
+  memcpy(&raw_heading, &tmp_heading, sizeof(tmp_heading));
+  if (raw_heading != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(7, this->_internal_heading(), target);
+  }
+
+  // bool is_fighter = 8;
+  if (this->_internal_is_fighter() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteBoolToArray(8, this->_internal_is_fighter(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -556,14 +593,14 @@ size_t RadarTarget::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // string id = 6;
+  // string id = 1;
   if (!this->_internal_id().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
         this->_internal_id());
   }
 
-  // double lat = 1;
+  // double lat = 2;
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_lat = this->_internal_lat();
   uint64_t raw_lat;
@@ -572,7 +609,7 @@ size_t RadarTarget::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // double lon = 2;
+  // double lon = 3;
   static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
   double tmp_lon = this->_internal_lon();
   uint64_t raw_lon;
@@ -581,19 +618,33 @@ size_t RadarTarget::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // int32 velocity = 3;
+  // int32 velocity = 4;
   if (this->_internal_velocity() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_velocity());
   }
 
-  // int32 baro_altitude = 4;
+  // int32 baro_altitude = 5;
   if (this->_internal_baro_altitude() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_baro_altitude());
   }
 
-  // int32 geo_altitude = 5;
+  // double heading = 7;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_heading = this->_internal_heading();
+  uint64_t raw_heading;
+  memcpy(&raw_heading, &tmp_heading, sizeof(tmp_heading));
+  if (raw_heading != 0) {
+    total_size += 1 + 8;
+  }
+
+  // int32 geo_altitude = 6;
   if (this->_internal_geo_altitude() != 0) {
     total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_geo_altitude());
+  }
+
+  // bool is_fighter = 8;
+  if (this->_internal_is_fighter() != 0) {
+    total_size += 1 + 1;
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
@@ -641,8 +692,18 @@ void RadarTarget::MergeFrom(const RadarTarget& from) {
   if (from._internal_baro_altitude() != 0) {
     _internal_set_baro_altitude(from._internal_baro_altitude());
   }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_heading = from._internal_heading();
+  uint64_t raw_heading;
+  memcpy(&raw_heading, &tmp_heading, sizeof(tmp_heading));
+  if (raw_heading != 0) {
+    _internal_set_heading(from._internal_heading());
+  }
   if (from._internal_geo_altitude() != 0) {
     _internal_set_geo_altitude(from._internal_geo_altitude());
+  }
+  if (from._internal_is_fighter() != 0) {
+    _internal_set_is_fighter(from._internal_is_fighter());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
@@ -668,8 +729,8 @@ void RadarTarget::InternalSwap(RadarTarget* other) {
       &other->id_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(RadarTarget, geo_altitude_)
-      + sizeof(RadarTarget::geo_altitude_)
+      PROTOBUF_FIELD_OFFSET(RadarTarget, is_fighter_)
+      + sizeof(RadarTarget::is_fighter_)
       - PROTOBUF_FIELD_OFFSET(RadarTarget, lat_)>(
           reinterpret_cast<char*>(&lat_),
           reinterpret_cast<char*>(&other->lat_));

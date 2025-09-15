@@ -338,14 +338,16 @@ class RadarTarget final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kIdFieldNumber = 6,
-    kLatFieldNumber = 1,
-    kLonFieldNumber = 2,
-    kVelocityFieldNumber = 3,
-    kBaroAltitudeFieldNumber = 4,
-    kGeoAltitudeFieldNumber = 5,
+    kIdFieldNumber = 1,
+    kLatFieldNumber = 2,
+    kLonFieldNumber = 3,
+    kVelocityFieldNumber = 4,
+    kBaroAltitudeFieldNumber = 5,
+    kHeadingFieldNumber = 7,
+    kGeoAltitudeFieldNumber = 6,
+    kIsFighterFieldNumber = 8,
   };
-  // string id = 6;
+  // string id = 1;
   void clear_id();
   const std::string& id() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
@@ -359,7 +361,7 @@ class RadarTarget final :
   std::string* _internal_mutable_id();
   public:
 
-  // double lat = 1;
+  // double lat = 2;
   void clear_lat();
   double lat() const;
   void set_lat(double value);
@@ -368,7 +370,7 @@ class RadarTarget final :
   void _internal_set_lat(double value);
   public:
 
-  // double lon = 2;
+  // double lon = 3;
   void clear_lon();
   double lon() const;
   void set_lon(double value);
@@ -377,7 +379,7 @@ class RadarTarget final :
   void _internal_set_lon(double value);
   public:
 
-  // int32 velocity = 3;
+  // int32 velocity = 4;
   void clear_velocity();
   int32_t velocity() const;
   void set_velocity(int32_t value);
@@ -386,7 +388,7 @@ class RadarTarget final :
   void _internal_set_velocity(int32_t value);
   public:
 
-  // int32 baro_altitude = 4;
+  // int32 baro_altitude = 5;
   void clear_baro_altitude();
   int32_t baro_altitude() const;
   void set_baro_altitude(int32_t value);
@@ -395,13 +397,31 @@ class RadarTarget final :
   void _internal_set_baro_altitude(int32_t value);
   public:
 
-  // int32 geo_altitude = 5;
+  // double heading = 7;
+  void clear_heading();
+  double heading() const;
+  void set_heading(double value);
+  private:
+  double _internal_heading() const;
+  void _internal_set_heading(double value);
+  public:
+
+  // int32 geo_altitude = 6;
   void clear_geo_altitude();
   int32_t geo_altitude() const;
   void set_geo_altitude(int32_t value);
   private:
   int32_t _internal_geo_altitude() const;
   void _internal_set_geo_altitude(int32_t value);
+  public:
+
+  // bool is_fighter = 8;
+  void clear_is_fighter();
+  bool is_fighter() const;
+  void set_is_fighter(bool value);
+  private:
+  bool _internal_is_fighter() const;
+  void _internal_set_is_fighter(bool value);
   public:
 
   // @@protoc_insertion_point(class_scope:radar.RadarTarget)
@@ -416,7 +436,9 @@ class RadarTarget final :
   double lon_;
   int32_t velocity_;
   int32_t baro_altitude_;
+  double heading_;
   int32_t geo_altitude_;
+  bool is_fighter_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_radar_2eproto;
 };
@@ -505,7 +527,7 @@ inline void StreamRequest::set_allocated_filter(std::string* filter) {
 
 // RadarTarget
 
-// string id = 6;
+// string id = 1;
 inline void RadarTarget::clear_id() {
   id_.ClearToEmpty();
 }
@@ -555,7 +577,7 @@ inline void RadarTarget::set_allocated_id(std::string* id) {
   // @@protoc_insertion_point(field_set_allocated:radar.RadarTarget.id)
 }
 
-// double lat = 1;
+// double lat = 2;
 inline void RadarTarget::clear_lat() {
   lat_ = 0;
 }
@@ -575,7 +597,7 @@ inline void RadarTarget::set_lat(double value) {
   // @@protoc_insertion_point(field_set:radar.RadarTarget.lat)
 }
 
-// double lon = 2;
+// double lon = 3;
 inline void RadarTarget::clear_lon() {
   lon_ = 0;
 }
@@ -595,7 +617,7 @@ inline void RadarTarget::set_lon(double value) {
   // @@protoc_insertion_point(field_set:radar.RadarTarget.lon)
 }
 
-// int32 velocity = 3;
+// int32 velocity = 4;
 inline void RadarTarget::clear_velocity() {
   velocity_ = 0;
 }
@@ -615,7 +637,7 @@ inline void RadarTarget::set_velocity(int32_t value) {
   // @@protoc_insertion_point(field_set:radar.RadarTarget.velocity)
 }
 
-// int32 baro_altitude = 4;
+// int32 baro_altitude = 5;
 inline void RadarTarget::clear_baro_altitude() {
   baro_altitude_ = 0;
 }
@@ -635,7 +657,7 @@ inline void RadarTarget::set_baro_altitude(int32_t value) {
   // @@protoc_insertion_point(field_set:radar.RadarTarget.baro_altitude)
 }
 
-// int32 geo_altitude = 5;
+// int32 geo_altitude = 6;
 inline void RadarTarget::clear_geo_altitude() {
   geo_altitude_ = 0;
 }
@@ -653,6 +675,46 @@ inline void RadarTarget::_internal_set_geo_altitude(int32_t value) {
 inline void RadarTarget::set_geo_altitude(int32_t value) {
   _internal_set_geo_altitude(value);
   // @@protoc_insertion_point(field_set:radar.RadarTarget.geo_altitude)
+}
+
+// double heading = 7;
+inline void RadarTarget::clear_heading() {
+  heading_ = 0;
+}
+inline double RadarTarget::_internal_heading() const {
+  return heading_;
+}
+inline double RadarTarget::heading() const {
+  // @@protoc_insertion_point(field_get:radar.RadarTarget.heading)
+  return _internal_heading();
+}
+inline void RadarTarget::_internal_set_heading(double value) {
+  
+  heading_ = value;
+}
+inline void RadarTarget::set_heading(double value) {
+  _internal_set_heading(value);
+  // @@protoc_insertion_point(field_set:radar.RadarTarget.heading)
+}
+
+// bool is_fighter = 8;
+inline void RadarTarget::clear_is_fighter() {
+  is_fighter_ = false;
+}
+inline bool RadarTarget::_internal_is_fighter() const {
+  return is_fighter_;
+}
+inline bool RadarTarget::is_fighter() const {
+  // @@protoc_insertion_point(field_get:radar.RadarTarget.is_fighter)
+  return _internal_is_fighter();
+}
+inline void RadarTarget::_internal_set_is_fighter(bool value) {
+  
+  is_fighter_ = value;
+}
+inline void RadarTarget::set_is_fighter(bool value) {
+  _internal_set_is_fighter(value);
+  // @@protoc_insertion_point(field_set:radar.RadarTarget.is_fighter)
 }
 
 #ifdef __GNUC__

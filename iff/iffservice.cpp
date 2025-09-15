@@ -13,17 +13,17 @@
 #include <sstream>
 #include <iomanip>
 
-// MongoDB C++ Driver
+
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
-// Programda 1 kez instance
+
 static mongocxx::instance s_mongo_instance{};
 
-// Constructor
+
 IFFServiceImpl::IFFServiceImpl(std::string mongo_uri,
                                std::string db_name,
                                std::string coll_name)
@@ -33,7 +33,7 @@ IFFServiceImpl::IFFServiceImpl(std::string mongo_uri,
 {
 }
 
-// -------- Yardımcı fonksiyonlar (header'da static üye olarak bildirildi) --------
+
 
 std::string IFFServiceImpl::get_string_utf8(const bsoncxx::document::view& v,
                                             const char* key,
@@ -64,7 +64,7 @@ bool IFFServiceImpl::is_in_tr_bbox(double lat, double lon) {
     return (lat >= 36.0 && lat <= 42.0 && lon >= 26.0 && lon <= 45.0);
 }
 
-// -------- Ana streaming metodu --------
+
 
 grpc::Status IFFServiceImpl::StreamIFFData(
     grpc::ServerContext* context,
@@ -119,7 +119,7 @@ grpc::Status IFFServiceImpl::StreamIFFData(
 
             iff::IFFStreamResponse resp;
             iff::IFFData* data = resp.mutable_data();
-            data->set_id(oss.str()); // proto'da string id = 5; olmalı
+            data->set_id(oss.str()); 
             data->set_status(rec.status);
             data->set_lat(rec.lat);
             data->set_lon(rec.lon);

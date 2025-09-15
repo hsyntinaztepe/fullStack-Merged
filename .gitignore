@@ -9,10 +9,6 @@ CMakeCache.txt
 compile_commands.json
 
 # Electron/Node
-electron/node_modules/
-electron/dist/
-electron/out/
-electron/.webpack/
 node_modules/
 project.root/node_modules/
 
