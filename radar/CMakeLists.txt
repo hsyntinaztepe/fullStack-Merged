@@ -4,6 +4,9 @@ project(DataLinkService LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# =========================
+# Derleyici ayarları
+# =========================
 if(MINGW)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -pipe")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
@@ -15,12 +18,11 @@ endif()
 # gRPC / Protobuf / Abseil
 # =========================
 set(CMAKE_PREFIX_PATH
-    "C:/users/stj.htinaztepe/desktop/installpc_protobuf3203"
-    "C:/users/stj.htinaztepe/desktop/installpc"
+    "C:/Users/stj.nalbayrak/Documents/grpc-install"
 )
 
 set(Protobuf_PROTOC_EXECUTABLE
-    "C:/users/stj.htinaztepe/desktop/installpc_protobuf3203/bin/protoc.exe"
+    "C:/Users/stj.nalbayrak/Documents/grpc-install/bin/protoc.exe"
 )
 
 find_package(Protobuf REQUIRED)
@@ -30,10 +32,10 @@ find_package(absl CONFIG REQUIRED)
 # =========================
 # MongoDB C++ ve C Driver yolları
 # =========================
-set(MONGO_CXX_INCLUDE_DIR "C:/msys64/home/stj.htinaztepe/mongo-cxx-install/include")
-set(MONGO_C_INCLUDE_DIR   "C:/msys64/home/stj.htinaztepe/mongo-c-driver-install/include")
-set(MONGO_CXX_LIB_DIR     "C:/msys64/home/stj.htinaztepe/mongo-cxx-install/lib")
-set(MONGO_C_LIB_DIR       "C:/msys64/home/stj.htinaztepe/mongo-c-driver-install/lib")
+set(MONGO_CXX_INCLUDE_DIR "C:/msys64/home/stj.nalbayrak/mongo-cxx-install/include")
+set(MONGO_C_INCLUDE_DIR   "C:/msys64/home/stj.nalbayrak/mongo-c-driver-install/include")
+set(MONGO_CXX_LIB_DIR     "C:/msys64/home/stj.nalbayrak/mongo-cxx-install/lib")
+set(MONGO_C_LIB_DIR       "C:/msys64/home/stj.nalbayrak/mongo-c-driver-install/lib")
 
 # =========================
 # Kaynak dosyalar
@@ -72,7 +74,9 @@ target_include_directories(radar PRIVATE
 target_link_directories(radar PRIVATE
     ${MONGO_CXX_LIB_DIR}
     ${MONGO_C_LIB_DIR}
+    C:/msys64/mingw64/lib
 )
+
 
 target_compile_definitions(radar PRIVATE
     MONGOCXX_STATIC
@@ -96,6 +100,7 @@ target_link_libraries(radar PRIVATE
     z
 )
 
+
 if(MINGW)
     target_link_libraries(radar PRIVATE
         ws2_32
@@ -108,18 +113,6 @@ if(MINGW)
         kernel32
         user32
     )
-endif()
-
-# =========================
-# Ninja optimizasyonları
-# =========================
-if(CMAKE_GENERATOR STREQUAL "Ninja")
-    set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Verbose output" FORCE)
-    include(ProcessorCount)
-    ProcessorCount(N)
-    if(NOT N EQUAL 0)
-        set(CMAKE_BUILD_PARALLEL_LEVEL ${N})
-    endif()
 endif()
 
 # =========================
@@ -139,4 +132,3 @@ endif()
 install(TARGETS radar
     RUNTIME DESTINATION bin
 )
-

@@ -1,14 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
-project(IFFService LANGUAGES CXX)
+project(DataLinkService LANGUAGES CXX)
 
-# =========================
-# Genel C++ ayarları
-# =========================
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # =========================
-# Derleyiciye özel ayarlar
+# Derleyici ayarları
 # =========================
 if(MINGW)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static-libgcc -static-libstdc++ -pipe")
@@ -18,15 +15,14 @@ elseif(MSVC)
 endif()
 
 # =========================
-# gRPC / Protobuf / Abseil yolları
+# gRPC / Protobuf / Abseil
 # =========================
 set(CMAKE_PREFIX_PATH
-    "C:/users/stj.htinaztepe/desktop/installpc_protobuf3203"  # Protobuf 3.20.3
-    "C:/users/stj.htinaztepe/desktop/installpc"               # gRPC + Abseil
+    "C:/Users/stj.nalbayrak/Documents/grpc-install"
 )
 
 set(Protobuf_PROTOC_EXECUTABLE
-    "C:/users/stj.htinaztepe/desktop/installpc_protobuf3203/bin/protoc.exe"
+    "C:/Users/stj.nalbayrak/Documents/grpc-install/bin/protoc.exe"
 )
 
 find_package(Protobuf REQUIRED)
@@ -36,10 +32,10 @@ find_package(absl CONFIG REQUIRED)
 # =========================
 # MongoDB C++ ve C Driver yolları
 # =========================
-set(MONGO_CXX_INCLUDE_DIR "C:/msys64/home/stj.htinaztepe/mongo-cxx-install/include")
-set(MONGO_C_INCLUDE_DIR   "C:/msys64/home/stj.htinaztepe/mongo-c-driver-install/include")
-set(MONGO_CXX_LIB_DIR     "C:/msys64/home/stj.htinaztepe/mongo-cxx-install/lib")
-set(MONGO_C_LIB_DIR       "C:/msys64/home/stj.htinaztepe/mongo-c-driver-install/lib")
+set(MONGO_CXX_INCLUDE_DIR "C:/msys64/home/stj.nalbayrak/mongo-cxx-install/include")
+set(MONGO_C_INCLUDE_DIR   "C:/msys64/home/stj.nalbayrak/mongo-c-driver-install/include")
+set(MONGO_CXX_LIB_DIR     "C:/msys64/home/stj.nalbayrak/mongo-cxx-install/lib")
+set(MONGO_C_LIB_DIR       "C:/msys64/home/stj.nalbayrak/mongo-c-driver-install/lib")
 
 # =========================
 # Kaynak dosyalar
@@ -51,12 +47,12 @@ set(SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/generated/iff.grpc.pb.cc
 )
 
-add_executable(iff_server ${SRC_FILES})
+add_executable(iff ${SRC_FILES})
 
 # =========================
 # Include dizinleri
 # =========================
-target_include_directories(iff_server PRIVATE
+target_include_directories(iff PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/proto
     ${CMAKE_CURRENT_SOURCE_DIR}/generated
@@ -75,19 +71,21 @@ target_include_directories(iff_server PRIVATE
 # =========================
 # Linkleme
 # =========================
-target_link_directories(iff_server PRIVATE
+target_link_directories(iff PRIVATE
     ${MONGO_CXX_LIB_DIR}
     ${MONGO_C_LIB_DIR}
+    C:/msys64/mingw64/lib
 )
 
-target_compile_definitions(iff_server PRIVATE
+
+target_compile_definitions(iff PRIVATE
     MONGOCXX_STATIC
     BSONCXX_STATIC
     MONGOC_STATIC
     BSON_STATIC
 )
 
-target_link_libraries(iff_server PRIVATE
+target_link_libraries(iff PRIVATE
     gRPC::grpc++
     gRPC::grpc++_reflection
     protobuf::libprotobuf
@@ -102,8 +100,9 @@ target_link_libraries(iff_server PRIVATE
     z
 )
 
+
 if(MINGW)
-    target_link_libraries(iff_server PRIVATE
+    target_link_libraries(iff PRIVATE
         ws2_32
         secur32
         crypt32
@@ -117,22 +116,10 @@ if(MINGW)
 endif()
 
 # =========================
-# Ninja optimizasyonları
-# =========================
-if(CMAKE_GENERATOR STREQUAL "Ninja")
-    set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Verbose output" FORCE)
-    include(ProcessorCount)
-    ProcessorCount(N)
-    if(NOT N EQUAL 0)
-        set(CMAKE_BUILD_PARALLEL_LEVEL ${N})
-    endif()
-endif()
-
-# =========================
 # Build tipine göre ayarlar
 # =========================
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(iff_server PRIVATE DEBUG=1)
+    target_compile_definitions(iff PRIVATE DEBUG=1)
     if(MINGW)
         set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -g -O0")
     endif()
@@ -142,9 +129,6 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
     endif()
 endif()
 
-# =========================
-# Install
-# =========================
-install(TARGETS iff_server
+install(TARGETS iff
     RUNTIME DESTINATION bin
 )

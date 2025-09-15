@@ -3,15 +3,9 @@ package com.aewc.sim;
 public class MainLauncher {
     public static void main(String[] args) {
         AircraftGenerator.generateAircrafts(30);
-        // Lancer Radar
         new Thread(new RadarSimService()).start();
-
-        // Lancer IFF
         new Thread(new IffSimService()).start();
-
-        // Lancer Datalink
-        new Thread(new DataLinkSimService()).start();
-
-        System.out.println("Simulation AEW&C démarrée : Radar, IFF et Datalink tournent en parallèle.");
+        //new Thread(new DataLinkSimService()).start();
+        System.out.println("Baris kartal simulasyonu basladi: Radar, IFF ve Datalink ayni anda calisiyor");
     }
 }

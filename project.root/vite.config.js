@@ -5,6 +5,7 @@ export default defineConfig({
   root: path.resolve(__dirname, 'renderer'),
   base: './',
   build: {
+    target: 'esnext', // <--- ajoute ça
     outDir: path.resolve(__dirname, 'dist'),
     emptyOutDir: true,
     rollupOptions: {

@@ -4,15 +4,13 @@
 #include <memory>
 #include <string>
 
-// MongoDB C++ Driver
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 #include <bsoncxx/json.hpp>
 
-// Tek seferlik Mongo instance
 
-// Mongo bağlantı testi
 void TestMongoIFF(const std::string& mongo_uri,
                   const std::string& db_name,
                   const std::string& coll_name)
@@ -27,7 +25,7 @@ void TestMongoIFF(const std::string& mongo_uri,
         std::cout << "[TEST] MongoDB bağlantısı başarılı. İlk kayıtlar:" << std::endl;
         for (auto&& doc : cursor) {
             std::cout << "  " << bsoncxx::to_json(doc) << std::endl;
-            if (++count >= 5) break; // sadece ilk 5 kaydı göster
+            if (++count >= 5) break; 
         }
         if (count == 0) {
             std::cout << "[TEST] Koleksiyon boş." << std::endl;
@@ -45,10 +43,10 @@ void RunServer()
     const std::string db_name        = "aewc";
     const std::string coll_name      = "iff";
 
-    // Mongo bağlantısını test et
+
     TestMongoIFF(mongo_uri, db_name, coll_name);
 
-    // Servis örneğini Mongo parametreleriyle oluştur
+
     IFFServiceImpl service(mongo_uri, db_name, coll_name);
 
     grpc::ServerBuilder builder;
