@@ -18,7 +18,7 @@ export function initMergedPopup(map, layer) {
 
   let activeFeature = null;
   let changeListenerKey = null;
-  let anchorCoord = null; // İlk tıklanan koordinat
+  let anchorCoord = null; 
 
   function closePopup() {
     overlay.setPosition(undefined);
@@ -43,7 +43,6 @@ export function initMergedPopup(map, layer) {
     });
 
     if (feature) {
-      // Önceki listener'ı temizle
       if (activeFeature && changeListenerKey) {
         activeFeature.un('change', changeListenerKey);
       }
@@ -71,8 +70,10 @@ export function initMergedPopup(map, layer) {
 
 function buildMergedHTML(props, coord) {
   const [lon, lat] = toLonLat(coord);
+  const hiddenKeys = ['geometry', 'radarId', 'lat', 'lon']; // gizlenecek alanlar
+
   const rows = Object.entries(props)
-    .filter(([k]) => k !== 'geometry')
+    .filter(([k]) => !hiddenKeys.includes(k))
     .map(([k, v]) => `<tr><th>${k}</th><td>${v ?? '-'}</td></tr>`)
     .join('');
 
@@ -82,3 +83,4 @@ function buildMergedHTML(props, coord) {
     <div><small>${lon.toFixed(5)}, ${lat.toFixed(5)}</small></div>
   `;
 }
+

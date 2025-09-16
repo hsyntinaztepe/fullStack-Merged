@@ -1,3 +1,4 @@
+/* === Genel === */
 html, body { 
   height: 100%; 
   margin: 0; 
@@ -8,18 +9,18 @@ html, body {
   height: 100vh; 
 }
 
-/* --- Toolbar --- */
+/* === Toolbar === */
 .toolbar {
   position: absolute; 
   top: 10px; 
   left: 50px; 
   z-index: 1000;
-  background: rgba(255,255,255,0.95);
-  padding: 8px; 
-  border-radius: 8px;
   display: flex; 
-  gap: 6px; 
   flex-wrap: wrap;
+  gap: 6px; 
+  padding: 8px; 
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
   box-shadow: 0 1px 6px rgba(0,0,0,0.15);
 }
@@ -29,61 +30,78 @@ html, body {
   padding: 6px 8px; 
 }
 
-/* --- Status --- */
+/* === Durum Göstergesi === */
 .status {
   position: absolute; 
   bottom: 10px; 
   left: 10px; 
   z-index: 1000;
+  padding: 6px 8px; 
   background: rgba(0,0,0,0.6); 
   color: #fff; 
-  padding: 6px 8px; 
   border-radius: 6px;
   font: 12px/1.4 monospace;
 }
 
-/* --- Layer Controls --- */
-.layer-controls {
+/* === Katman Paneli (Açılır/Kapanır) === */
+.layer-panel {
   position: absolute;
   top: 10px;
   right: 10px;
   z-index: 1000;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+#layer-toggle {
+  width: 120px;
+  padding: 6px 10px;
+  border: none;
+  background: #1976d2;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.layer-controls {
+  display: flex;
+  flex-direction: column;
   background: rgba(255,255,255,0.95);
-  padding: 8px;
-  border-radius: 8px;
+  border-radius: 0 0 4px 4px;
   box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+  margin-top: 2px;
 }
 
 .layer-controls button {
-  margin: 0 3px;
   padding: 6px 8px;
-  cursor: pointer;
   border: 1px solid #ccc;
   background: white;
   border-radius: 3px;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  cursor: pointer;
+  text-align: left;
 }
 
 .layer-controls button:hover {
   background: #f0f0f0;
 }
 
-/* --- Popup kutusu --- */
+.hidden {
+  display: none;
+}
+
+/* === Popup Kutusu === */
 .ol-popup.radar-popup {
+  position: absolute;
+  padding: 18px;
   background: white;
   border: 1px solid #ccc;
-  padding: 18px;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  position: absolute;
   font-size: 12px;
-
-  /* Yeni eklenenler */
-  min-width: 240px;       /* Minimum genişlik */
-  max-width: 320px;       /* İstersen artırabilirsin */
-  white-space: normal;    /* Metin normal akışta */
-  word-break: break-word; /* Uzun kelimeler taşarsa kır */
-  box-sizing: border-box; /* Padding genişliği etkilemesin */
+  min-width: 240px;
+  max-width: 320px;
+  white-space: normal;
+  word-break: break-word;
+  box-sizing: border-box;
 }
 
 .ol-popup-closer {
@@ -116,21 +134,21 @@ html, body {
   word-break: break-word;
 }
 
-/* --- Sağ Panel: Şüpheli Hedefler --- */
+/* === Sağ Panel: Şüpheli Hedefler === */
 #suspicious-panel {
   position: absolute;
   top: 0;
   right: 0;
   width: 300px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   background: rgba(0,0,0,0.78);
   color: #fff;
   overflow-y: auto;
   box-shadow: -2px 0 6px rgba(0,0,0,0.4);
   backdrop-filter: blur(2px);
   z-index: 1000;
-  display: flex;
-  flex-direction: column;
 }
 
 #suspicious-panel h3 {
@@ -147,10 +165,10 @@ html, body {
 }
 
 .suspicious-item {
-  border: 1px solid #444;
-  border-radius: 6px;
   padding: 8px;
   background: #141414;
+  border: 1px solid #444;
+  border-radius: 6px;
   font-size: 12px;
   line-height: 1.4;
 }
@@ -170,6 +188,6 @@ html, body {
 }
 
 /* Olasılık renkleri */
-.prob-low { background: #2a3b20; color: #a6e39d; }     /* 0.01–0.33 */
-.prob-mid { background: #4b3b1c; color: #ffd48a; }     /* 0.34–0.66 */
-.prob-high { background: #4a1f1f; color: #ff9c9c; }    /* 0.67–1.00 */
+.prob-low  { background: #2a3b20; color: #a6e39d; }  /* 0.01–0.33 */
+.prob-mid  { background: #4b3b1c; color: #ffd48a; }  /* 0.34–0.66 */
+.prob-high { background: #4a1f1f; color: #ff9c9c; }  /* 0.67–1.00 */

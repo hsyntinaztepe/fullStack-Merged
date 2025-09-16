@@ -30,7 +30,7 @@ export const drawStyle = (feature) => {
   }
 };
 
-// Radar/IFF hedef stili
+
 export function radarStyle(feature) {
   const status = (feature.get('status') ?? 'UNKNOWN').toString();
   const callsign = (feature.get('callsign') ?? 'UNKNOWN').toString();

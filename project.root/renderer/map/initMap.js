@@ -33,14 +33,14 @@ export const radarLayer = new VectorLayer({
 
 export const map = new Map({
   target: 'map',
-  layers: [baseLayers.osm, drawLayer, radarLayer],
+  layers: [baseLayers.satellite, drawLayer, radarLayer],
   view: new View({
     center: fromLonLat([32.85, 39.93]),
     zoom: 8
   }),
   controls: defaultControls({
-    zoom: false,         // + / – butonlarını kaldırır
-    attribution: false   // "© OpenStreetMap contributors" yazısını kaldırır
+    zoom: false,        
+    attribution: false   
   })
 });
 

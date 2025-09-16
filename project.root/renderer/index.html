@@ -7,18 +7,18 @@
     <link rel="stylesheet" href="./assets/css/ol.css" />
   </head>
   <body>
-    <!-- Harita -->
+
     <div id="map"></div>
 
-    <!-- Sağ panel: Şüpheli hedefler -->
+
     <aside id="suspicious-panel">
-      <h3>Şüpheli hedefler</h3>
+      <h3>Suspicious Targets</h3>
       <div id="suspicious-list">
-        <!-- JS ile doldurulacak -->
+  
       </div>
     </aside>
     
-    <!-- Toolbar -->
+ 
     <div class="toolbar">
       <button data-tool="None">Seçim Yok</button>
       <button data-tool="Point">Nokta</button>
@@ -32,25 +32,40 @@
       <button id="fit">Fit to Data</button>
     </div>
     
-    <!-- Katman değiştirme -->
-    <div class="layer-controls">
-      <button onclick="changeLayer('osm')">Harita</button>
-      <button onclick="changeLayer('satellite')">Uydu</button>
-      <button onclick="changeLayer('hybrid')">Hibrit</button>
-      <button onclick="changeLayer('terrain')">Arazi</button>
+   
+    <div class="layer-panel">
+      <button id="layer-toggle">Katmanlar ▼</button>
+      <div id="layer-controls" class="layer-controls hidden">
+        <button onclick="changeLayer('osm')">Harita</button>
+        <button onclick="changeLayer('satellite')">Uydu</button>
+        <button onclick="changeLayer('hybrid')">Hibrit</button>
+        <button onclick="changeLayer('terrain')">Arazi</button>
+      </div>
     </div>
     
-    <!-- Durum -->
+
     <div class="status" id="status">Hazır</div>
     
-    <!-- Popup -->
+   
     <div id="popup" class="ol-popup radar-popup">
       <button id="popup-closer" class="ol-popup-closer" type="button">×</button>
       <div id="popup-content" class="ol-popup-content"></div>
     </div>
 
-    <!-- JS -->
+  
     <script type="module" src="index.js"></script>
     <script type="module" src="./ui/suspiciousPanel.js"></script>
+    <script>
+    
+      const toggleBtn = document.getElementById('layer-toggle');
+      const layerControls = document.getElementById('layer-controls');
+
+      toggleBtn.addEventListener('click', () => {
+        layerControls.classList.toggle('hidden');
+        toggleBtn.textContent = layerControls.classList.contains('hidden')
+          ? 'Katmanlar ▼'
+          : 'Katmanlar ▲';
+      });
+    </script>
   </body>
 </html>
