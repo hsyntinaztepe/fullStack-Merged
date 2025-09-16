@@ -5,7 +5,6 @@ public class MainLauncher {
         AircraftGenerator.generateAircrafts(30);
         new Thread(new RadarSimService()).start();
         new Thread(new IffSimService()).start();
-        //new Thread(new DataLinkSimService()).start();
         System.out.println("Baris kartal simulasyonu basladi: Radar, IFF ve Datalink ayni anda calisiyor");
     }
 }

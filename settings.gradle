@@ -1,0 +1,5 @@
+rootProject.name = 'fullStack-Merged'
+
+include 'radar'
+include 'iff'
+include 'datalink'

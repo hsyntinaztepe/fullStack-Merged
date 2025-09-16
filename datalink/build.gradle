@@ -1,0 +1,58 @@
+plugins {
+    id 'java'
+    id 'com.google.protobuf' version '0.9.4'
+    id 'application'
+}
+
+group = 'datalink'
+version = '0.0.1'
+java { toolchain { languageVersion = JavaLanguageVersion.of(22) } }
+
+repositories { mavenCentral() }
+
+def grpcVersion = '1.64.0'
+def protobufVersion = '3.25.3'
+
+dependencies {
+    implementation "io.grpc:grpc-netty:${grpcVersion}"
+    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
+    implementation "io.grpc:grpc-stub:${grpcVersion}"
+
+    // Driver MongoDB
+    implementation 'org.mongodb:mongodb-driver-sync:5.2.0'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+}
+
+protobuf {
+    protoc { artifact = "com.google.protobuf:protoc:${protobufVersion}" }
+    plugins { grpc { artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}" } }
+    generateProtoTasks {
+        all().each { task -> task.plugins { grpc {} } }
+    }
+}
+
+sourceSets {
+    main {
+        java {
+            // On ajoute ton dossier custom, mais on garde les chemins générés par protoc
+            srcDirs += ['src/main/com/java']
+        }
+        proto {
+            // Inclut tous les .proto nécessaires
+            srcDirs = [
+                'src/main/proto',   // datalink.proto
+                '../radar/proto',   // radar.proto
+                '../iff/proto'      // iff.proto
+            ]
+        }
+    }
+}
+
+
+
+application {
+    mainClass = 'MainDatalink' // adapte si tu as un package
+}
+
+tasks.withType(Test).configureEach { useJUnitPlatform() }

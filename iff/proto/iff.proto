@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package iff;
+option java_multiple_files = true;
 
 // Tek bir IFF verisi
 message IFFData {

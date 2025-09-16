@@ -1,0 +1,66 @@
+syntax = "proto3";
+package datalink;
+option java_multiple_files = true;
+
+enum Identification {
+  IDENTIFICATION_UNKNOWN = 0;
+  IDENTIFICATION_FRIEND = 1;
+  IDENTIFICATION_FOE = 2;
+  IDENTIFICATION_NEUTRAL = 3;
+}
+
+enum IdentificationSource {
+  IDENT_SRC_UNKNOWN = 0;
+  IDENT_SRC_IFF = 1;
+  IDENT_SRC_MANUAL = 2;
+  IDENT_SRC_INFERRED = 3;
+}
+
+message DatalinkTrack {
+  string track_id = 1;
+
+  double lat = 2;
+  double lon = 3;
+  int32 altitude_m = 4;   
+  int32 speed = 5;
+  double heading = 6; 
+
+  Identification identification = 7;
+  IdentificationSource identification_source = 8;
+
+  int64 updated_at = 9;   
+  string callsign = 10;   
+  string platform = 11;
+}
+
+message GetTrackRequest { string track_id = 1; }
+message GetTrackResponse { DatalinkTrack track = 1; }
+
+message ListTracksRequest {}
+message ListTracksResponse { repeated DatalinkTrack tracks = 1; }
+
+message SubscribeTracksRequest {}
+message SubscribeTracksResponse {
+  enum EventType {
+    UNKNOWN = 0;
+    UPSERT = 1;  // création / mise à jour
+    DELETE = 2;  // suppression (ex: expiration)
+  }
+  EventType type = 1;
+  DatalinkTrack track = 2;
+}
+
+message SetManualIdentificationRequest {
+  string track_id = 1;
+  Identification identification = 2;
+}
+message SetManualIdentificationResponse {
+  DatalinkTrack track = 1;
+}
+
+service DatalinkService {
+  rpc GetTrack(GetTrackRequest) returns (GetTrackResponse);
+  rpc ListTracks(ListTracksRequest) returns (ListTracksResponse);
+  rpc SubscribeTracks(SubscribeTracksRequest) returns (stream SubscribeTracksResponse);
+  rpc SetManualIdentification(SetManualIdentificationRequest) returns (SetManualIdentificationResponse);
+}

@@ -1,6 +1,8 @@
 syntax = "proto3";
 
 package radar;
+option java_multiple_files = true;
+
 
 message StreamRequest {
   int32 refresh_interval_ms = 1;
