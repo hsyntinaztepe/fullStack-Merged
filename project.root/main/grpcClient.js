@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Radar proto yükleme
+
 const radarPackageDef = protoLoader.loadSync(
   path.join(__dirname, '../proto/radar.proto'),
   { keepCase: true, longs: String, enums: String, defaults: true, oneofs: true }
@@ -18,7 +18,7 @@ export const radarClient = new radarGrpcObj.radar.RadarService(
   grpc.credentials.createInsecure()
 );
 
-// IFF proto yükleme
+
 const iffPackageDef = protoLoader.loadSync(
   path.join(__dirname, '../proto/iff.proto'),
   { keepCase: true, longs: String, enums: String, defaults: true, oneofs: true }
@@ -26,6 +26,6 @@ const iffPackageDef = protoLoader.loadSync(
 const iffGrpcObj = grpc.loadPackageDefinition(iffPackageDef);
 
 export const iffClient = new iffGrpcObj.iff.IFFService(
-  'localhost:50051', // IFF servisin çalıştığı port
+  'localhost:50051', 
   grpc.credentials.createInsecure()
 );

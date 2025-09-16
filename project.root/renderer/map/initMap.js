@@ -39,8 +39,8 @@ export const map = new Map({
     zoom: 8
   }),
   controls: defaultControls({
-    zoom: false,         // + / – butonlarını kaldırır
-    attribution: false   // "© OpenStreetMap contributors" yazısını kaldırır
+    zoom: false,        
+    attribution: false   
   })
 });
 

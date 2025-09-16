@@ -18,7 +18,7 @@ ipcMain.on('radar:startStream', (event, args) => {
   activeStream = call;
 
   call.on('data', (target) => {
-    // === Konsola basma eklendi ===
+
   console.log(
     `[STREAM] id=${target.id}, ` +
     `lat=${target.lat?.toFixed?.(5) ?? target.lat}, ` +
@@ -28,7 +28,7 @@ ipcMain.on('radar:startStream', (event, args) => {
     `geoAlt=${target.geo_altitude}`
   );
 
-    // =============================
+   
 
     event.sender.send('radar:streamData', target);
   });

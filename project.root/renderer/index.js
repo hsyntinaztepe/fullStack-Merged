@@ -1,7 +1,7 @@
-// Harita ve kaynaklar
+
 import './map/initMap.js';
 
-// UI ve kontrol modülleri
+
 import { setDrawInteraction, ensureModify, ensureTranslate } from './map/interactions.js';
 import { changeLayer } from './map/layerControl.js';
 import { loadGeoJsonFromFile, saveGeoJsonToFile, loadExampleGeoJson } from './map/geoJsonHandlers.js';
@@ -10,7 +10,7 @@ import { drawSource, map, radarLayer } from './map/initMap.js';
 import { setStatus } from './ui/status.js';
 import { initMergedPopup } from './map/radarPopup.js';
 
-// === Toolbar bağlama ===
+
 document.querySelectorAll('.toolbar button[data-tool]').forEach(btn => {
   btn.addEventListener('click', () => setDrawInteraction(btn.getAttribute('data-tool')));
 });
@@ -45,27 +45,27 @@ document.getElementById('fit').addEventListener('click', () => {
 document.getElementById('load').addEventListener('click', loadGeoJsonFromFile);
 document.getElementById('save').addEventListener('click', saveGeoJsonToFile);
 
-// Katman değiştirme global erişim
+
 window.changeLayer = changeLayer;
 
-// === Başlangıç yüklemeleri ===
+
 await loadExampleGeoJson();
 await loadRadarTargets();
 
-// === IFF snapshot + Radar stream eşleşme mantığı ===
+
 const iffTargets = new Map();
 
-// ID normalize fonksiyonu
+
 const cleanId = (id) => (id || '').trim().toUpperCase();
 
-// IFF stream başlat (filtre istemezsen lat/lon/radius_km = 0 gönder)
+
 window.iff.startStream({
   lat: 0,
   lon: 0,
   radius_km: 0
 });
 
-// IFF verisi geldikçe kaydet
+
 window.iff.onStreamData((data) => {
   if (!data) return;
   const id = cleanId(data.id);
@@ -114,7 +114,7 @@ window.iff.onStreamEnd(() => {
     });
   }
 
-  // IFF verisi hazır → radar stream başlat
+ 
   startRadarStream(iffTargets);
 });
 
@@ -122,5 +122,5 @@ window.iff.onStreamStopped(() => {
   console.log('[IFF STREAM] Stopped');
 });
 
-// === Popup’ı başlat ===
+
 initMergedPopup(map, radarLayer);
