@@ -9,9 +9,6 @@ public class MainLauncher {
         // Lancer IFF
         new Thread(new IffSimService()).start();
 
-        // Lancer Datalink
-        new Thread(new DataLinkSimService()).start();
-
         System.out.println("Simulation AEW&C démarrée : Radar, IFF et Datalink tournent en parallèle.");
     }
 }
