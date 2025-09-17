@@ -2,28 +2,26 @@ syntax = "proto3";
 
 package datalink;
 
-// Data Link Message - tek bir mesaj için
-message DataLinkMessage {
+
+service DataLink {
+  rpc StreamDataLink (DLRequest) returns (stream DLStreamResponse);
+}
+
+
+message DLRequest {}
+
+
+message DLData {
   string id = 1;
-  string from = 2;
-  string to = 3;
-  string text = 4;
+  string callsign = 2;
+  string status = 3;
+  double lat = 4;
+  double lon = 5;
+  double velocity = 6;
+  double baroAlt = 7;
+  double geoAlt = 8;
 }
 
-// Request mesajı - istemci tarafından gönderilir
-message DataLinkRequest {
-  // Şu anda boş ama gelecekte filtre parametreleri eklenebilir
-  string filter = 1;
-}
-
-// Response mesajı - server tarafından döndürülür
-message DataLinkResponse {
-  repeated DataLinkMessage messages = 1;
-  int32 total_count = 2;
-}
-
-// Data Link Service tanımı
-service DataLinkService {
-  // Data Link mesajlarını getir
-  rpc GetDataLinkMessages(DataLinkRequest) returns (DataLinkResponse);
+message DLStreamResponse {
+  DLData data = 1;
 }

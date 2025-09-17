@@ -12,15 +12,18 @@ function fmt(v, digits = 2) {
   return Number.isFinite(n) ? n.toFixed(digits) : String(v);
 }
 
-function renderItem(t) {
+function renderItem(t, targetsRef) {
   const p = Number(t.suspiciousProbability ?? 0);
   const cls = probClass(p);
-
+  const isFoe = t.status === 'FOE';
+  
+  const radarIdClass = isFoe ? 'foe-target' : '';
+  
   const div = document.createElement('div');
   div.className = 'suspicious-item';
   div.innerHTML = `
     <div class="row">
-      <div><strong>${t.radarId}</strong> ${t.callsign !== 'UNKNOWN' ? `| ${t.callsign}` : ''}</div>
+      <div><strong class="${radarIdClass}">${t.radarId}</strong> ${t.callsign !== 'UNKNOWN' ? `| ${t.callsign}` : ''}</div>
       <div class="badge ${cls}">P=${fmt(p, 2)}</div>
     </div>
     <div class="row">
@@ -36,30 +39,34 @@ function renderItem(t) {
       <div>geo ${fmt(t.geoAlt, 0)}</div>
     </div>
     <div class="row">
-      <button class="mark-foe-btn">Mark as FOE</button>
+      <button class="mark-foe-btn">${isFoe ? 'Unmark as FOE' : 'Mark as FOE'}</button>
     </div>
   `;
 
   const btn = div.querySelector('.mark-foe-btn');
   btn.addEventListener('click', () => {
-    const isFoe = t.status === 'FOE';
     if (isFoe) {
-      // Override kaldır
+      // Optimistic reset
+      t.status = null;
       window.dispatchEvent(new CustomEvent('target:resetStatus', { detail: { radarId: t.radarId } }));
     } else {
-      // FOE olarak işaretle
+      // Optimistic mark
+      t.status = 'FOE';
       window.dispatchEvent(new CustomEvent('target:markFoe', { detail: { radarId: t.radarId } }));
     }
+    // UI’yı hemen yeniden çiz
+    renderList(targetsRef);
   });
+  
   return div;
 }
+
 
 function renderList(targets = []) {
   listEl.innerHTML = '';
   const sorted = [...targets].sort((a, b) => (b.suspiciousProbability ?? 0) - (a.suspiciousProbability ?? 0));
-  sorted.forEach(t => listEl.appendChild(renderItem(t)));
+  sorted.forEach(t => listEl.appendChild(renderItem(t, targets)));
 }
-
 window.addEventListener('suspicious:update', (e) => {
   const targets = e.detail || [];
   renderList(targets);

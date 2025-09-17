@@ -23,6 +23,7 @@
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/arena.h>
 #include <google/protobuf/arenastring.h>
+#include <google/protobuf/generated_message_bases.h>
 #include <google/protobuf/generated_message_util.h>
 #include <google/protobuf/metadata_lite.h>
 #include <google/protobuf/generated_message_reflection.h>
@@ -45,43 +46,42 @@ struct TableStruct_datalink_2eproto {
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_datalink_2eproto;
 namespace datalink {
-class DataLinkMessage;
-struct DataLinkMessageDefaultTypeInternal;
-extern DataLinkMessageDefaultTypeInternal _DataLinkMessage_default_instance_;
-class DataLinkRequest;
-struct DataLinkRequestDefaultTypeInternal;
-extern DataLinkRequestDefaultTypeInternal _DataLinkRequest_default_instance_;
-class DataLinkResponse;
-struct DataLinkResponseDefaultTypeInternal;
-extern DataLinkResponseDefaultTypeInternal _DataLinkResponse_default_instance_;
+class DLData;
+struct DLDataDefaultTypeInternal;
+extern DLDataDefaultTypeInternal _DLData_default_instance_;
+class DLRequest;
+struct DLRequestDefaultTypeInternal;
+extern DLRequestDefaultTypeInternal _DLRequest_default_instance_;
+class DLStreamResponse;
+struct DLStreamResponseDefaultTypeInternal;
+extern DLStreamResponseDefaultTypeInternal _DLStreamResponse_default_instance_;
 }  // namespace datalink
 PROTOBUF_NAMESPACE_OPEN
-template<> ::datalink::DataLinkMessage* Arena::CreateMaybeMessage<::datalink::DataLinkMessage>(Arena*);
-template<> ::datalink::DataLinkRequest* Arena::CreateMaybeMessage<::datalink::DataLinkRequest>(Arena*);
-template<> ::datalink::DataLinkResponse* Arena::CreateMaybeMessage<::datalink::DataLinkResponse>(Arena*);
+template<> ::datalink::DLData* Arena::CreateMaybeMessage<::datalink::DLData>(Arena*);
+template<> ::datalink::DLRequest* Arena::CreateMaybeMessage<::datalink::DLRequest>(Arena*);
+template<> ::datalink::DLStreamResponse* Arena::CreateMaybeMessage<::datalink::DLStreamResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace datalink {
 
 // ===================================================================
 
-class DataLinkMessage final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:datalink.DataLinkMessage) */ {
+class DLRequest final :
+    public ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase /* @@protoc_insertion_point(class_definition:datalink.DLRequest) */ {
  public:
-  inline DataLinkMessage() : DataLinkMessage(nullptr) {}
-  ~DataLinkMessage() override;
-  explicit PROTOBUF_CONSTEXPR DataLinkMessage(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline DLRequest() : DLRequest(nullptr) {}
+  explicit PROTOBUF_CONSTEXPR DLRequest(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  DataLinkMessage(const DataLinkMessage& from);
-  DataLinkMessage(DataLinkMessage&& from) noexcept
-    : DataLinkMessage() {
+  DLRequest(const DLRequest& from);
+  DLRequest(DLRequest&& from) noexcept
+    : DLRequest() {
     *this = ::std::move(from);
   }
 
-  inline DataLinkMessage& operator=(const DataLinkMessage& from) {
+  inline DLRequest& operator=(const DLRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline DataLinkMessage& operator=(DataLinkMessage&& from) noexcept {
+  inline DLRequest& operator=(DLRequest&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -104,20 +104,20 @@ class DataLinkMessage final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const DataLinkMessage& default_instance() {
+  static const DLRequest& default_instance() {
     return *internal_default_instance();
   }
-  static inline const DataLinkMessage* internal_default_instance() {
-    return reinterpret_cast<const DataLinkMessage*>(
-               &_DataLinkMessage_default_instance_);
+  static inline const DLRequest* internal_default_instance() {
+    return reinterpret_cast<const DLRequest*>(
+               &_DLRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     0;
 
-  friend void swap(DataLinkMessage& a, DataLinkMessage& b) {
+  friend void swap(DLRequest& a, DLRequest& b) {
     a.Swap(&b);
   }
-  inline void Swap(DataLinkMessage* other) {
+  inline void Swap(DLRequest* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -130,7 +130,7 @@ class DataLinkMessage final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(DataLinkMessage* other) {
+  void UnsafeArenaSwap(DLRequest* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -138,13 +138,130 @@ class DataLinkMessage final :
 
   // implements Message ----------------------------------------------
 
-  DataLinkMessage* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<DataLinkMessage>(arena);
+  DLRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<DLRequest>(arena);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyFrom;
+  inline void CopyFrom(const DLRequest& from) {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl(this, from);
+  }
+  using ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeFrom;
+  void MergeFrom(const DLRequest& from) {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl(this, from);
+  }
+  public:
+
+  private:
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "datalink.DLRequest";
+  }
+  protected:
+  explicit DLRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                       bool is_message_owned = false);
+  public:
+
+  static const ClassData _class_data_;
+  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:datalink.DLRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  friend struct ::TableStruct_datalink_2eproto;
+};
+// -------------------------------------------------------------------
+
+class DLData final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:datalink.DLData) */ {
+ public:
+  inline DLData() : DLData(nullptr) {}
+  ~DLData() override;
+  explicit PROTOBUF_CONSTEXPR DLData(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+
+  DLData(const DLData& from);
+  DLData(DLData&& from) noexcept
+    : DLData() {
+    *this = ::std::move(from);
+  }
+
+  inline DLData& operator=(const DLData& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline DLData& operator=(DLData&& from) noexcept {
+    if (this == &from) return *this;
+    if (GetOwningArena() == from.GetOwningArena()
+  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
+        && GetOwningArena() != nullptr
+  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
+    ) {
+      InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return default_instance().GetMetadata().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return default_instance().GetMetadata().reflection;
+  }
+  static const DLData& default_instance() {
+    return *internal_default_instance();
+  }
+  static inline const DLData* internal_default_instance() {
+    return reinterpret_cast<const DLData*>(
+               &_DLData_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(DLData& a, DLData& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(DLData* other) {
+    if (other == this) return;
+  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() != nullptr &&
+        GetOwningArena() == other->GetOwningArena()) {
+   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
+    if (GetOwningArena() == other->GetOwningArena()) {
+  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(DLData* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  DLData* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<DLData>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const DataLinkMessage& from);
+  void CopyFrom(const DLData& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const DataLinkMessage& from);
+  void MergeFrom(const DLData& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
   public:
@@ -161,15 +278,15 @@ class DataLinkMessage final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(DataLinkMessage* other);
+  void InternalSwap(DLData* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "datalink.DataLinkMessage";
+    return "datalink.DLData";
   }
   protected:
-  explicit DataLinkMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit DLData(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   public:
 
@@ -184,9 +301,13 @@ class DataLinkMessage final :
 
   enum : int {
     kIdFieldNumber = 1,
-    kFromFieldNumber = 2,
-    kToFieldNumber = 3,
-    kTextFieldNumber = 4,
+    kCallsignFieldNumber = 2,
+    kStatusFieldNumber = 3,
+    kLatFieldNumber = 4,
+    kLonFieldNumber = 5,
+    kVelocityFieldNumber = 6,
+    kBaroAltFieldNumber = 7,
+    kGeoAltFieldNumber = 8,
   };
   // string id = 1;
   void clear_id();
@@ -202,49 +323,80 @@ class DataLinkMessage final :
   std::string* _internal_mutable_id();
   public:
 
-  // string from = 2;
-  void clear_from();
-  const std::string& from() const;
+  // string callsign = 2;
+  void clear_callsign();
+  const std::string& callsign() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_from(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_from();
-  PROTOBUF_NODISCARD std::string* release_from();
-  void set_allocated_from(std::string* from);
+  void set_callsign(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_callsign();
+  PROTOBUF_NODISCARD std::string* release_callsign();
+  void set_allocated_callsign(std::string* callsign);
   private:
-  const std::string& _internal_from() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_from(const std::string& value);
-  std::string* _internal_mutable_from();
+  const std::string& _internal_callsign() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_callsign(const std::string& value);
+  std::string* _internal_mutable_callsign();
   public:
 
-  // string to = 3;
-  void clear_to();
-  const std::string& to() const;
+  // string status = 3;
+  void clear_status();
+  const std::string& status() const;
   template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_to(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_to();
-  PROTOBUF_NODISCARD std::string* release_to();
-  void set_allocated_to(std::string* to);
+  void set_status(ArgT0&& arg0, ArgT... args);
+  std::string* mutable_status();
+  PROTOBUF_NODISCARD std::string* release_status();
+  void set_allocated_status(std::string* status);
   private:
-  const std::string& _internal_to() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_to(const std::string& value);
-  std::string* _internal_mutable_to();
+  const std::string& _internal_status() const;
+  inline PROTOBUF_ALWAYS_INLINE void _internal_set_status(const std::string& value);
+  std::string* _internal_mutable_status();
   public:
 
-  // string text = 4;
-  void clear_text();
-  const std::string& text() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_text(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_text();
-  PROTOBUF_NODISCARD std::string* release_text();
-  void set_allocated_text(std::string* text);
+  // double lat = 4;
+  void clear_lat();
+  double lat() const;
+  void set_lat(double value);
   private:
-  const std::string& _internal_text() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_text(const std::string& value);
-  std::string* _internal_mutable_text();
+  double _internal_lat() const;
+  void _internal_set_lat(double value);
   public:
 
-  // @@protoc_insertion_point(class_scope:datalink.DataLinkMessage)
+  // double lon = 5;
+  void clear_lon();
+  double lon() const;
+  void set_lon(double value);
+  private:
+  double _internal_lon() const;
+  void _internal_set_lon(double value);
+  public:
+
+  // double velocity = 6;
+  void clear_velocity();
+  double velocity() const;
+  void set_velocity(double value);
+  private:
+  double _internal_velocity() const;
+  void _internal_set_velocity(double value);
+  public:
+
+  // double baroAlt = 7;
+  void clear_baroalt();
+  double baroalt() const;
+  void set_baroalt(double value);
+  private:
+  double _internal_baroalt() const;
+  void _internal_set_baroalt(double value);
+  public:
+
+  // double geoAlt = 8;
+  void clear_geoalt();
+  double geoalt() const;
+  void set_geoalt(double value);
+  private:
+  double _internal_geoalt() const;
+  void _internal_set_geoalt(double value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:datalink.DLData)
  private:
   class _Internal;
 
@@ -252,32 +404,36 @@ class DataLinkMessage final :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr id_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr from_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr to_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr text_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr callsign_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr status_;
+  double lat_;
+  double lon_;
+  double velocity_;
+  double baroalt_;
+  double geoalt_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_datalink_2eproto;
 };
 // -------------------------------------------------------------------
 
-class DataLinkRequest final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:datalink.DataLinkRequest) */ {
+class DLStreamResponse final :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:datalink.DLStreamResponse) */ {
  public:
-  inline DataLinkRequest() : DataLinkRequest(nullptr) {}
-  ~DataLinkRequest() override;
-  explicit PROTOBUF_CONSTEXPR DataLinkRequest(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
+  inline DLStreamResponse() : DLStreamResponse(nullptr) {}
+  ~DLStreamResponse() override;
+  explicit PROTOBUF_CONSTEXPR DLStreamResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
 
-  DataLinkRequest(const DataLinkRequest& from);
-  DataLinkRequest(DataLinkRequest&& from) noexcept
-    : DataLinkRequest() {
+  DLStreamResponse(const DLStreamResponse& from);
+  DLStreamResponse(DLStreamResponse&& from) noexcept
+    : DLStreamResponse() {
     *this = ::std::move(from);
   }
 
-  inline DataLinkRequest& operator=(const DataLinkRequest& from) {
+  inline DLStreamResponse& operator=(const DLStreamResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline DataLinkRequest& operator=(DataLinkRequest&& from) noexcept {
+  inline DLStreamResponse& operator=(DLStreamResponse&& from) noexcept {
     if (this == &from) return *this;
     if (GetOwningArena() == from.GetOwningArena()
   #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
@@ -300,168 +456,20 @@ class DataLinkRequest final :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return default_instance().GetMetadata().reflection;
   }
-  static const DataLinkRequest& default_instance() {
+  static const DLStreamResponse& default_instance() {
     return *internal_default_instance();
   }
-  static inline const DataLinkRequest* internal_default_instance() {
-    return reinterpret_cast<const DataLinkRequest*>(
-               &_DataLinkRequest_default_instance_);
-  }
-  static constexpr int kIndexInFileMessages =
-    1;
-
-  friend void swap(DataLinkRequest& a, DataLinkRequest& b) {
-    a.Swap(&b);
-  }
-  inline void Swap(DataLinkRequest* other) {
-    if (other == this) return;
-  #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetOwningArena() != nullptr &&
-        GetOwningArena() == other->GetOwningArena()) {
-   #else  // PROTOBUF_FORCE_COPY_IN_SWAP
-    if (GetOwningArena() == other->GetOwningArena()) {
-  #endif  // !PROTOBUF_FORCE_COPY_IN_SWAP
-      InternalSwap(other);
-    } else {
-      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
-    }
-  }
-  void UnsafeArenaSwap(DataLinkRequest* other) {
-    if (other == this) return;
-    GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
-    InternalSwap(other);
-  }
-
-  // implements Message ----------------------------------------------
-
-  DataLinkRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<DataLinkRequest>(arena);
-  }
-  using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const DataLinkRequest& from);
-  using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const DataLinkRequest& from);
-  private:
-  static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
-  public:
-  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
-  bool IsInitialized() const final;
-
-  size_t ByteSizeLong() const final;
-  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
-  uint8_t* _InternalSerialize(
-      uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
-  int GetCachedSize() const final { return _cached_size_.Get(); }
-
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const final;
-  void InternalSwap(DataLinkRequest* other);
-
-  private:
-  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
-  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "datalink.DataLinkRequest";
-  }
-  protected:
-  explicit DataLinkRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                       bool is_message_owned = false);
-  public:
-
-  static const ClassData _class_data_;
-  const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*GetClassData() const final;
-
-  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
-
-  // nested types ----------------------------------------------------
-
-  // accessors -------------------------------------------------------
-
-  enum : int {
-    kFilterFieldNumber = 1,
-  };
-  // string filter = 1;
-  void clear_filter();
-  const std::string& filter() const;
-  template <typename ArgT0 = const std::string&, typename... ArgT>
-  void set_filter(ArgT0&& arg0, ArgT... args);
-  std::string* mutable_filter();
-  PROTOBUF_NODISCARD std::string* release_filter();
-  void set_allocated_filter(std::string* filter);
-  private:
-  const std::string& _internal_filter() const;
-  inline PROTOBUF_ALWAYS_INLINE void _internal_set_filter(const std::string& value);
-  std::string* _internal_mutable_filter();
-  public:
-
-  // @@protoc_insertion_point(class_scope:datalink.DataLinkRequest)
- private:
-  class _Internal;
-
-  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
-  typedef void InternalArenaConstructable_;
-  typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr filter_;
-  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
-  friend struct ::TableStruct_datalink_2eproto;
-};
-// -------------------------------------------------------------------
-
-class DataLinkResponse final :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:datalink.DataLinkResponse) */ {
- public:
-  inline DataLinkResponse() : DataLinkResponse(nullptr) {}
-  ~DataLinkResponse() override;
-  explicit PROTOBUF_CONSTEXPR DataLinkResponse(::PROTOBUF_NAMESPACE_ID::internal::ConstantInitialized);
-
-  DataLinkResponse(const DataLinkResponse& from);
-  DataLinkResponse(DataLinkResponse&& from) noexcept
-    : DataLinkResponse() {
-    *this = ::std::move(from);
-  }
-
-  inline DataLinkResponse& operator=(const DataLinkResponse& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  inline DataLinkResponse& operator=(DataLinkResponse&& from) noexcept {
-    if (this == &from) return *this;
-    if (GetOwningArena() == from.GetOwningArena()
-  #ifdef PROTOBUF_FORCE_COPY_IN_MOVE
-        && GetOwningArena() != nullptr
-  #endif  // !PROTOBUF_FORCE_COPY_IN_MOVE
-    ) {
-      InternalSwap(&from);
-    } else {
-      CopyFrom(from);
-    }
-    return *this;
-  }
-
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
-    return GetDescriptor();
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
-    return default_instance().GetMetadata().descriptor;
-  }
-  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
-    return default_instance().GetMetadata().reflection;
-  }
-  static const DataLinkResponse& default_instance() {
-    return *internal_default_instance();
-  }
-  static inline const DataLinkResponse* internal_default_instance() {
-    return reinterpret_cast<const DataLinkResponse*>(
-               &_DataLinkResponse_default_instance_);
+  static inline const DLStreamResponse* internal_default_instance() {
+    return reinterpret_cast<const DLStreamResponse*>(
+               &_DLStreamResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     2;
 
-  friend void swap(DataLinkResponse& a, DataLinkResponse& b) {
+  friend void swap(DLStreamResponse& a, DLStreamResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(DataLinkResponse* other) {
+  inline void Swap(DLStreamResponse* other) {
     if (other == this) return;
   #ifdef PROTOBUF_FORCE_COPY_IN_SWAP
     if (GetOwningArena() != nullptr &&
@@ -474,7 +482,7 @@ class DataLinkResponse final :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(DataLinkResponse* other) {
+  void UnsafeArenaSwap(DLStreamResponse* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetOwningArena() == other->GetOwningArena());
     InternalSwap(other);
@@ -482,13 +490,13 @@ class DataLinkResponse final :
 
   // implements Message ----------------------------------------------
 
-  DataLinkResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
-    return CreateMaybeMessage<DataLinkResponse>(arena);
+  DLStreamResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena = nullptr) const final {
+    return CreateMaybeMessage<DLStreamResponse>(arena);
   }
   using ::PROTOBUF_NAMESPACE_ID::Message::CopyFrom;
-  void CopyFrom(const DataLinkResponse& from);
+  void CopyFrom(const DLStreamResponse& from);
   using ::PROTOBUF_NAMESPACE_ID::Message::MergeFrom;
-  void MergeFrom(const DataLinkResponse& from);
+  void MergeFrom(const DLStreamResponse& from);
   private:
   static void MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to, const ::PROTOBUF_NAMESPACE_ID::Message& from);
   public:
@@ -505,15 +513,15 @@ class DataLinkResponse final :
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(DataLinkResponse* other);
+  void InternalSwap(DLStreamResponse* other);
 
   private:
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "datalink.DataLinkResponse";
+    return "datalink.DLStreamResponse";
   }
   protected:
-  explicit DataLinkResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+  explicit DLStreamResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                        bool is_message_owned = false);
   public:
 
@@ -527,45 +535,34 @@ class DataLinkResponse final :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kMessagesFieldNumber = 1,
-    kTotalCountFieldNumber = 2,
+    kDataFieldNumber = 1,
   };
-  // repeated .datalink.DataLinkMessage messages = 1;
-  int messages_size() const;
+  // .datalink.DLData data = 1;
+  bool has_data() const;
   private:
-  int _internal_messages_size() const;
+  bool _internal_has_data() const;
   public:
-  void clear_messages();
-  ::datalink::DataLinkMessage* mutable_messages(int index);
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::datalink::DataLinkMessage >*
-      mutable_messages();
+  void clear_data();
+  const ::datalink::DLData& data() const;
+  PROTOBUF_NODISCARD ::datalink::DLData* release_data();
+  ::datalink::DLData* mutable_data();
+  void set_allocated_data(::datalink::DLData* data);
   private:
-  const ::datalink::DataLinkMessage& _internal_messages(int index) const;
-  ::datalink::DataLinkMessage* _internal_add_messages();
+  const ::datalink::DLData& _internal_data() const;
+  ::datalink::DLData* _internal_mutable_data();
   public:
-  const ::datalink::DataLinkMessage& messages(int index) const;
-  ::datalink::DataLinkMessage* add_messages();
-  const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::datalink::DataLinkMessage >&
-      messages() const;
+  void unsafe_arena_set_allocated_data(
+      ::datalink::DLData* data);
+  ::datalink::DLData* unsafe_arena_release_data();
 
-  // int32 total_count = 2;
-  void clear_total_count();
-  int32_t total_count() const;
-  void set_total_count(int32_t value);
-  private:
-  int32_t _internal_total_count() const;
-  void _internal_set_total_count(int32_t value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:datalink.DataLinkResponse)
+  // @@protoc_insertion_point(class_scope:datalink.DLStreamResponse)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::datalink::DataLinkMessage > messages_;
-  int32_t total_count_;
+  ::datalink::DLData* data_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_datalink_2eproto;
 };
@@ -578,44 +575,48 @@ class DataLinkResponse final :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// DataLinkMessage
+// DLRequest
+
+// -------------------------------------------------------------------
+
+// DLData
 
 // string id = 1;
-inline void DataLinkMessage::clear_id() {
+inline void DLData::clear_id() {
   id_.ClearToEmpty();
 }
-inline const std::string& DataLinkMessage::id() const {
-  // @@protoc_insertion_point(field_get:datalink.DataLinkMessage.id)
+inline const std::string& DLData::id() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.id)
   return _internal_id();
 }
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
-void DataLinkMessage::set_id(ArgT0&& arg0, ArgT... args) {
+void DLData::set_id(ArgT0&& arg0, ArgT... args) {
  
  id_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:datalink.DataLinkMessage.id)
+  // @@protoc_insertion_point(field_set:datalink.DLData.id)
 }
-inline std::string* DataLinkMessage::mutable_id() {
+inline std::string* DLData::mutable_id() {
   std::string* _s = _internal_mutable_id();
-  // @@protoc_insertion_point(field_mutable:datalink.DataLinkMessage.id)
+  // @@protoc_insertion_point(field_mutable:datalink.DLData.id)
   return _s;
 }
-inline const std::string& DataLinkMessage::_internal_id() const {
+inline const std::string& DLData::_internal_id() const {
   return id_.Get();
 }
-inline void DataLinkMessage::_internal_set_id(const std::string& value) {
+inline void DLData::_internal_set_id(const std::string& value) {
   
   id_.Set(value, GetArenaForAllocation());
 }
-inline std::string* DataLinkMessage::_internal_mutable_id() {
+inline std::string* DLData::_internal_mutable_id() {
   
   return id_.Mutable(GetArenaForAllocation());
 }
-inline std::string* DataLinkMessage::release_id() {
-  // @@protoc_insertion_point(field_release:datalink.DataLinkMessage.id)
+inline std::string* DLData::release_id() {
+  // @@protoc_insertion_point(field_release:datalink.DLData.id)
   return id_.Release();
 }
-inline void DataLinkMessage::set_allocated_id(std::string* id) {
+inline void DLData::set_allocated_id(std::string* id) {
   if (id != nullptr) {
     
   } else {
@@ -627,275 +628,301 @@ inline void DataLinkMessage::set_allocated_id(std::string* id) {
     id_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:datalink.DataLinkMessage.id)
+  // @@protoc_insertion_point(field_set_allocated:datalink.DLData.id)
 }
 
-// string from = 2;
-inline void DataLinkMessage::clear_from() {
-  from_.ClearToEmpty();
+// string callsign = 2;
+inline void DLData::clear_callsign() {
+  callsign_.ClearToEmpty();
 }
-inline const std::string& DataLinkMessage::from() const {
-  // @@protoc_insertion_point(field_get:datalink.DataLinkMessage.from)
-  return _internal_from();
+inline const std::string& DLData::callsign() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.callsign)
+  return _internal_callsign();
 }
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
-void DataLinkMessage::set_from(ArgT0&& arg0, ArgT... args) {
+void DLData::set_callsign(ArgT0&& arg0, ArgT... args) {
  
- from_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:datalink.DataLinkMessage.from)
+ callsign_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:datalink.DLData.callsign)
 }
-inline std::string* DataLinkMessage::mutable_from() {
-  std::string* _s = _internal_mutable_from();
-  // @@protoc_insertion_point(field_mutable:datalink.DataLinkMessage.from)
+inline std::string* DLData::mutable_callsign() {
+  std::string* _s = _internal_mutable_callsign();
+  // @@protoc_insertion_point(field_mutable:datalink.DLData.callsign)
   return _s;
 }
-inline const std::string& DataLinkMessage::_internal_from() const {
-  return from_.Get();
+inline const std::string& DLData::_internal_callsign() const {
+  return callsign_.Get();
 }
-inline void DataLinkMessage::_internal_set_from(const std::string& value) {
+inline void DLData::_internal_set_callsign(const std::string& value) {
   
-  from_.Set(value, GetArenaForAllocation());
+  callsign_.Set(value, GetArenaForAllocation());
 }
-inline std::string* DataLinkMessage::_internal_mutable_from() {
+inline std::string* DLData::_internal_mutable_callsign() {
   
-  return from_.Mutable(GetArenaForAllocation());
+  return callsign_.Mutable(GetArenaForAllocation());
 }
-inline std::string* DataLinkMessage::release_from() {
-  // @@protoc_insertion_point(field_release:datalink.DataLinkMessage.from)
-  return from_.Release();
+inline std::string* DLData::release_callsign() {
+  // @@protoc_insertion_point(field_release:datalink.DLData.callsign)
+  return callsign_.Release();
 }
-inline void DataLinkMessage::set_allocated_from(std::string* from) {
-  if (from != nullptr) {
+inline void DLData::set_allocated_callsign(std::string* callsign) {
+  if (callsign != nullptr) {
     
   } else {
     
   }
-  from_.SetAllocated(from, GetArenaForAllocation());
+  callsign_.SetAllocated(callsign, GetArenaForAllocation());
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (from_.IsDefault()) {
-    from_.Set("", GetArenaForAllocation());
+  if (callsign_.IsDefault()) {
+    callsign_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:datalink.DataLinkMessage.from)
+  // @@protoc_insertion_point(field_set_allocated:datalink.DLData.callsign)
 }
 
-// string to = 3;
-inline void DataLinkMessage::clear_to() {
-  to_.ClearToEmpty();
+// string status = 3;
+inline void DLData::clear_status() {
+  status_.ClearToEmpty();
 }
-inline const std::string& DataLinkMessage::to() const {
-  // @@protoc_insertion_point(field_get:datalink.DataLinkMessage.to)
-  return _internal_to();
+inline const std::string& DLData::status() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.status)
+  return _internal_status();
 }
 template <typename ArgT0, typename... ArgT>
 inline PROTOBUF_ALWAYS_INLINE
-void DataLinkMessage::set_to(ArgT0&& arg0, ArgT... args) {
+void DLData::set_status(ArgT0&& arg0, ArgT... args) {
  
- to_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:datalink.DataLinkMessage.to)
+ status_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
+  // @@protoc_insertion_point(field_set:datalink.DLData.status)
 }
-inline std::string* DataLinkMessage::mutable_to() {
-  std::string* _s = _internal_mutable_to();
-  // @@protoc_insertion_point(field_mutable:datalink.DataLinkMessage.to)
+inline std::string* DLData::mutable_status() {
+  std::string* _s = _internal_mutable_status();
+  // @@protoc_insertion_point(field_mutable:datalink.DLData.status)
   return _s;
 }
-inline const std::string& DataLinkMessage::_internal_to() const {
-  return to_.Get();
+inline const std::string& DLData::_internal_status() const {
+  return status_.Get();
 }
-inline void DataLinkMessage::_internal_set_to(const std::string& value) {
+inline void DLData::_internal_set_status(const std::string& value) {
   
-  to_.Set(value, GetArenaForAllocation());
+  status_.Set(value, GetArenaForAllocation());
 }
-inline std::string* DataLinkMessage::_internal_mutable_to() {
+inline std::string* DLData::_internal_mutable_status() {
   
-  return to_.Mutable(GetArenaForAllocation());
+  return status_.Mutable(GetArenaForAllocation());
 }
-inline std::string* DataLinkMessage::release_to() {
-  // @@protoc_insertion_point(field_release:datalink.DataLinkMessage.to)
-  return to_.Release();
+inline std::string* DLData::release_status() {
+  // @@protoc_insertion_point(field_release:datalink.DLData.status)
+  return status_.Release();
 }
-inline void DataLinkMessage::set_allocated_to(std::string* to) {
-  if (to != nullptr) {
+inline void DLData::set_allocated_status(std::string* status) {
+  if (status != nullptr) {
     
   } else {
     
   }
-  to_.SetAllocated(to, GetArenaForAllocation());
+  status_.SetAllocated(status, GetArenaForAllocation());
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (to_.IsDefault()) {
-    to_.Set("", GetArenaForAllocation());
+  if (status_.IsDefault()) {
+    status_.Set("", GetArenaForAllocation());
   }
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:datalink.DataLinkMessage.to)
+  // @@protoc_insertion_point(field_set_allocated:datalink.DLData.status)
 }
 
-// string text = 4;
-inline void DataLinkMessage::clear_text() {
-  text_.ClearToEmpty();
+// double lat = 4;
+inline void DLData::clear_lat() {
+  lat_ = 0;
 }
-inline const std::string& DataLinkMessage::text() const {
-  // @@protoc_insertion_point(field_get:datalink.DataLinkMessage.text)
-  return _internal_text();
+inline double DLData::_internal_lat() const {
+  return lat_;
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void DataLinkMessage::set_text(ArgT0&& arg0, ArgT... args) {
- 
- text_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:datalink.DataLinkMessage.text)
+inline double DLData::lat() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.lat)
+  return _internal_lat();
 }
-inline std::string* DataLinkMessage::mutable_text() {
-  std::string* _s = _internal_mutable_text();
-  // @@protoc_insertion_point(field_mutable:datalink.DataLinkMessage.text)
-  return _s;
-}
-inline const std::string& DataLinkMessage::_internal_text() const {
-  return text_.Get();
-}
-inline void DataLinkMessage::_internal_set_text(const std::string& value) {
+inline void DLData::_internal_set_lat(double value) {
   
-  text_.Set(value, GetArenaForAllocation());
+  lat_ = value;
 }
-inline std::string* DataLinkMessage::_internal_mutable_text() {
+inline void DLData::set_lat(double value) {
+  _internal_set_lat(value);
+  // @@protoc_insertion_point(field_set:datalink.DLData.lat)
+}
+
+// double lon = 5;
+inline void DLData::clear_lon() {
+  lon_ = 0;
+}
+inline double DLData::_internal_lon() const {
+  return lon_;
+}
+inline double DLData::lon() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.lon)
+  return _internal_lon();
+}
+inline void DLData::_internal_set_lon(double value) {
   
-  return text_.Mutable(GetArenaForAllocation());
+  lon_ = value;
 }
-inline std::string* DataLinkMessage::release_text() {
-  // @@protoc_insertion_point(field_release:datalink.DataLinkMessage.text)
-  return text_.Release();
+inline void DLData::set_lon(double value) {
+  _internal_set_lon(value);
+  // @@protoc_insertion_point(field_set:datalink.DLData.lon)
 }
-inline void DataLinkMessage::set_allocated_text(std::string* text) {
-  if (text != nullptr) {
-    
-  } else {
-    
-  }
-  text_.SetAllocated(text, GetArenaForAllocation());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (text_.IsDefault()) {
-    text_.Set("", GetArenaForAllocation());
-  }
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:datalink.DataLinkMessage.text)
+
+// double velocity = 6;
+inline void DLData::clear_velocity() {
+  velocity_ = 0;
+}
+inline double DLData::_internal_velocity() const {
+  return velocity_;
+}
+inline double DLData::velocity() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.velocity)
+  return _internal_velocity();
+}
+inline void DLData::_internal_set_velocity(double value) {
+  
+  velocity_ = value;
+}
+inline void DLData::set_velocity(double value) {
+  _internal_set_velocity(value);
+  // @@protoc_insertion_point(field_set:datalink.DLData.velocity)
+}
+
+// double baroAlt = 7;
+inline void DLData::clear_baroalt() {
+  baroalt_ = 0;
+}
+inline double DLData::_internal_baroalt() const {
+  return baroalt_;
+}
+inline double DLData::baroalt() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.baroAlt)
+  return _internal_baroalt();
+}
+inline void DLData::_internal_set_baroalt(double value) {
+  
+  baroalt_ = value;
+}
+inline void DLData::set_baroalt(double value) {
+  _internal_set_baroalt(value);
+  // @@protoc_insertion_point(field_set:datalink.DLData.baroAlt)
+}
+
+// double geoAlt = 8;
+inline void DLData::clear_geoalt() {
+  geoalt_ = 0;
+}
+inline double DLData::_internal_geoalt() const {
+  return geoalt_;
+}
+inline double DLData::geoalt() const {
+  // @@protoc_insertion_point(field_get:datalink.DLData.geoAlt)
+  return _internal_geoalt();
+}
+inline void DLData::_internal_set_geoalt(double value) {
+  
+  geoalt_ = value;
+}
+inline void DLData::set_geoalt(double value) {
+  _internal_set_geoalt(value);
+  // @@protoc_insertion_point(field_set:datalink.DLData.geoAlt)
 }
 
 // -------------------------------------------------------------------
 
-// DataLinkRequest
+// DLStreamResponse
 
-// string filter = 1;
-inline void DataLinkRequest::clear_filter() {
-  filter_.ClearToEmpty();
+// .datalink.DLData data = 1;
+inline bool DLStreamResponse::_internal_has_data() const {
+  return this != internal_default_instance() && data_ != nullptr;
 }
-inline const std::string& DataLinkRequest::filter() const {
-  // @@protoc_insertion_point(field_get:datalink.DataLinkRequest.filter)
-  return _internal_filter();
+inline bool DLStreamResponse::has_data() const {
+  return _internal_has_data();
 }
-template <typename ArgT0, typename... ArgT>
-inline PROTOBUF_ALWAYS_INLINE
-void DataLinkRequest::set_filter(ArgT0&& arg0, ArgT... args) {
- 
- filter_.Set(static_cast<ArgT0 &&>(arg0), args..., GetArenaForAllocation());
-  // @@protoc_insertion_point(field_set:datalink.DataLinkRequest.filter)
+inline void DLStreamResponse::clear_data() {
+  if (GetArenaForAllocation() == nullptr && data_ != nullptr) {
+    delete data_;
+  }
+  data_ = nullptr;
 }
-inline std::string* DataLinkRequest::mutable_filter() {
-  std::string* _s = _internal_mutable_filter();
-  // @@protoc_insertion_point(field_mutable:datalink.DataLinkRequest.filter)
-  return _s;
+inline const ::datalink::DLData& DLStreamResponse::_internal_data() const {
+  const ::datalink::DLData* p = data_;
+  return p != nullptr ? *p : reinterpret_cast<const ::datalink::DLData&>(
+      ::datalink::_DLData_default_instance_);
 }
-inline const std::string& DataLinkRequest::_internal_filter() const {
-  return filter_.Get();
+inline const ::datalink::DLData& DLStreamResponse::data() const {
+  // @@protoc_insertion_point(field_get:datalink.DLStreamResponse.data)
+  return _internal_data();
 }
-inline void DataLinkRequest::_internal_set_filter(const std::string& value) {
-  
-  filter_.Set(value, GetArenaForAllocation());
-}
-inline std::string* DataLinkRequest::_internal_mutable_filter() {
-  
-  return filter_.Mutable(GetArenaForAllocation());
-}
-inline std::string* DataLinkRequest::release_filter() {
-  // @@protoc_insertion_point(field_release:datalink.DataLinkRequest.filter)
-  return filter_.Release();
-}
-inline void DataLinkRequest::set_allocated_filter(std::string* filter) {
-  if (filter != nullptr) {
+inline void DLStreamResponse::unsafe_arena_set_allocated_data(
+    ::datalink::DLData* data) {
+  if (GetArenaForAllocation() == nullptr) {
+    delete reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(data_);
+  }
+  data_ = data;
+  if (data) {
     
   } else {
     
   }
-  filter_.SetAllocated(filter, GetArenaForAllocation());
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (filter_.IsDefault()) {
-    filter_.Set("", GetArenaForAllocation());
-  }
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  // @@protoc_insertion_point(field_set_allocated:datalink.DataLinkRequest.filter)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:datalink.DLStreamResponse.data)
 }
-
-// -------------------------------------------------------------------
-
-// DataLinkResponse
-
-// repeated .datalink.DataLinkMessage messages = 1;
-inline int DataLinkResponse::_internal_messages_size() const {
-  return messages_.size();
-}
-inline int DataLinkResponse::messages_size() const {
-  return _internal_messages_size();
-}
-inline void DataLinkResponse::clear_messages() {
-  messages_.Clear();
-}
-inline ::datalink::DataLinkMessage* DataLinkResponse::mutable_messages(int index) {
-  // @@protoc_insertion_point(field_mutable:datalink.DataLinkResponse.messages)
-  return messages_.Mutable(index);
-}
-inline ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::datalink::DataLinkMessage >*
-DataLinkResponse::mutable_messages() {
-  // @@protoc_insertion_point(field_mutable_list:datalink.DataLinkResponse.messages)
-  return &messages_;
-}
-inline const ::datalink::DataLinkMessage& DataLinkResponse::_internal_messages(int index) const {
-  return messages_.Get(index);
-}
-inline const ::datalink::DataLinkMessage& DataLinkResponse::messages(int index) const {
-  // @@protoc_insertion_point(field_get:datalink.DataLinkResponse.messages)
-  return _internal_messages(index);
-}
-inline ::datalink::DataLinkMessage* DataLinkResponse::_internal_add_messages() {
-  return messages_.Add();
-}
-inline ::datalink::DataLinkMessage* DataLinkResponse::add_messages() {
-  ::datalink::DataLinkMessage* _add = _internal_add_messages();
-  // @@protoc_insertion_point(field_add:datalink.DataLinkResponse.messages)
-  return _add;
-}
-inline const ::PROTOBUF_NAMESPACE_ID::RepeatedPtrField< ::datalink::DataLinkMessage >&
-DataLinkResponse::messages() const {
-  // @@protoc_insertion_point(field_list:datalink.DataLinkResponse.messages)
-  return messages_;
-}
-
-// int32 total_count = 2;
-inline void DataLinkResponse::clear_total_count() {
-  total_count_ = 0;
-}
-inline int32_t DataLinkResponse::_internal_total_count() const {
-  return total_count_;
-}
-inline int32_t DataLinkResponse::total_count() const {
-  // @@protoc_insertion_point(field_get:datalink.DataLinkResponse.total_count)
-  return _internal_total_count();
-}
-inline void DataLinkResponse::_internal_set_total_count(int32_t value) {
+inline ::datalink::DLData* DLStreamResponse::release_data() {
   
-  total_count_ = value;
+  ::datalink::DLData* temp = data_;
+  data_ = nullptr;
+#ifdef PROTOBUF_FORCE_COPY_IN_RELEASE
+  auto* old =  reinterpret_cast<::PROTOBUF_NAMESPACE_ID::MessageLite*>(temp);
+  temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  if (GetArenaForAllocation() == nullptr) { delete old; }
+#else  // PROTOBUF_FORCE_COPY_IN_RELEASE
+  if (GetArenaForAllocation() != nullptr) {
+    temp = ::PROTOBUF_NAMESPACE_ID::internal::DuplicateIfNonNull(temp);
+  }
+#endif  // !PROTOBUF_FORCE_COPY_IN_RELEASE
+  return temp;
 }
-inline void DataLinkResponse::set_total_count(int32_t value) {
-  _internal_set_total_count(value);
-  // @@protoc_insertion_point(field_set:datalink.DataLinkResponse.total_count)
+inline ::datalink::DLData* DLStreamResponse::unsafe_arena_release_data() {
+  // @@protoc_insertion_point(field_release:datalink.DLStreamResponse.data)
+  
+  ::datalink::DLData* temp = data_;
+  data_ = nullptr;
+  return temp;
+}
+inline ::datalink::DLData* DLStreamResponse::_internal_mutable_data() {
+  
+  if (data_ == nullptr) {
+    auto* p = CreateMaybeMessage<::datalink::DLData>(GetArenaForAllocation());
+    data_ = p;
+  }
+  return data_;
+}
+inline ::datalink::DLData* DLStreamResponse::mutable_data() {
+  ::datalink::DLData* _msg = _internal_mutable_data();
+  // @@protoc_insertion_point(field_mutable:datalink.DLStreamResponse.data)
+  return _msg;
+}
+inline void DLStreamResponse::set_allocated_data(::datalink::DLData* data) {
+  ::PROTOBUF_NAMESPACE_ID::Arena* message_arena = GetArenaForAllocation();
+  if (message_arena == nullptr) {
+    delete data_;
+  }
+  if (data) {
+    ::PROTOBUF_NAMESPACE_ID::Arena* submessage_arena =
+        ::PROTOBUF_NAMESPACE_ID::Arena::InternalGetOwningArena(data);
+    if (message_arena != submessage_arena) {
+      data = ::PROTOBUF_NAMESPACE_ID::internal::GetOwnedMessage(
+          message_arena, data, submessage_arena);
+    }
+    
+  } else {
+    
+  }
+  data_ = data;
+  // @@protoc_insertion_point(field_set_allocated:datalink.DLStreamResponse.data)
 }
 
 #ifdef __GNUC__

@@ -1,11 +1,10 @@
-// radar.proto
 syntax = "proto3";
 
 package radar;
 
 message StreamRequest {
   int32 refresh_interval_ms = 1;
-  string filter = 2; // varsa
+  string filter = 2; 
 }
 
 message RadarTarget {
@@ -15,8 +14,8 @@ message RadarTarget {
   int32 velocity = 4;
   int32 baro_altitude = 5;
   int32 geo_altitude = 6;
-  double heading = 7;   // yeni
-  bool is_fighter = 8;  // yeni
+  double heading = 7;   
+  bool is_fighter = 8;  
 }
 service RadarService {
   rpc StreamRadarTargets (StreamRequest) returns (stream RadarTarget);

@@ -1,105 +1,149 @@
 #include "datalinkservice.h"
-#include <fstream>
-#include <sstream>
+
+#include <bsoncxx/json.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
+
 #include <iostream>
+#include <thread>
+#include <chrono>
+#include <sstream>
+#include <iomanip>
+#include <vector>
+#include <algorithm>
 
-std::vector<std::string> DataLinkServiceImpl::readDataLinkFile(const std::string &filename)
-{
-    std::vector<std::string> lines;
-    std::ifstream file(filename);
-    std::string line;
+static mongocxx::instance s_mongo_instance{};
 
-    if (!file.is_open())
-    {
-        std::cerr << "Error: Could not open file " << filename << std::endl;
-        return lines;
+DataLinkServiceImpl::DataLinkServiceImpl(std::string mongo_uri,
+                                         std::string db_name,
+                                         std::string coll_name)
+    : mongo_uri_(std::move(mongo_uri)),
+      db_name_(std::move(db_name)),
+      coll_name_(std::move(coll_name)) {}
+
+std::string DataLinkServiceImpl::get_string_utf8(const bsoncxx::document::view& v,
+                                                 const char* key,
+                                                 const std::string& def) {
+    auto elem = v[key];
+    if (!elem) return def;
+    if (elem.type() == bsoncxx::type::k_string) {
+        auto sv = elem.get_string().value;
+        return std::string(sv.data(), sv.size());
     }
-
-    while (std::getline(file, line))
-    {
-        lines.push_back(line);
-    }
-    return lines;
+    return def;
 }
 
-grpc::Status DataLinkServiceImpl::GetDataLinkMessages(grpc::ServerContext *context,
-                                                      const datalink::DataLinkRequest *request,
-                                                      datalink::DataLinkResponse *response)
+bool DataLinkServiceImpl::get_double_safe(const bsoncxx::document::view& v,
+                                          const char* key,
+                                          double& out) {
+    auto elem = v[key];
+    if (!elem) return false;
+    switch (elem.type()) {
+        case bsoncxx::type::k_double: out = elem.get_double().value; return true;
+        case bsoncxx::type::k_int32:  out = static_cast<double>(elem.get_int32().value); return true;
+        case bsoncxx::type::k_int64:  out = static_cast<double>(elem.get_int64().value); return true;
+        default: return false;
+    }
+}
+
+bool DataLinkServiceImpl::is_in_tr_bbox(double lat, double lon) {
+    return (lat >= 36.0 && lat <= 42.0 && lon >= 26.0 && lon <= 45.0);
+}
+
+grpc::Status DataLinkServiceImpl::StreamDataLink(
+    grpc::ServerContext* context,
+    const datalink::DLRequest* request,
+    grpc::ServerWriter<datalink::DLStreamResponse>* writer)
 {
-    auto lines = readDataLinkFile("datalink_data.txt");
+    try {
+        mongocxx::client conn{mongocxx::uri{mongo_uri_}};
+        auto db   = conn[db_name_];
+        auto coll = db[coll_name_];
 
-    if (lines.empty())
-    {
-        std::cout << "No data found or file could not be read." << std::endl;
-        return grpc::Status(grpc::StatusCode::NOT_FOUND, "DataLink messages file not found");
-    }
+        struct DLRecord {
+            std::string callsign;
+            std::string status;
+            double lat;
+            double lon;
+            double velocity;
+            double baroalt;
+            double geoalt;
+        };
 
-    for (const auto &line : lines)
-    {
-        std::istringstream iss(line);
-        std::string id, from_part, from, to_part, to, text_part, text;
+        std::vector<DLRecord> records;
 
-        // Format: MSG001, FROM: HQ, TO: UNIT1, TEXT: "Proceed North"
-        if (std::getline(iss, id, ','))
-        {
-            // FROM kısmını parse et
-            if (std::getline(iss, from_part, ','))
-            {
-                size_t colon_pos = from_part.find(':');
-                if (colon_pos != std::string::npos)
-                {
-                    from = from_part.substr(colon_pos + 1);
-                }
-            }
+        auto cursor = coll.find({});
+        for (auto&& doc : cursor) {
+            std::string callsign = get_string_utf8(doc, "callsign", "UNKNOWN");
+            std::string status   = get_string_utf8(doc, "status", "UNKNOWN");
 
-            // TO kısmını parse et
-            if (std::getline(iss, to_part, ','))
-            {
-                size_t colon_pos = to_part.find(':');
-                if (colon_pos != std::string::npos)
-                {
-                    to = to_part.substr(colon_pos + 1);
-                }
-            }
+            double lat=0, lon=0, vel=0, baro=0, geo=0;
+            if (!get_double_safe(doc, "lat", lat)) continue;
+            if (!get_double_safe(doc, "lon", lon)) continue;
+            get_double_safe(doc, "velocity", vel);
+            get_double_safe(doc, "baroaltitude", baro);
+            get_double_safe(doc, "geoaltitude", geo);
 
-            // TEXT kısmını parse et (kalan kısmın hepsi)
-            if (std::getline(iss, text_part))
-            {
-                size_t colon_pos = text_part.find(':');
-                if (colon_pos != std::string::npos)
-                {
-                    text = text_part.substr(colon_pos + 1);
-                    // Tırnak işaretlerini ve boşlukları temizle
-                    text.erase(0, text.find_first_not_of(" \t\""));
-                    text.erase(text.find_last_not_of(" \t\"") + 1);
-                }
-            }
+            if (!is_in_tr_bbox(lat, lon)) continue;
 
-            // Tüm alanların boşluklarını temizle
-            id.erase(0, id.find_first_not_of(" \t"));
-            id.erase(id.find_last_not_of(" \t") + 1);
-            from.erase(0, from.find_first_not_of(" \t"));
-            from.erase(from.find_last_not_of(" \t") + 1);
-            to.erase(0, to.find_first_not_of(" \t"));
-            to.erase(to.find_last_not_of(" \t") + 1);
-
-            // Response'a mesajı ekle
-            auto *message = response->add_messages();
-            message->set_id(id);
-            message->set_from(from);
-            message->set_to(to);
-            message->set_text(text);
+            records.push_back({callsign, status, lat, lon, vel, baro, geo});
         }
-    }
 
-    response->set_total_count(response->messages_size());
+        std::sort(records.begin(), records.end(),
+            [](const DLRecord& a, const DLRecord& b) {
+                if (a.lat != b.lat) return a.lat < b.lat;
+                if (a.lon != b.lon) return a.lon < b.lon;
+                return a.callsign < b.callsign;
+            });
 
-    std::cout << "Loaded DataLink Messages:" << std::endl;
-    for (const auto &line : lines)
-    {
-        std::cout << line << std::endl;
+        std::ostringstream oss;
+        int rank = 0;
+
+        for (const auto& rec : records) {
+            ++rank;
+            oss.str(std::string());
+            oss.clear();
+            oss << "DL" << std::setw(3) << std::setfill('0') << rank;
+
+            datalink::DLStreamResponse resp;
+            datalink::DLData* data = resp.mutable_data();
+            data->set_id(oss.str());
+            data->set_callsign(rec.callsign);
+            data->set_status(rec.status);
+            data->set_lat(rec.lat);
+            data->set_lon(rec.lon);
+            data->set_velocity(rec.velocity);
+            data->set_baroalt(rec.baroalt);
+            data->set_geoalt(rec.geoalt);
+
+            std::cout << "[DL] ID: " << data->id()
+                      << " | Callsign: " << data->callsign()
+                      << " | Status: " << data->status()
+                      << " | Lat: " << data->lat()
+                      << " | Lon: " << data->lon()
+                      << " | Vel: " << data->velocity()
+                      << " | Baro: " << data->baroalt()
+                      << " | Geo: " << data->geoalt()
+                      << std::endl;
+
+            if (!writer->Write(resp)) {
+                std::cerr << "[DL] Client disconnected." << std::endl;
+                break;
+            }
+
+            if (context->IsCancelled()) {
+                std::cout << "[DL] Stream cancelled by client." << std::endl;
+                break;
+            }
+
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
+
+    } catch (const std::exception& e) {
+        std::cerr << "[ERROR] MongoDB DataLink query failed: " << e.what() << std::endl;
+        return grpc::Status(grpc::StatusCode::INTERNAL, e.what());
     }
-    std::cout << "Total " << response->messages_size() << " messages processed." << std::endl;
 
     return grpc::Status::OK;
 }

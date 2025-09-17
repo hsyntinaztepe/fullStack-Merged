@@ -21,46 +21,48 @@ namespace _pb = ::PROTOBUF_NAMESPACE_ID;
 namespace _pbi = _pb::internal;
 
 namespace datalink {
-PROTOBUF_CONSTEXPR DataLinkMessage::DataLinkMessage(
+PROTOBUF_CONSTEXPR DLRequest::DLRequest(
+    ::_pbi::ConstantInitialized){}
+struct DLRequestDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DLRequestDefaultTypeInternal()
+      : _instance(::_pbi::ConstantInitialized{}) {}
+  ~DLRequestDefaultTypeInternal() {}
+  union {
+    DLRequest _instance;
+  };
+};
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DLRequestDefaultTypeInternal _DLRequest_default_instance_;
+PROTOBUF_CONSTEXPR DLData::DLData(
     ::_pbi::ConstantInitialized)
   : id_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , from_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , to_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
-  , text_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}){}
-struct DataLinkMessageDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR DataLinkMessageDefaultTypeInternal()
+  , callsign_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , status_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{})
+  , lat_(0)
+  , lon_(0)
+  , velocity_(0)
+  , baroalt_(0)
+  , geoalt_(0){}
+struct DLDataDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DLDataDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
-  ~DataLinkMessageDefaultTypeInternal() {}
+  ~DLDataDefaultTypeInternal() {}
   union {
-    DataLinkMessage _instance;
+    DLData _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DataLinkMessageDefaultTypeInternal _DataLinkMessage_default_instance_;
-PROTOBUF_CONSTEXPR DataLinkRequest::DataLinkRequest(
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DLDataDefaultTypeInternal _DLData_default_instance_;
+PROTOBUF_CONSTEXPR DLStreamResponse::DLStreamResponse(
     ::_pbi::ConstantInitialized)
-  : filter_(&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}){}
-struct DataLinkRequestDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR DataLinkRequestDefaultTypeInternal()
+  : data_(nullptr){}
+struct DLStreamResponseDefaultTypeInternal {
+  PROTOBUF_CONSTEXPR DLStreamResponseDefaultTypeInternal()
       : _instance(::_pbi::ConstantInitialized{}) {}
-  ~DataLinkRequestDefaultTypeInternal() {}
+  ~DLStreamResponseDefaultTypeInternal() {}
   union {
-    DataLinkRequest _instance;
+    DLStreamResponse _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DataLinkRequestDefaultTypeInternal _DataLinkRequest_default_instance_;
-PROTOBUF_CONSTEXPR DataLinkResponse::DataLinkResponse(
-    ::_pbi::ConstantInitialized)
-  : messages_()
-  , total_count_(0){}
-struct DataLinkResponseDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR DataLinkResponseDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
-  ~DataLinkResponseDefaultTypeInternal() {}
-  union {
-    DataLinkResponse _instance;
-  };
-};
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DataLinkResponseDefaultTypeInternal _DataLinkResponse_default_instance_;
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 DLStreamResponseDefaultTypeInternal _DLStreamResponse_default_instance_;
 }  // namespace datalink
 static ::_pb::Metadata file_level_metadata_datalink_2eproto[3];
 static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_datalink_2eproto = nullptr;
@@ -68,57 +70,58 @@ static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors
 
 const uint32_t TableStruct_datalink_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkMessage, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkMessage, id_),
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkMessage, from_),
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkMessage, to_),
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkMessage, text_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkRequest, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkRequest, filter_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, id_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, callsign_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, status_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, lat_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, lon_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, velocity_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, baroalt_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLData, geoalt_),
   ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkResponse, _internal_metadata_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLStreamResponse, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkResponse, messages_),
-  PROTOBUF_FIELD_OFFSET(::datalink::DataLinkResponse, total_count_),
+  PROTOBUF_FIELD_OFFSET(::datalink::DLStreamResponse, data_),
 };
 static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::datalink::DataLinkMessage)},
-  { 10, -1, -1, sizeof(::datalink::DataLinkRequest)},
-  { 17, -1, -1, sizeof(::datalink::DataLinkResponse)},
+  { 0, -1, -1, sizeof(::datalink::DLRequest)},
+  { 6, -1, -1, sizeof(::datalink::DLData)},
+  { 20, -1, -1, sizeof(::datalink::DLStreamResponse)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::datalink::_DataLinkMessage_default_instance_._instance,
-  &::datalink::_DataLinkRequest_default_instance_._instance,
-  &::datalink::_DataLinkResponse_default_instance_._instance,
+  &::datalink::_DLRequest_default_instance_._instance,
+  &::datalink::_DLData_default_instance_._instance,
+  &::datalink::_DLStreamResponse_default_instance_._instance,
 };
 
 const char descriptor_table_protodef_datalink_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\016datalink.proto\022\010datalink\"E\n\017DataLinkMe"
-  "ssage\022\n\n\002id\030\001 \001(\t\022\014\n\004from\030\002 \001(\t\022\n\n\002to\030\003 "
-  "\001(\t\022\014\n\004text\030\004 \001(\t\"!\n\017DataLinkRequest\022\016\n\006"
-  "filter\030\001 \001(\t\"T\n\020DataLinkResponse\022+\n\010mess"
-  "ages\030\001 \003(\0132\031.datalink.DataLinkMessage\022\023\n"
-  "\013total_count\030\002 \001(\0052_\n\017DataLinkService\022L\n"
-  "\023GetDataLinkMessages\022\031.datalink.DataLink"
-  "Request\032\032.datalink.DataLinkResponseb\006pro"
-  "to3"
+  "\n\016datalink.proto\022\010datalink\"\013\n\tDLRequest\""
+  "\203\001\n\006DLData\022\n\n\002id\030\001 \001(\t\022\020\n\010callsign\030\002 \001(\t"
+  "\022\016\n\006status\030\003 \001(\t\022\013\n\003lat\030\004 \001(\001\022\013\n\003lon\030\005 \001"
+  "(\001\022\020\n\010velocity\030\006 \001(\001\022\017\n\007baroAlt\030\007 \001(\001\022\016\n"
+  "\006geoAlt\030\010 \001(\001\"2\n\020DLStreamResponse\022\036\n\004dat"
+  "a\030\001 \001(\0132\020.datalink.DLData2O\n\010DataLink\022C\n"
+  "\016StreamDataLink\022\023.datalink.DLRequest\032\032.d"
+  "atalink.DLStreamResponse0\001b\006proto3"
   ;
 static ::_pbi::once_flag descriptor_table_datalink_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_datalink_2eproto = {
-    false, false, 323, descriptor_table_protodef_datalink_2eproto,
+    false, false, 314, descriptor_table_protodef_datalink_2eproto,
     "datalink.proto",
     &descriptor_table_datalink_2eproto_once, nullptr, 0, 3,
     schemas, file_default_instances, TableStruct_datalink_2eproto::offsets,
@@ -135,17 +138,56 @@ namespace datalink {
 
 // ===================================================================
 
-class DataLinkMessage::_Internal {
+class DLRequest::_Internal {
  public:
 };
 
-DataLinkMessage::DataLinkMessage(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+DLRequest::DLRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+                         bool is_message_owned)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase(arena, is_message_owned) {
+  // @@protoc_insertion_point(arena_constructor:datalink.DLRequest)
+}
+DLRequest::DLRequest(const DLRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  // @@protoc_insertion_point(copy_constructor:datalink.DLRequest)
+}
+
+
+
+
+
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DLRequest::_class_data_ = {
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl,
+    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl,
+};
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DLRequest::GetClassData() const { return &_class_data_; }
+
+
+
+
+
+
+
+::PROTOBUF_NAMESPACE_ID::Metadata DLRequest::GetMetadata() const {
+  return ::_pbi::AssignDescriptors(
+      &descriptor_table_datalink_2eproto_getter, &descriptor_table_datalink_2eproto_once,
+      file_level_metadata_datalink_2eproto[0]);
+}
+
+// ===================================================================
+
+class DLData::_Internal {
+ public:
+};
+
+DLData::DLData(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
   : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(arena_constructor:datalink.DataLinkMessage)
+  // @@protoc_insertion_point(arena_constructor:datalink.DLData)
 }
-DataLinkMessage::DataLinkMessage(const DataLinkMessage& from)
+DLData::DLData(const DLData& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   id_.InitDefault();
@@ -156,54 +198,49 @@ DataLinkMessage::DataLinkMessage(const DataLinkMessage& from)
     id_.Set(from._internal_id(), 
       GetArenaForAllocation());
   }
-  from_.InitDefault();
+  callsign_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    from_.Set("", GetArenaForAllocation());
+    callsign_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_from().empty()) {
-    from_.Set(from._internal_from(), 
+  if (!from._internal_callsign().empty()) {
+    callsign_.Set(from._internal_callsign(), 
       GetArenaForAllocation());
   }
-  to_.InitDefault();
+  status_.InitDefault();
   #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    to_.Set("", GetArenaForAllocation());
+    status_.Set("", GetArenaForAllocation());
   #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_to().empty()) {
-    to_.Set(from._internal_to(), 
+  if (!from._internal_status().empty()) {
+    status_.Set(from._internal_status(), 
       GetArenaForAllocation());
   }
-  text_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    text_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_text().empty()) {
-    text_.Set(from._internal_text(), 
-      GetArenaForAllocation());
-  }
-  // @@protoc_insertion_point(copy_constructor:datalink.DataLinkMessage)
+  ::memcpy(&lat_, &from.lat_,
+    static_cast<size_t>(reinterpret_cast<char*>(&geoalt_) -
+    reinterpret_cast<char*>(&lat_)) + sizeof(geoalt_));
+  // @@protoc_insertion_point(copy_constructor:datalink.DLData)
 }
 
-inline void DataLinkMessage::SharedCtor() {
+inline void DLData::SharedCtor() {
 id_.InitDefault();
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
   id_.Set("", GetArenaForAllocation());
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-from_.InitDefault();
+callsign_.InitDefault();
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  from_.Set("", GetArenaForAllocation());
+  callsign_.Set("", GetArenaForAllocation());
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-to_.InitDefault();
+status_.InitDefault();
 #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  to_.Set("", GetArenaForAllocation());
+  status_.Set("", GetArenaForAllocation());
 #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-text_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  text_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+    reinterpret_cast<char*>(&lat_) - reinterpret_cast<char*>(this)),
+    0, static_cast<size_t>(reinterpret_cast<char*>(&geoalt_) -
+    reinterpret_cast<char*>(&lat_)) + sizeof(geoalt_));
 }
 
-DataLinkMessage::~DataLinkMessage() {
-  // @@protoc_insertion_point(destructor:datalink.DataLinkMessage)
+DLData::~DLData() {
+  // @@protoc_insertion_point(destructor:datalink.DLData)
   if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
@@ -211,32 +248,33 @@ DataLinkMessage::~DataLinkMessage() {
   SharedDtor();
 }
 
-inline void DataLinkMessage::SharedDtor() {
+inline void DLData::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
   id_.Destroy();
-  from_.Destroy();
-  to_.Destroy();
-  text_.Destroy();
+  callsign_.Destroy();
+  status_.Destroy();
 }
 
-void DataLinkMessage::SetCachedSize(int size) const {
+void DLData::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void DataLinkMessage::Clear() {
-// @@protoc_insertion_point(message_clear_start:datalink.DataLinkMessage)
+void DLData::Clear() {
+// @@protoc_insertion_point(message_clear_start:datalink.DLData)
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   id_.ClearToEmpty();
-  from_.ClearToEmpty();
-  to_.ClearToEmpty();
-  text_.ClearToEmpty();
+  callsign_.ClearToEmpty();
+  status_.ClearToEmpty();
+  ::memset(&lat_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&geoalt_) -
+      reinterpret_cast<char*>(&lat_)) + sizeof(geoalt_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* DataLinkMessage::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+const char* DLData::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     uint32_t tag;
@@ -248,37 +286,67 @@ const char* DataLinkMessage::_InternalParse(const char* ptr, ::_pbi::ParseContex
           auto str = _internal_mutable_id();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "datalink.DataLinkMessage.id"));
+          CHK_(::_pbi::VerifyUTF8(str, "datalink.DLData.id"));
         } else
           goto handle_unusual;
         continue;
-      // string from = 2;
+      // string callsign = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
-          auto str = _internal_mutable_from();
+          auto str = _internal_mutable_callsign();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "datalink.DataLinkMessage.from"));
+          CHK_(::_pbi::VerifyUTF8(str, "datalink.DLData.callsign"));
         } else
           goto handle_unusual;
         continue;
-      // string to = 3;
+      // string status = 3;
       case 3:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 26)) {
-          auto str = _internal_mutable_to();
+          auto str = _internal_mutable_status();
           ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
           CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "datalink.DataLinkMessage.to"));
+          CHK_(::_pbi::VerifyUTF8(str, "datalink.DLData.status"));
         } else
           goto handle_unusual;
         continue;
-      // string text = 4;
+      // double lat = 4;
       case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
-          auto str = _internal_mutable_text();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "datalink.DataLinkMessage.text"));
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 33)) {
+          lat_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // double lon = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 41)) {
+          lon_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // double velocity = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 49)) {
+          velocity_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // double baroAlt = 7;
+      case 7:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 57)) {
+          baroalt_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else
+          goto handle_unusual;
+        continue;
+      // double geoAlt = 8;
+      case 8:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 65)) {
+          geoalt_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
         } else
           goto handle_unusual;
         continue;
@@ -305,9 +373,9 @@ failure:
 #undef CHK_
 }
 
-uint8_t* DataLinkMessage::_InternalSerialize(
+uint8_t* DLData::_InternalSerialize(
     uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:datalink.DataLinkMessage)
+  // @@protoc_insertion_point(serialize_to_array_start:datalink.DLData)
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
@@ -316,51 +384,91 @@ uint8_t* DataLinkMessage::_InternalSerialize(
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
       this->_internal_id().data(), static_cast<int>(this->_internal_id().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "datalink.DataLinkMessage.id");
+      "datalink.DLData.id");
     target = stream->WriteStringMaybeAliased(
         1, this->_internal_id(), target);
   }
 
-  // string from = 2;
-  if (!this->_internal_from().empty()) {
+  // string callsign = 2;
+  if (!this->_internal_callsign().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_from().data(), static_cast<int>(this->_internal_from().length()),
+      this->_internal_callsign().data(), static_cast<int>(this->_internal_callsign().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "datalink.DataLinkMessage.from");
+      "datalink.DLData.callsign");
     target = stream->WriteStringMaybeAliased(
-        2, this->_internal_from(), target);
+        2, this->_internal_callsign(), target);
   }
 
-  // string to = 3;
-  if (!this->_internal_to().empty()) {
+  // string status = 3;
+  if (!this->_internal_status().empty()) {
     ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_to().data(), static_cast<int>(this->_internal_to().length()),
+      this->_internal_status().data(), static_cast<int>(this->_internal_status().length()),
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "datalink.DataLinkMessage.to");
+      "datalink.DLData.status");
     target = stream->WriteStringMaybeAliased(
-        3, this->_internal_to(), target);
+        3, this->_internal_status(), target);
   }
 
-  // string text = 4;
-  if (!this->_internal_text().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_text().data(), static_cast<int>(this->_internal_text().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "datalink.DataLinkMessage.text");
-    target = stream->WriteStringMaybeAliased(
-        4, this->_internal_text(), target);
+  // double lat = 4;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lat = this->_internal_lat();
+  uint64_t raw_lat;
+  memcpy(&raw_lat, &tmp_lat, sizeof(tmp_lat));
+  if (raw_lat != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(4, this->_internal_lat(), target);
+  }
+
+  // double lon = 5;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lon = this->_internal_lon();
+  uint64_t raw_lon;
+  memcpy(&raw_lon, &tmp_lon, sizeof(tmp_lon));
+  if (raw_lon != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(5, this->_internal_lon(), target);
+  }
+
+  // double velocity = 6;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_velocity = this->_internal_velocity();
+  uint64_t raw_velocity;
+  memcpy(&raw_velocity, &tmp_velocity, sizeof(tmp_velocity));
+  if (raw_velocity != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(6, this->_internal_velocity(), target);
+  }
+
+  // double baroAlt = 7;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_baroalt = this->_internal_baroalt();
+  uint64_t raw_baroalt;
+  memcpy(&raw_baroalt, &tmp_baroalt, sizeof(tmp_baroalt));
+  if (raw_baroalt != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(7, this->_internal_baroalt(), target);
+  }
+
+  // double geoAlt = 8;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_geoalt = this->_internal_geoalt();
+  uint64_t raw_geoalt;
+  memcpy(&raw_geoalt, &tmp_geoalt, sizeof(tmp_geoalt));
+  if (raw_geoalt != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::_pbi::WireFormatLite::WriteDoubleToArray(8, this->_internal_geoalt(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:datalink.DataLinkMessage)
+  // @@protoc_insertion_point(serialize_to_array_end:datalink.DLData)
   return target;
 }
 
-size_t DataLinkMessage::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:datalink.DataLinkMessage)
+size_t DLData::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:datalink.DLData)
   size_t total_size = 0;
 
   uint32_t cached_has_bits = 0;
@@ -374,45 +482,83 @@ size_t DataLinkMessage::ByteSizeLong() const {
         this->_internal_id());
   }
 
-  // string from = 2;
-  if (!this->_internal_from().empty()) {
+  // string callsign = 2;
+  if (!this->_internal_callsign().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_from());
+        this->_internal_callsign());
   }
 
-  // string to = 3;
-  if (!this->_internal_to().empty()) {
+  // string status = 3;
+  if (!this->_internal_status().empty()) {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_to());
+        this->_internal_status());
   }
 
-  // string text = 4;
-  if (!this->_internal_text().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_text());
+  // double lat = 4;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lat = this->_internal_lat();
+  uint64_t raw_lat;
+  memcpy(&raw_lat, &tmp_lat, sizeof(tmp_lat));
+  if (raw_lat != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double lon = 5;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lon = this->_internal_lon();
+  uint64_t raw_lon;
+  memcpy(&raw_lon, &tmp_lon, sizeof(tmp_lon));
+  if (raw_lon != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double velocity = 6;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_velocity = this->_internal_velocity();
+  uint64_t raw_velocity;
+  memcpy(&raw_velocity, &tmp_velocity, sizeof(tmp_velocity));
+  if (raw_velocity != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double baroAlt = 7;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_baroalt = this->_internal_baroalt();
+  uint64_t raw_baroalt;
+  memcpy(&raw_baroalt, &tmp_baroalt, sizeof(tmp_baroalt));
+  if (raw_baroalt != 0) {
+    total_size += 1 + 8;
+  }
+
+  // double geoAlt = 8;
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_geoalt = this->_internal_geoalt();
+  uint64_t raw_geoalt;
+  memcpy(&raw_geoalt, &tmp_geoalt, sizeof(tmp_geoalt));
+  if (raw_geoalt != 0) {
+    total_size += 1 + 8;
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DataLinkMessage::_class_data_ = {
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DLData::_class_data_ = {
     ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    DataLinkMessage::MergeImpl
+    DLData::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DataLinkMessage::GetClassData() const { return &_class_data_; }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DLData::GetClassData() const { return &_class_data_; }
 
-void DataLinkMessage::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+void DLData::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
                       const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DataLinkMessage *>(to)->MergeFrom(
-      static_cast<const DataLinkMessage &>(from));
+  static_cast<DLData *>(to)->MergeFrom(
+      static_cast<const DLData &>(from));
 }
 
 
-void DataLinkMessage::MergeFrom(const DataLinkMessage& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:datalink.DataLinkMessage)
+void DLData::MergeFrom(const DLData& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:datalink.DLData)
   GOOGLE_DCHECK_NE(&from, this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
@@ -420,30 +566,62 @@ void DataLinkMessage::MergeFrom(const DataLinkMessage& from) {
   if (!from._internal_id().empty()) {
     _internal_set_id(from._internal_id());
   }
-  if (!from._internal_from().empty()) {
-    _internal_set_from(from._internal_from());
+  if (!from._internal_callsign().empty()) {
+    _internal_set_callsign(from._internal_callsign());
   }
-  if (!from._internal_to().empty()) {
-    _internal_set_to(from._internal_to());
+  if (!from._internal_status().empty()) {
+    _internal_set_status(from._internal_status());
   }
-  if (!from._internal_text().empty()) {
-    _internal_set_text(from._internal_text());
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lat = from._internal_lat();
+  uint64_t raw_lat;
+  memcpy(&raw_lat, &tmp_lat, sizeof(tmp_lat));
+  if (raw_lat != 0) {
+    _internal_set_lat(from._internal_lat());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_lon = from._internal_lon();
+  uint64_t raw_lon;
+  memcpy(&raw_lon, &tmp_lon, sizeof(tmp_lon));
+  if (raw_lon != 0) {
+    _internal_set_lon(from._internal_lon());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_velocity = from._internal_velocity();
+  uint64_t raw_velocity;
+  memcpy(&raw_velocity, &tmp_velocity, sizeof(tmp_velocity));
+  if (raw_velocity != 0) {
+    _internal_set_velocity(from._internal_velocity());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_baroalt = from._internal_baroalt();
+  uint64_t raw_baroalt;
+  memcpy(&raw_baroalt, &tmp_baroalt, sizeof(tmp_baroalt));
+  if (raw_baroalt != 0) {
+    _internal_set_baroalt(from._internal_baroalt());
+  }
+  static_assert(sizeof(uint64_t) == sizeof(double), "Code assumes uint64_t and double are the same size.");
+  double tmp_geoalt = from._internal_geoalt();
+  uint64_t raw_geoalt;
+  memcpy(&raw_geoalt, &tmp_geoalt, sizeof(tmp_geoalt));
+  if (raw_geoalt != 0) {
+    _internal_set_geoalt(from._internal_geoalt());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void DataLinkMessage::CopyFrom(const DataLinkMessage& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:datalink.DataLinkMessage)
+void DLData::CopyFrom(const DLData& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:datalink.DLData)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool DataLinkMessage::IsInitialized() const {
+bool DLData::IsInitialized() const {
   return true;
 }
 
-void DataLinkMessage::InternalSwap(DataLinkMessage* other) {
+void DLData::InternalSwap(DLData* other) {
   using std::swap;
   auto* lhs_arena = GetArenaForAllocation();
   auto* rhs_arena = other->GetArenaForAllocation();
@@ -453,215 +631,22 @@ void DataLinkMessage::InternalSwap(DataLinkMessage* other) {
       &other->id_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &from_, lhs_arena,
-      &other->from_, rhs_arena
+      &callsign_, lhs_arena,
+      &other->callsign_, rhs_arena
   );
   ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &to_, lhs_arena,
-      &other->to_, rhs_arena
+      &status_, lhs_arena,
+      &other->status_, rhs_arena
   );
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &text_, lhs_arena,
-      &other->text_, rhs_arena
-  );
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(DLData, geoalt_)
+      + sizeof(DLData::geoalt_)
+      - PROTOBUF_FIELD_OFFSET(DLData, lat_)>(
+          reinterpret_cast<char*>(&lat_),
+          reinterpret_cast<char*>(&other->lat_));
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata DataLinkMessage::GetMetadata() const {
-  return ::_pbi::AssignDescriptors(
-      &descriptor_table_datalink_2eproto_getter, &descriptor_table_datalink_2eproto_once,
-      file_level_metadata_datalink_2eproto[0]);
-}
-
-// ===================================================================
-
-class DataLinkRequest::_Internal {
- public:
-};
-
-DataLinkRequest::DataLinkRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor();
-  // @@protoc_insertion_point(arena_constructor:datalink.DataLinkRequest)
-}
-DataLinkRequest::DataLinkRequest(const DataLinkRequest& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  filter_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    filter_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_filter().empty()) {
-    filter_.Set(from._internal_filter(), 
-      GetArenaForAllocation());
-  }
-  // @@protoc_insertion_point(copy_constructor:datalink.DataLinkRequest)
-}
-
-inline void DataLinkRequest::SharedCtor() {
-filter_.InitDefault();
-#ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  filter_.Set("", GetArenaForAllocation());
-#endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-}
-
-DataLinkRequest::~DataLinkRequest() {
-  // @@protoc_insertion_point(destructor:datalink.DataLinkRequest)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
-  SharedDtor();
-}
-
-inline void DataLinkRequest::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
-  filter_.Destroy();
-}
-
-void DataLinkRequest::SetCachedSize(int size) const {
-  _cached_size_.Set(size);
-}
-
-void DataLinkRequest::Clear() {
-// @@protoc_insertion_point(message_clear_start:datalink.DataLinkRequest)
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  filter_.ClearToEmpty();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
-}
-
-const char* DataLinkRequest::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // string filter = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
-          auto str = _internal_mutable_filter();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "datalink.DataLinkRequest.filter"));
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
-  return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
-}
-
-uint8_t* DataLinkRequest::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:datalink.DataLinkRequest)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  // string filter = 1;
-  if (!this->_internal_filter().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_filter().data(), static_cast<int>(this->_internal_filter().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "datalink.DataLinkRequest.filter");
-    target = stream->WriteStringMaybeAliased(
-        1, this->_internal_filter(), target);
-  }
-
-  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
-  }
-  // @@protoc_insertion_point(serialize_to_array_end:datalink.DataLinkRequest)
-  return target;
-}
-
-size_t DataLinkRequest::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:datalink.DataLinkRequest)
-  size_t total_size = 0;
-
-  uint32_t cached_has_bits = 0;
-  // Prevent compiler warnings about cached_has_bits being unused
-  (void) cached_has_bits;
-
-  // string filter = 1;
-  if (!this->_internal_filter().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_filter());
-  }
-
-  return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
-}
-
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DataLinkRequest::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    DataLinkRequest::MergeImpl
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DataLinkRequest::GetClassData() const { return &_class_data_; }
-
-void DataLinkRequest::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
-                      const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DataLinkRequest *>(to)->MergeFrom(
-      static_cast<const DataLinkRequest &>(from));
-}
-
-
-void DataLinkRequest::MergeFrom(const DataLinkRequest& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:datalink.DataLinkRequest)
-  GOOGLE_DCHECK_NE(&from, this);
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
-
-  if (!from._internal_filter().empty()) {
-    _internal_set_filter(from._internal_filter());
-  }
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-}
-
-void DataLinkRequest::CopyFrom(const DataLinkRequest& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:datalink.DataLinkRequest)
-  if (&from == this) return;
-  Clear();
-  MergeFrom(from);
-}
-
-bool DataLinkRequest::IsInitialized() const {
-  return true;
-}
-
-void DataLinkRequest::InternalSwap(DataLinkRequest* other) {
-  using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
-  _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &filter_, lhs_arena,
-      &other->filter_, rhs_arena
-  );
-}
-
-::PROTOBUF_NAMESPACE_ID::Metadata DataLinkRequest::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata DLData::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_datalink_2eproto_getter, &descriptor_table_datalink_2eproto_once,
       file_level_metadata_datalink_2eproto[1]);
@@ -669,31 +654,38 @@ void DataLinkRequest::InternalSwap(DataLinkRequest* other) {
 
 // ===================================================================
 
-class DataLinkResponse::_Internal {
+class DLStreamResponse::_Internal {
  public:
+  static const ::datalink::DLData& data(const DLStreamResponse* msg);
 };
 
-DataLinkResponse::DataLinkResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
+const ::datalink::DLData&
+DLStreamResponse::_Internal::data(const DLStreamResponse* msg) {
+  return *msg->data_;
+}
+DLStreamResponse::DLStreamResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena,
                          bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned),
-  messages_(arena) {
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
   SharedCtor();
-  // @@protoc_insertion_point(arena_constructor:datalink.DataLinkResponse)
+  // @@protoc_insertion_point(arena_constructor:datalink.DLStreamResponse)
 }
-DataLinkResponse::DataLinkResponse(const DataLinkResponse& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message(),
-      messages_(from.messages_) {
+DLStreamResponse::DLStreamResponse(const DLStreamResponse& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  total_count_ = from.total_count_;
-  // @@protoc_insertion_point(copy_constructor:datalink.DataLinkResponse)
+  if (from._internal_has_data()) {
+    data_ = new ::datalink::DLData(*from.data_);
+  } else {
+    data_ = nullptr;
+  }
+  // @@protoc_insertion_point(copy_constructor:datalink.DLStreamResponse)
 }
 
-inline void DataLinkResponse::SharedCtor() {
-total_count_ = 0;
+inline void DLStreamResponse::SharedCtor() {
+data_ = nullptr;
 }
 
-DataLinkResponse::~DataLinkResponse() {
-  // @@protoc_insertion_point(destructor:datalink.DataLinkResponse)
+DLStreamResponse::~DLStreamResponse() {
+  // @@protoc_insertion_point(destructor:datalink.DLStreamResponse)
   if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
   (void)arena;
     return;
@@ -701,48 +693,38 @@ DataLinkResponse::~DataLinkResponse() {
   SharedDtor();
 }
 
-inline void DataLinkResponse::SharedDtor() {
+inline void DLStreamResponse::SharedDtor() {
   GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  if (this != internal_default_instance()) delete data_;
 }
 
-void DataLinkResponse::SetCachedSize(int size) const {
+void DLStreamResponse::SetCachedSize(int size) const {
   _cached_size_.Set(size);
 }
 
-void DataLinkResponse::Clear() {
-// @@protoc_insertion_point(message_clear_start:datalink.DataLinkResponse)
+void DLStreamResponse::Clear() {
+// @@protoc_insertion_point(message_clear_start:datalink.DLStreamResponse)
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  messages_.Clear();
-  total_count_ = 0;
+  if (GetArenaForAllocation() == nullptr && data_ != nullptr) {
+    delete data_;
+  }
+  data_ = nullptr;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
-const char* DataLinkResponse::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
+const char* DLStreamResponse::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
   while (!ctx->Done(&ptr)) {
     uint32_t tag;
     ptr = ::_pbi::ReadTag(ptr, &tag);
     switch (tag >> 3) {
-      // repeated .datalink.DataLinkMessage messages = 1;
+      // .datalink.DLData data = 1;
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
-          ptr -= 1;
-          do {
-            ptr += 1;
-            ptr = ctx->ParseMessage(_internal_add_messages(), ptr);
-            CHK_(ptr);
-            if (!ctx->DataAvailable(ptr)) break;
-          } while (::PROTOBUF_NAMESPACE_ID::internal::ExpectTag<10>(ptr));
-        } else
-          goto handle_unusual;
-        continue;
-      // int32 total_count = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          total_count_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint32(&ptr);
+          ptr = ctx->ParseMessage(_internal_mutable_data(), ptr);
           CHK_(ptr);
         } else
           goto handle_unusual;
@@ -770,102 +752,88 @@ failure:
 #undef CHK_
 }
 
-uint8_t* DataLinkResponse::_InternalSerialize(
+uint8_t* DLStreamResponse::_InternalSerialize(
     uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
-  // @@protoc_insertion_point(serialize_to_array_start:datalink.DataLinkResponse)
+  // @@protoc_insertion_point(serialize_to_array_start:datalink.DLStreamResponse)
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated .datalink.DataLinkMessage messages = 1;
-  for (unsigned i = 0,
-      n = static_cast<unsigned>(this->_internal_messages_size()); i < n; i++) {
-    const auto& repfield = this->_internal_messages(i);
+  // .datalink.DLData data = 1;
+  if (this->_internal_has_data()) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-        InternalWriteMessage(1, repfield, repfield.GetCachedSize(), target, stream);
-  }
-
-  // int32 total_count = 2;
-  if (this->_internal_total_count() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt32ToArray(2, this->_internal_total_count(), target);
+      InternalWriteMessage(1, _Internal::data(this),
+        _Internal::data(this).GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
   }
-  // @@protoc_insertion_point(serialize_to_array_end:datalink.DataLinkResponse)
+  // @@protoc_insertion_point(serialize_to_array_end:datalink.DLStreamResponse)
   return target;
 }
 
-size_t DataLinkResponse::ByteSizeLong() const {
-// @@protoc_insertion_point(message_byte_size_start:datalink.DataLinkResponse)
+size_t DLStreamResponse::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:datalink.DLStreamResponse)
   size_t total_size = 0;
 
   uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated .datalink.DataLinkMessage messages = 1;
-  total_size += 1UL * this->_internal_messages_size();
-  for (const auto& msg : this->messages_) {
-    total_size +=
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(msg);
-  }
-
-  // int32 total_count = 2;
-  if (this->_internal_total_count() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int32SizePlusOne(this->_internal_total_count());
+  // .datalink.DLData data = 1;
+  if (this->_internal_has_data()) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
+        *data_);
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DataLinkResponse::_class_data_ = {
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData DLStreamResponse::_class_data_ = {
     ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSizeCheck,
-    DataLinkResponse::MergeImpl
+    DLStreamResponse::MergeImpl
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DataLinkResponse::GetClassData() const { return &_class_data_; }
+const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*DLStreamResponse::GetClassData() const { return &_class_data_; }
 
-void DataLinkResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
+void DLStreamResponse::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message* to,
                       const ::PROTOBUF_NAMESPACE_ID::Message& from) {
-  static_cast<DataLinkResponse *>(to)->MergeFrom(
-      static_cast<const DataLinkResponse &>(from));
+  static_cast<DLStreamResponse *>(to)->MergeFrom(
+      static_cast<const DLStreamResponse &>(from));
 }
 
 
-void DataLinkResponse::MergeFrom(const DataLinkResponse& from) {
-// @@protoc_insertion_point(class_specific_merge_from_start:datalink.DataLinkResponse)
+void DLStreamResponse::MergeFrom(const DLStreamResponse& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:datalink.DLStreamResponse)
   GOOGLE_DCHECK_NE(&from, this);
   uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
-  messages_.MergeFrom(from.messages_);
-  if (from._internal_total_count() != 0) {
-    _internal_set_total_count(from._internal_total_count());
+  if (from._internal_has_data()) {
+    _internal_mutable_data()->::datalink::DLData::MergeFrom(from._internal_data());
   }
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
 }
 
-void DataLinkResponse::CopyFrom(const DataLinkResponse& from) {
-// @@protoc_insertion_point(class_specific_copy_from_start:datalink.DataLinkResponse)
+void DLStreamResponse::CopyFrom(const DLStreamResponse& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:datalink.DLStreamResponse)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool DataLinkResponse::IsInitialized() const {
+bool DLStreamResponse::IsInitialized() const {
   return true;
 }
 
-void DataLinkResponse::InternalSwap(DataLinkResponse* other) {
+void DLStreamResponse::InternalSwap(DLStreamResponse* other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  messages_.InternalSwap(&other->messages_);
-  swap(total_count_, other->total_count_);
+  swap(data_, other->data_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata DataLinkResponse::GetMetadata() const {
+::PROTOBUF_NAMESPACE_ID::Metadata DLStreamResponse::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_datalink_2eproto_getter, &descriptor_table_datalink_2eproto_once,
       file_level_metadata_datalink_2eproto[2]);
@@ -874,17 +842,17 @@ void DataLinkResponse::InternalSwap(DataLinkResponse* other) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace datalink
 PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::datalink::DataLinkMessage*
-Arena::CreateMaybeMessage< ::datalink::DataLinkMessage >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::datalink::DataLinkMessage >(arena);
+template<> PROTOBUF_NOINLINE ::datalink::DLRequest*
+Arena::CreateMaybeMessage< ::datalink::DLRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::datalink::DLRequest >(arena);
 }
-template<> PROTOBUF_NOINLINE ::datalink::DataLinkRequest*
-Arena::CreateMaybeMessage< ::datalink::DataLinkRequest >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::datalink::DataLinkRequest >(arena);
+template<> PROTOBUF_NOINLINE ::datalink::DLData*
+Arena::CreateMaybeMessage< ::datalink::DLData >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::datalink::DLData >(arena);
 }
-template<> PROTOBUF_NOINLINE ::datalink::DataLinkResponse*
-Arena::CreateMaybeMessage< ::datalink::DataLinkResponse >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::datalink::DataLinkResponse >(arena);
+template<> PROTOBUF_NOINLINE ::datalink::DLStreamResponse*
+Arena::CreateMaybeMessage< ::datalink::DLStreamResponse >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::datalink::DLStreamResponse >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 
