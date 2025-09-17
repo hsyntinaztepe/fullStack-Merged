@@ -24,10 +24,10 @@
 #include <grpcpp/support/status.h>
 #include <grpcpp/support/stub_options.h>
 #include <grpcpp/support/sync_stream.h>
+#include <grpcpp/ports_def.inc>
 
 namespace datalink {
 
-// Data Link Service tanımı
 class DataLinkService final {
  public:
   static constexpr char const* service_full_name() {
@@ -36,43 +36,44 @@ class DataLinkService final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    // Data Link mesajlarını getir
-    virtual ::grpc::Status GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::datalink::DataLinkResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::datalink::DataLinkResponse>> AsyncGetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::datalink::DataLinkResponse>>(AsyncGetDataLinkMessagesRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientReaderInterface< ::datalink::DataLinkStreamResponse>> StreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request) {
+      return std::unique_ptr< ::grpc::ClientReaderInterface< ::datalink::DataLinkStreamResponse>>(StreamDataLinkRaw(context, request));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::datalink::DataLinkResponse>> PrepareAsyncGetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::datalink::DataLinkResponse>>(PrepareAsyncGetDataLinkMessagesRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::datalink::DataLinkStreamResponse>> AsyncStreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::datalink::DataLinkStreamResponse>>(AsyncStreamDataLinkRaw(context, request, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::datalink::DataLinkStreamResponse>> PrepareAsyncStreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::datalink::DataLinkStreamResponse>>(PrepareAsyncStreamDataLinkRaw(context, request, cq));
     }
     class async_interface {
      public:
       virtual ~async_interface() {}
-      // Data Link mesajlarını getir
-      virtual void GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void StreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::grpc::ClientReadReactor< ::datalink::DataLinkStreamResponse>* reactor) = 0;
     };
     typedef class async_interface experimental_async_interface;
     virtual class async_interface* async() { return nullptr; }
     class async_interface* experimental_async() { return async(); }
    private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::datalink::DataLinkResponse>* AsyncGetDataLinkMessagesRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::datalink::DataLinkResponse>* PrepareAsyncGetDataLinkMessagesRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientReaderInterface< ::datalink::DataLinkStreamResponse>* StreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::datalink::DataLinkStreamResponse>* AsyncStreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientAsyncReaderInterface< ::datalink::DataLinkStreamResponse>* PrepareAsyncStreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
-    ::grpc::Status GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::datalink::DataLinkResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>> AsyncGetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>>(AsyncGetDataLinkMessagesRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientReader< ::datalink::DataLinkStreamResponse>> StreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request) {
+      return std::unique_ptr< ::grpc::ClientReader< ::datalink::DataLinkStreamResponse>>(StreamDataLinkRaw(context, request));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>> PrepareAsyncGetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>>(PrepareAsyncGetDataLinkMessagesRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>> AsyncStreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>>(AsyncStreamDataLinkRaw(context, request, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>> PrepareAsyncStreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>>(PrepareAsyncStreamDataLinkRaw(context, request, cq));
     }
     class async final :
       public StubInterface::async_interface {
      public:
-      void GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response, std::function<void(::grpc::Status)>) override;
-      void GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void StreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::grpc::ClientReadReactor< ::datalink::DataLinkStreamResponse>* reactor) override;
      private:
       friend class Stub;
       explicit async(Stub* stub): stub_(stub) { }
@@ -84,9 +85,10 @@ class DataLinkService final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>* AsyncGetDataLinkMessagesRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>* PrepareAsyncGetDataLinkMessagesRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) override;
-    const ::grpc::internal::RpcMethod rpcmethod_GetDataLinkMessages_;
+    ::grpc::ClientReader< ::datalink::DataLinkStreamResponse>* StreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request) override;
+    ::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>* AsyncStreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq, void* tag) override;
+    ::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>* PrepareAsyncStreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_StreamDataLink_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -94,151 +96,146 @@ class DataLinkService final {
    public:
     Service();
     virtual ~Service();
-    // Data Link mesajlarını getir
-    virtual ::grpc::Status GetDataLinkMessages(::grpc::ServerContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response);
+    virtual ::grpc::Status StreamDataLink(::grpc::ServerContext* context, const ::datalink::DataLinkRequest* request, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* writer);
   };
   template <class BaseClass>
-  class WithAsyncMethod_GetDataLinkMessages : public BaseClass {
+  class WithAsyncMethod_StreamDataLink : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithAsyncMethod_GetDataLinkMessages() {
+    WithAsyncMethod_StreamDataLink() {
       ::grpc::Service::MarkMethodAsync(0);
     }
-    ~WithAsyncMethod_GetDataLinkMessages() override {
+    ~WithAsyncMethod_StreamDataLink() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status GetDataLinkMessages(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::datalink::DataLinkResponse* /*response*/) override {
+    ::grpc::Status StreamDataLink(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestGetDataLinkMessages(::grpc::ServerContext* context, ::datalink::DataLinkRequest* request, ::grpc::ServerAsyncResponseWriter< ::datalink::DataLinkResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestStreamDataLink(::grpc::ServerContext* context, ::datalink::DataLinkRequest* request, ::grpc::ServerAsyncWriter< ::datalink::DataLinkStreamResponse>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncServerStreaming(0, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_GetDataLinkMessages<Service > AsyncService;
+  typedef WithAsyncMethod_StreamDataLink<Service > AsyncService;
   template <class BaseClass>
-  class WithCallbackMethod_GetDataLinkMessages : public BaseClass {
+  class WithCallbackMethod_StreamDataLink : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetDataLinkMessages() {
+    WithCallbackMethod_StreamDataLink() {
       ::grpc::Service::MarkMethodCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::datalink::DataLinkRequest, ::datalink::DataLinkResponse>(
+          new ::grpc::internal::CallbackServerStreamingHandler< ::datalink::DataLinkRequest, ::datalink::DataLinkStreamResponse>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response) { return this->GetDataLinkMessages(context, request, response); }));}
-    void SetMessageAllocatorFor_GetDataLinkMessages(
-        ::grpc::MessageAllocator< ::datalink::DataLinkRequest, ::datalink::DataLinkResponse>* allocator) {
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::datalink::DataLinkRequest, ::datalink::DataLinkResponse>*>(handler)
-              ->SetMessageAllocator(allocator);
+                   ::grpc::CallbackServerContext* context, const ::datalink::DataLinkRequest* request) { return this->StreamDataLink(context, request); }));
     }
-    ~WithCallbackMethod_GetDataLinkMessages() override {
+    ~WithCallbackMethod_StreamDataLink() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status GetDataLinkMessages(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::datalink::DataLinkResponse* /*response*/) override {
+    ::grpc::Status StreamDataLink(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* GetDataLinkMessages(
-      ::grpc::CallbackServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::datalink::DataLinkResponse* /*response*/)  { return nullptr; }
+    virtual ::grpc::ServerWriteReactor< ::datalink::DataLinkStreamResponse>* StreamDataLink(
+      ::grpc::CallbackServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/)  { return nullptr; }
   };
-  typedef WithCallbackMethod_GetDataLinkMessages<Service > CallbackService;
+  typedef WithCallbackMethod_StreamDataLink<Service > CallbackService;
   typedef CallbackService ExperimentalCallbackService;
   template <class BaseClass>
-  class WithGenericMethod_GetDataLinkMessages : public BaseClass {
+  class WithGenericMethod_StreamDataLink : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithGenericMethod_GetDataLinkMessages() {
+    WithGenericMethod_StreamDataLink() {
       ::grpc::Service::MarkMethodGeneric(0);
     }
-    ~WithGenericMethod_GetDataLinkMessages() override {
+    ~WithGenericMethod_StreamDataLink() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status GetDataLinkMessages(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::datalink::DataLinkResponse* /*response*/) override {
+    ::grpc::Status StreamDataLink(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
   };
   template <class BaseClass>
-  class WithRawMethod_GetDataLinkMessages : public BaseClass {
+  class WithRawMethod_StreamDataLink : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawMethod_GetDataLinkMessages() {
+    WithRawMethod_StreamDataLink() {
       ::grpc::Service::MarkMethodRaw(0);
     }
-    ~WithRawMethod_GetDataLinkMessages() override {
+    ~WithRawMethod_StreamDataLink() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status GetDataLinkMessages(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::datalink::DataLinkResponse* /*response*/) override {
+    ::grpc::Status StreamDataLink(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestGetDataLinkMessages(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestStreamDataLink(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncServerStreaming(0, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetDataLinkMessages : public BaseClass {
+  class WithRawCallbackMethod_StreamDataLink : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetDataLinkMessages() {
+    WithRawCallbackMethod_StreamDataLink() {
       ::grpc::Service::MarkMethodRawCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackServerStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetDataLinkMessages(context, request, response); }));
+                   ::grpc::CallbackServerContext* context, const::grpc::ByteBuffer* request) { return this->StreamDataLink(context, request); }));
     }
-    ~WithRawCallbackMethod_GetDataLinkMessages() override {
+    ~WithRawCallbackMethod_StreamDataLink() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status GetDataLinkMessages(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::datalink::DataLinkResponse* /*response*/) override {
+    ::grpc::Status StreamDataLink(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    virtual ::grpc::ServerUnaryReactor* GetDataLinkMessages(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+    virtual ::grpc::ServerWriteReactor< ::grpc::ByteBuffer>* StreamDataLink(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/)  { return nullptr; }
   };
+  typedef Service StreamedUnaryService;
   template <class BaseClass>
-  class WithStreamedUnaryMethod_GetDataLinkMessages : public BaseClass {
+  class WithSplitStreamingMethod_StreamDataLink : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithStreamedUnaryMethod_GetDataLinkMessages() {
+    WithSplitStreamingMethod_StreamDataLink() {
       ::grpc::Service::MarkMethodStreamed(0,
-        new ::grpc::internal::StreamedUnaryHandler<
-          ::datalink::DataLinkRequest, ::datalink::DataLinkResponse>(
+        new ::grpc::internal::SplitServerStreamingHandler<
+          ::datalink::DataLinkRequest, ::datalink::DataLinkStreamResponse>(
             [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
-                     ::datalink::DataLinkRequest, ::datalink::DataLinkResponse>* streamer) {
-                       return this->StreamedGetDataLinkMessages(context,
+                   ::grpc::ServerSplitStreamer<
+                     ::datalink::DataLinkRequest, ::datalink::DataLinkStreamResponse>* streamer) {
+                       return this->StreamedStreamDataLink(context,
                          streamer);
                   }));
     }
-    ~WithStreamedUnaryMethod_GetDataLinkMessages() override {
+    ~WithSplitStreamingMethod_StreamDataLink() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status GetDataLinkMessages(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::datalink::DataLinkResponse* /*response*/) override {
+    ::grpc::Status StreamDataLink(::grpc::ServerContext* /*context*/, const ::datalink::DataLinkRequest* /*request*/, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* /*writer*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedGetDataLinkMessages(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::datalink::DataLinkRequest,::datalink::DataLinkResponse>* server_unary_streamer) = 0;
+    // replace default version of method with split streamed
+    virtual ::grpc::Status StreamedStreamDataLink(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::datalink::DataLinkRequest,::datalink::DataLinkStreamResponse>* server_split_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_GetDataLinkMessages<Service > StreamedUnaryService;
-  typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_GetDataLinkMessages<Service > StreamedService;
+  typedef WithSplitStreamingMethod_StreamDataLink<Service > SplitStreamedService;
+  typedef WithSplitStreamingMethod_StreamDataLink<Service > StreamedService;
 };
 
 }  // namespace datalink
 
 
+#include <grpcpp/ports_undef.inc>
 #endif  // GRPC_datalink_2eproto__INCLUDED

@@ -1,21 +1,41 @@
-#ifndef DATALINKSERVICE_H
-#define DATALINKSERVICE_H
+#pragma once
 
-#include "datalink.grpc.pb.h"
 #include <grpcpp/grpcpp.h>
-#include <string>
-#include <vector>
+#include "datalink.grpc.pb.h"
 
+#include <string>
+#include <bsoncxx/document/view.hpp>
+
+// DataLinkService implementasyonu
 class DataLinkServiceImpl final : public datalink::DataLinkService::Service
 {
 public:
-    
-    std::vector<std::string> readDataLinkFile(const std::string &filename);
+    DataLinkServiceImpl(std::string mongo_uri,
+                        std::string db_name,
+                        std::string coll_name);
 
-  
-    grpc::Status GetDataLinkMessages(grpc::ServerContext *context,
-                                     const datalink::DataLinkRequest *request,
-                                     datalink::DataLinkResponse *response) override;
+    grpc::Status StreamDataLink(
+        grpc::ServerContext *context,
+        const datalink::DataLinkRequest *request,
+        grpc::ServerWriter<datalink::DataLinkStreamResponse> *writer) override;
+
+private:
+    std::string mongo_uri_;
+    std::string db_name_;
+    std::string coll_name_;
+
+    // Yardımcı fonksiyonlar
+    static std::string get_string_utf8(const bsoncxx::document::view &v,
+                                       const char *key,
+                                       const std::string &def);
+
+    static bool get_double_safe(const bsoncxx::document::view &v,
+                                const char *key,
+                                double &out);
+
+    static bool get_int64_safe(const bsoncxx::document::view &v,
+                               const char *key,
+                               int64_t &out);
+
+    static bool is_in_tr_bbox(double lat, double lon);
 };
-
-#endif // DATALINKSERVICE_H

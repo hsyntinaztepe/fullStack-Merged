@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package datalink;
+
+// ---- Request / Response tanımları ----
+
+// Boş istek (şimdilik filtre vs. koymadık)
+message DataLinkRequest {}
+
+// Tek bir DataLink kaydı
+message DataLinkData {
+  string id = 1;            // DL001 gibi ID (biz üretiyoruz)
+  string callsign = 2;      // "CG04"
+  string status = 3;        // "FRIEND"
+  double lat = 4;           // 37.85765...
+  double lon = 5;           // 26.27811...
+  double velocity = 6;      // 373.37...
+  double baroaltitude = 7;  // 3458.75...
+  double geoaltitude = 8;   // 3548.77...
+  int64 timestamp = 9;      // 1758135912222
+}
+
+// Stream response
+message DataLinkStreamResponse {
+  DataLinkData data = 1;
+}
+
+// ---- Service tanımı ----
+service DataLinkService {
+  rpc StreamDataLink (DataLinkRequest) returns (stream DataLinkStreamResponse);
+}

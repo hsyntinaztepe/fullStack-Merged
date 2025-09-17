@@ -19,10 +19,11 @@
 #include <grpcpp/server_context.h>
 #include <grpcpp/impl/service_type.h>
 #include <grpcpp/support/sync_stream.h>
+#include <grpcpp/ports_def.inc>
 namespace datalink {
 
 static const char* DataLinkService_method_names[] = {
-  "/datalink.DataLinkService/GetDataLinkMessages",
+  "/datalink.DataLinkService/StreamDataLink",
 };
 
 std::unique_ptr< DataLinkService::Stub> DataLinkService::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -32,55 +33,49 @@ std::unique_ptr< DataLinkService::Stub> DataLinkService::NewStub(const std::shar
 }
 
 DataLinkService::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options)
-  : channel_(channel), rpcmethod_GetDataLinkMessages_(DataLinkService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  : channel_(channel), rpcmethod_StreamDataLink_(DataLinkService_method_names[0], options.suffix_for_stats(),::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   {}
 
-::grpc::Status DataLinkService::Stub::GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::datalink::DataLinkResponse* response) {
-  return ::grpc::internal::BlockingUnaryCall< ::datalink::DataLinkRequest, ::datalink::DataLinkResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), rpcmethod_GetDataLinkMessages_, context, request, response);
+::grpc::ClientReader< ::datalink::DataLinkStreamResponse>* DataLinkService::Stub::StreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request) {
+  return ::grpc::internal::ClientReaderFactory< ::datalink::DataLinkStreamResponse>::Create(channel_.get(), rpcmethod_StreamDataLink_, context, request);
 }
 
-void DataLinkService::Stub::async::GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall< ::datalink::DataLinkRequest, ::datalink::DataLinkResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetDataLinkMessages_, context, request, response, std::move(f));
+void DataLinkService::Stub::async::StreamDataLink(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::grpc::ClientReadReactor< ::datalink::DataLinkStreamResponse>* reactor) {
+  ::grpc::internal::ClientCallbackReaderFactory< ::datalink::DataLinkStreamResponse>::Create(stub_->channel_.get(), stub_->rpcmethod_StreamDataLink_, context, request, reactor);
 }
 
-void DataLinkService::Stub::async::GetDataLinkMessages(::grpc::ClientContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response, ::grpc::ClientUnaryReactor* reactor) {
-  ::grpc::internal::ClientCallbackUnaryFactory::Create< ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(stub_->channel_.get(), stub_->rpcmethod_GetDataLinkMessages_, context, request, response, reactor);
+::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>* DataLinkService::Stub::AsyncStreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq, void* tag) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::datalink::DataLinkStreamResponse>::Create(channel_.get(), cq, rpcmethod_StreamDataLink_, context, request, true, tag);
 }
 
-::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>* DataLinkService::Stub::PrepareAsyncGetDataLinkMessagesRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderHelper::Create< ::datalink::DataLinkResponse, ::datalink::DataLinkRequest, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(channel_.get(), cq, rpcmethod_GetDataLinkMessages_, context, request);
-}
-
-::grpc::ClientAsyncResponseReader< ::datalink::DataLinkResponse>* DataLinkService::Stub::AsyncGetDataLinkMessagesRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
-  auto* result =
-    this->PrepareAsyncGetDataLinkMessagesRaw(context, request, cq);
-  result->StartCall();
-  return result;
+::grpc::ClientAsyncReader< ::datalink::DataLinkStreamResponse>* DataLinkService::Stub::PrepareAsyncStreamDataLinkRaw(::grpc::ClientContext* context, const ::datalink::DataLinkRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncReaderFactory< ::datalink::DataLinkStreamResponse>::Create(channel_.get(), cq, rpcmethod_StreamDataLink_, context, request, false, nullptr);
 }
 
 DataLinkService::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       DataLinkService_method_names[0],
-      ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< DataLinkService::Service, ::datalink::DataLinkRequest, ::datalink::DataLinkResponse, ::grpc::protobuf::MessageLite, ::grpc::protobuf::MessageLite>(
+      ::grpc::internal::RpcMethod::SERVER_STREAMING,
+      new ::grpc::internal::ServerStreamingHandler< DataLinkService::Service, ::datalink::DataLinkRequest, ::datalink::DataLinkStreamResponse>(
           [](DataLinkService::Service* service,
              ::grpc::ServerContext* ctx,
              const ::datalink::DataLinkRequest* req,
-             ::datalink::DataLinkResponse* resp) {
-               return service->GetDataLinkMessages(ctx, req, resp);
+             ::grpc::ServerWriter<::datalink::DataLinkStreamResponse>* writer) {
+               return service->StreamDataLink(ctx, req, writer);
              }, this)));
 }
 
 DataLinkService::Service::~Service() {
 }
 
-::grpc::Status DataLinkService::Service::GetDataLinkMessages(::grpc::ServerContext* context, const ::datalink::DataLinkRequest* request, ::datalink::DataLinkResponse* response) {
+::grpc::Status DataLinkService::Service::StreamDataLink(::grpc::ServerContext* context, const ::datalink::DataLinkRequest* request, ::grpc::ServerWriter< ::datalink::DataLinkStreamResponse>* writer) {
   (void) context;
   (void) request;
-  (void) response;
+  (void) writer;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
 
 }  // namespace datalink
+#include <grpcpp/ports_undef.inc>
 

@@ -25,16 +25,6 @@ ipcMain.on('iff:startStream', (event, args) => {
 
   call.on('data', (resp) => {
     
-    console.log('[IFF STREAM]', {
-      id: resp.data?.id,
-      status: resp.data?.status,
-      lat: resp.data?.lat,
-      lon: resp.data?.lon,
-      callsign: resp.data?.callsign
-    });
-
-
-
     event.sender.send('iff:streamData', resp.data);
   });
 

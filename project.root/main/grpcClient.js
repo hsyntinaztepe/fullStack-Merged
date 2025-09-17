@@ -26,6 +26,18 @@ const iffPackageDef = protoLoader.loadSync(
 const iffGrpcObj = grpc.loadPackageDefinition(iffPackageDef);
 
 export const iffClient = new iffGrpcObj.iff.IFFService(
-  'localhost:50051', 
+  'localhost:50051',
+  grpc.credentials.createInsecure()
+);
+
+
+const datalinkPackageDef = protoLoader.loadSync(
+  path.join(__dirname, '../proto/datalink.proto'),
+  { keepCase: true, longs: String, enums: String, defaults: true, oneofs: true }
+);
+const datalinkGrpcObj = grpc.loadPackageDefinition(datalinkPackageDef);
+
+export const datalinkClient = new datalinkGrpcObj.datalink.DataLinkService(
+  'localhost:50052',
   grpc.credentials.createInsecure()
 );
